@@ -1,13 +1,16 @@
 FROM node:latest
 
-WORKDIR /var/www
+RUN mkdir -p /usr/src/app
+WORKDIR /usr/src/app
 
 RUN npm install -g nodemon
 
-COPY ./app /var/www
+COPY ./app/package.json /usr/src/app/
 
 RUN npm install
 
+COPY ./app /usr/src/app
+
 EXPOSE 8080
-#CMD ["nodemon", "--watch", ".", "-e", "js", "app.js"]
+
 CMD ["nodemon", "-L", "app.js"]
