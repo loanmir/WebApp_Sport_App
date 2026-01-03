@@ -13,4 +13,4 @@ COPY ./app /usr/src/app
 
 EXPOSE 8080
 
-CMD ["nodemon", "-L", "app.js"]
+CMD ["nodemon", "-L", "back-end/app.js"]

@@ -4,7 +4,7 @@ services:
     container_name: Sport_App_Jakin
     build: .
     # This command overrides the Dockerfile CMD to ensure watching works
-    command: nodemon -L app.js
+    command: nodemon -L back-end/app.js
     ports:
       - "8080:8080"
     volumes:
