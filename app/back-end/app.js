@@ -1,6 +1,7 @@
 const express = require("express")
 const app = express()
 const port = 8080
+const cors = require("cors");
 
 // Imports
 const noviceRouter = require("./routes/novice");
@@ -9,7 +10,9 @@ const connectDB = require('./db/dbConnection');
 
 connectDB();
 
-app.use(express.json());
+
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 app.get("/",(req,res)=>{
     res.send("This text must be changed to a static file")
