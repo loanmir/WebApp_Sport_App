@@ -10,7 +10,7 @@ const connectDB = require('./db/dbConnection');
 
 connectDB();
 
-
+app.use(express.json()); //JSON parsing directive so that front-end can send JSON data to the back-end -> TAKE A LOOK AGAIN
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 

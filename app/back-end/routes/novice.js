@@ -18,7 +18,6 @@ novice.get('/', async (req, res, next) => {
 
 // Getting one specific news item by ID
 novice.get('/:id', async (req, res, next) => {
-    console.log(req.params)
     try {
         const result = await newsData.oneNovica(req.params.id);
         res.json(result);
@@ -41,6 +40,7 @@ novice.post('/', async (req, res, next) => {
         
         // Return 201 (Created)
         res.status(201).json(newEntry);
+        console.log("New news item created:", newEntry);
     } catch (err) {
         console.error(err);
         res.status(500).send("Error creating news");
