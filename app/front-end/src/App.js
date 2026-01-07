@@ -40,7 +40,7 @@ class App extends Component {
       case "login":
         return <LoginView QUserFromChild={this.QHandleUserLog} />;
       case "novica":
-        return <SingleNovicaView QViewFromChild={this.QSetView} />;
+        return <SingleNovicaView QViewFromChild={this.QSetView} data={this.state.novicaID} />;
       default:
         return <HomeView />;
     }

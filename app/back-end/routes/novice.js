@@ -18,6 +18,7 @@ novice.get('/', async (req, res, next) => {
 
 // Getting one specific news item by ID
 novice.get('/:id', async (req, res, next) => {
+    console.log(req.params)
     try {
         const result = await newsData.oneNovica(req.params.id);
         res.json(result);
