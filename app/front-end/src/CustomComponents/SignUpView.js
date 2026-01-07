@@ -1,4 +1,5 @@
 import { Component } from "react";
+import axios from "axios";
 
 class SignUpView extends Component {
   constructor(props) {
@@ -21,6 +22,20 @@ class SignUpView extends Component {
   QSendUserToParent = (state) => {
     this.props.QUserFromChild(state.user);
   };
+
+  QPostSignUp = () => {
+    let user = this.state.user;
+    axios.post("http://localhost:8080/users/register",{
+      username: user.username,
+      email: user.email,            // remember to check also the email format!! If it is valid, like @, domain etc.
+      password: user.password
+    })
+    .then(res => {
+      console.log("Sent to server...") // HERE then check whether user already exists in database!!
+    }).catch(err => {
+      console.log(err)
+    })
+  }
 
   render() {
     return (
@@ -72,7 +87,7 @@ class SignUpView extends Component {
           </div>
         </form>
         <button
-          onClick={() => this.QSendUserToParent(this.state)}
+          onClick={() => this.QPostSignUp()}
           style={{ margin: "10px" }}
           className="btn btn-primary bt"
         >

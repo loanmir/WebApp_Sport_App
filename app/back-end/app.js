@@ -5,6 +5,7 @@ const cors = require("cors");
 
 // Imports
 const noviceRouter = require("./routes/novice");
+const usersRouter = require("./routes/users");
 const connectDB = require('./db/dbConnection');
 
 
@@ -20,6 +21,7 @@ app.get("/",(req,res)=>{
 
 
 app.use("/novice", noviceRouter);
+app.use("/users", usersRouter);
 
 ///App listening on port
 app.listen(process.env.PORT || port, ()=>{

@@ -1,6 +1,6 @@
 const express= require("express")
-const novice = express.Router();
-const newsData = require('../db/userData');
+const users = express.Router();
+const userData = require('../db/userData');
 
 
 // USER LOGIN 
