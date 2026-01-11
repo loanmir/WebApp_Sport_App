@@ -1,4 +1,5 @@
 import { Component } from "react";
+import axios from "axios";
 // Imported routes for different view Components
 import HomeView from "./CustomComponents/HomeView";
 import AboutView from "./CustomComponents/AboutView";
@@ -15,6 +16,7 @@ class App extends Component {
     this.state = {
       currentPage: "none",
       novicaID: 0,
+      userStatus: {logged:false}
     };
   }
 
@@ -34,11 +36,11 @@ class App extends Component {
       case "novice":
         return <NoviceView QIDFromChild={this.QSetView} />;
       case "addnovica":
-        return <AddNovicaView QViewFromChild={this.QSetView} />;
+        return state.userStatus.logged ? <AddNovicaView QViewFromChild={this.QSetView} /> : "";
       case "signup":
         return <SignUpView  />;
       case "login":
-        return <LoginView QUserFromChild={this.QHandleUserLog} />;
+        return <LoginView QUserFromChild={this.QSetUser} />;
       case "novica":
         return <SingleNovicaView QViewFromChild={this.QSetView} data={this.state.novicaID} />;
       default:
@@ -46,9 +48,22 @@ class App extends Component {
     }
   };
 
-  QHandleUserLog = (obj) => {
-    this.QSetView({ page: "home" });
+  QSetUser = (obj) => {
+    this.setState({
+      userStatus:{logged:true, user: obj}
+    })
   };
+
+
+  componentDidMount() {
+    axios.get("http://localhost:8080/users/login")
+    .then(res => {
+        console.log(res.data)
+      }) 
+      .catch(err => { 
+        console.log("Error:", err);
+      });
+  }
 
   render() {
     return (

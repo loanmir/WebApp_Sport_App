@@ -1,6 +1,28 @@
 const express= require("express")
 const users = express.Router();
 const userData = require('../db/userData');
+const session = require("express-session");
+
+// CHECK AGAIN THIS session.parameters!!! -> TAKE A LOOK AT THE MEANING
+users.use(session({
+    secret: "somesecret",
+    resave: false,
+    saveUninitialized: false,
+    cookie:{
+        expires: 60*2 // 2 minutes
+    }
+}))
+
+users.get("/login", (req, res) => {
+    if(req.session.user){
+        res.send({
+            logged:true,
+            user: req.session.user
+        })
+    } else{
+        res.send({logged:false}) // If user doen't exist then we send that there is no logged user
+    }
+})
 
 
 // USER LOGIN 
@@ -31,7 +53,7 @@ users.post('/login', async (req, res) => {
                 }
 
                 // Send success response
-                return res.json({ message: "Login successful", user: user });
+                return res.json({ message: "Login successful", user: user.user_name });
             } else {
                 console.log("INCORRECT PASSWORD");
                 return res.status(401).json({ error: "Incorrect password" });

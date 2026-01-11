@@ -19,9 +19,9 @@ class NoviceView extends Component {
       .then(res => {
         this.setState({
           novice: res.data
-        }); // <--- End of setState
-      }) // <--- End of .then
-      .catch(err => { // <--- catch belongs to axios, not setState
+        }); 
+      }) 
+      .catch(err => {
         console.log("Error:", err);
       });
   }

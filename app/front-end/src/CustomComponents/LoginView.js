@@ -1,4 +1,5 @@
 import { Component } from "react";
+import axios from "axios";
 
 class LoginView extends Component {
   constructor(props) {
@@ -6,7 +7,7 @@ class LoginView extends Component {
       (this.state = {
         user: {
           type: "login",
-        },
+        }
       });
   }
 
@@ -16,9 +17,24 @@ class LoginView extends Component {
     }));
   };
 
-  QSendUserToParent = (state) => {
-    this.props.QUserFromChild(state.user);
+  QSendUserToParent = (obj) => {
+    this.props.QUserFromChild(obj);
   };
+
+// REMEMBER!!!!! -> Add the implementation of the session -> So that you refresh than it does not reset but it stilò has that user logged in
+
+  QPostLogin = () =>{
+    let user = this.state.user;
+    axios.post("http://localhost:8080/users/login", {
+      username: user.username,
+      password: user.password
+    },{withCredentials:true})
+    .then(res => {
+        console.log("Sent to server...")
+        console.log(res.data)
+        this.QSendUserToParent(res.data);
+    })
+  }
 
   render() {
     return (
@@ -55,11 +71,11 @@ class LoginView extends Component {
           </div>
         </form>
         <button
-          onClick={() => this.QSendUserToParent(this.state)}
+          onClick={() => this.QPostLogin()}
           style={{ margin: "10px" }}
           className="btn btn-primary bt"
         >
-          Sign up
+          Log in
         </button>
       </div>
     );
