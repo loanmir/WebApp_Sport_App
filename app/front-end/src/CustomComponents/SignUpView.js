@@ -26,9 +26,10 @@ class SignUpView extends Component {
   QPostSignUp = () => {
     let user = this.state.user;
     axios.post("http://localhost:8080/users/register",{
-      username: user.username,
-      email: user.email,            // remember to check also the email format!! If it is valid, like @, domain etc.
-      password: user.password
+      username: user.username,           // remember to check also the email format!! If it is valid, like @, domain etc.
+      password: user.password,
+      name: user.name,
+      surname: user.surname
     })
     .then(res => {
       console.log("Sent to server...") // HERE then check whether user already exists in database!!
@@ -62,25 +63,31 @@ class SignUpView extends Component {
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">Email address</label>
-            <input
-              onChange={(e) => this.QGetTextFromField(e)}
-              name="email"
-              type="email"
-              className="form-control"
-              id="exampleInputEmail1"
-              aria-describedby="emailHelp"
-            />
-            <div id="emailHelp" className="form-text">
-              We'll never share your email with anyone else.
-            </div>
-          </div>
-          <div className="mb-3">
             <label className="form-label">Password</label>
             <input
               onChange={(e) => this.QGetTextFromField(e)}
               name="password"
               type="password"
+              className="form-control"
+              id="exampleInputPassword1"
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">First Name</label>
+            <input
+              onChange={(e) => this.QGetTextFromField(e)}
+              name="name"
+              type="text"
+              className="form-control"
+              id="exampleInputPassword1"
+            />
+          </div>
+          <div className="mb-3">
+            <label className="form-label">Surname</label>
+            <input
+              onChange={(e) => this.QGetTextFromField(e)}
+              name="surname"
+              type="text"
               className="form-control"
               id="exampleInputPassword1"
             />

@@ -8,6 +8,7 @@ const cookieParser = require("cookie-parser");
 // Imports
 const teamsRouter = require("./routes/teams");
 const usersRouter = require("./routes/users");
+const fieldsRouter = require("./routes/fields");
 const connectDB = require('./db/dbConnection');
 
 
@@ -30,6 +31,7 @@ app.get("/",(req,res)=>{
 
 app.use("/teams", teamsRouter);
 app.use("/users", usersRouter);
+app.use("/fields", fieldsRouter);
 
 
 ///App listening on port

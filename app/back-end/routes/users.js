@@ -27,7 +27,7 @@ users.get("/login", (req, res) => {
 
 // USER LOGIN 
 users.post('/login', async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password  } = req.body;
 
     // CHECKING IF USERNAME AND PASSWORD ARE PROVIDED
     if (!username || !password) {
@@ -53,7 +53,7 @@ users.post('/login', async (req, res) => {
                 }
 
                 // Send success response
-                return res.json({ message: "Login successful", user: user.user_name });
+                return res.json({ message: "Login successful", user: user.user_username });
             } else {
                 console.log("INCORRECT PASSWORD");
                 return res.status(401).json({ error: "Incorrect password" });
@@ -71,17 +71,17 @@ users.post('/login', async (req, res) => {
 
 // USER REGISTRATION
 users.post('/register', async (req, res) => {
-    const { username, password, email } = req.body;
+    const { username, password, name, surname } = req.body;
 
     // CHECKING IF ALL FIELDS ARE PROVIDED
-    if (!username || !password || !email) {
+    if (!username || !password || !name || !surname) {
         console.log("A field is missing!");
-        return res.status(400).json({ error: "Missing username, password, or email" });
+        return res.status(400).json({ error: "Missing username, password, name, or surname" });
     }
 
     try {
         // INSERTING THE NEW USER INTO THE DATABASE
-        const newUser = await userData.AddUser(username, email, password);
+        const newUser = await userData.AddUser(username, password, name, surname);
         
         // If code reaches here, it succeeded (otherwise catch block runs)
         console.log("New user added!!");

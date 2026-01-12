@@ -7,7 +7,7 @@ let dataPool = {};
 dataPool.AuthUser = async (username) => {
     try {
         // .findOne returns the first document that matches the criteria
-        const user = await User.findOne({ user_name: username });
+        const user = await User.findOne({ user_username: username });
         return user; 
     } catch (err) {
         throw err;
@@ -16,12 +16,14 @@ dataPool.AuthUser = async (username) => {
 
 
 // REGISTER A NEW USER
-dataPool.AddUser = async (username, email, password) => {
+dataPool.AddUser = async (username, password, name, surname) => {
     try {
         const newUser = await User.create({
-            user_name: username,
-            user_email: email,
-            user_password: password
+            user_username: username,
+            user_password: password,
+            user_firstName: name,
+            user_surname: surname
+            
         });
         return newUser;
     } catch (err) {

@@ -2,7 +2,8 @@ import { Component } from "react";
 import axios from "axios";
 // Imported routes for different view Components
 import HomeView from "./CustomComponents/HomeView";
-import AboutView from "./CustomComponents/AboutView";
+import FieldsView from "./CustomComponents/FieldsView";
+import AddFieldView from "./CustomComponents/AddFieldView";
 import AddTeamView from "./CustomComponents/AddTeamView";
 import LoginView from "./CustomComponents/LoginView";
 import TeamsView from "./CustomComponents/TeamsView";
@@ -31,8 +32,10 @@ class App extends Component {
   QGetView = (state) => {
     let page = state.currentPage;
     switch (page) {
-      case "about":
-        return <AboutView />;
+      case "fields":
+        return <FieldsView QIDFromChild={this.QSetView} />;
+      case "addfield":
+        return <AddFieldView QViewFromChild={this.QSetView} />;
       case "teams":
         return <TeamsView QIDFromChild={this.QSetView} />;
       case "addteam":
@@ -98,12 +101,12 @@ class App extends Component {
                   <li className="nav-item">
                     <a
                       onClick={() => {
-                        this.QSetView({ page: "about" });
+                        this.QSetView({ page: "fields" });
                       }}
                       className="nav-link "
                       href="#"
                     >
-                      About
+                      Fields
                     </a>
                   </li>
 

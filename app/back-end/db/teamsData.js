@@ -1,4 +1,4 @@
-const Teams = require('../models/Teams'); 
+const Teams = require('../models/Team'); 
 
 let dataPool = {};
 
