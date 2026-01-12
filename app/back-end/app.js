@@ -6,7 +6,7 @@ const cookieParser = require("cookie-parser");
 
 
 // Imports
-const noviceRouter = require("./routes/novice");
+const teamsRouter = require("./routes/teams");
 const usersRouter = require("./routes/users");
 const connectDB = require('./db/dbConnection');
 
@@ -28,7 +28,7 @@ app.get("/",(req,res)=>{
 });
 
 
-app.use("/novice", noviceRouter);
+app.use("/teams", teamsRouter);
 app.use("/users", usersRouter);
 
 

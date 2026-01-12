@@ -1,12 +1,12 @@
 import { Component } from "react";
 import axios from "axios";
 
-class NoviceView extends Component {
+class TeamsView extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      novice: [],
+      teams: [],
     }
   }
 
@@ -15,10 +15,10 @@ class NoviceView extends Component {
   };
 
   componentDidMount() {
-    axios.get("http://localhost:8080/novice")
+    axios.get("http://localhost:8080/teams")
       .then(res => {
         this.setState({
-          novice: res.data
+          teams: res.data
         }); 
       }) 
       .catch(err => {
@@ -27,7 +27,7 @@ class NoviceView extends Component {
   }
 
   render() {
-    let data = this.state.novice;
+    let data = this.state.teams;
     return (
       <div
         className="row row-cols-1 row-cols-md-3 g-4"
@@ -43,7 +43,7 @@ class NoviceView extends Component {
                     <p className="card-text">{d.slug}</p>
                   </div>
                   <button
-                    onClick={() => this.QSetViewInParent({ page: "novica", id: d._id })}
+                    onClick={() => this.QSetViewInParent({ page: "team", id: d._id })}
                     style={{ margin: "10px" }}
                     className="btn btn-primary bt"
                   >
@@ -60,4 +60,4 @@ class NoviceView extends Component {
   }
 }
 
-export default NoviceView;
+export default TeamsView;

@@ -1,12 +1,12 @@
 import { Component } from "react";
 import axios from "axios";
 
-class SingleNovicaView extends Component {
+class SingleTeamView extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      novica: {}
+      team: {}
     }
   }
 
@@ -15,32 +15,32 @@ class SingleNovicaView extends Component {
   };
 
   componentDidMount() {
-    axios.get("http://localhost:8080/novice/"+this.props.data)
+    axios.get("http://localhost:8080/teams/"+this.props.data)
     .then(res=>{
       this.setState({
-        novica: res.data
+        team: res.data
       })
     })
   }
 
   render() {
-    let novica = this.state.novica;
-    let isEmpty = Object.keys(novica).length === 0; // Check if novica object is empty (if the data hasn't arrived yet)
-    // Object.keys() returns an array of all the keys in novica!
+    let team = this.state.team;
+    let isEmpty = Object.keys(team).length === 0; // Check if team object is empty (if the data hasn't arrived yet)
+    // Object.keys() returns an array of all the keys in team!
     // Checkinf if the number of elements in the array is 0
     return (
       <div className="card" style={{ margin: "10px" }}>
         {!isEmpty ? 
         <div>
-          <h5 className="card-header">{novica.title}</h5>
+          <h5 className="card-header">{team.title}</h5>
           <div className="card-body">
-            <h5 className="card-title">{novica.slug}</h5>
-            <p className="card-text">{novica.text}</p>
+            <h5 className="card-title">{team.slug}</h5>
+            <p className="card-text">{team.text}</p>
             <button
-              onClick={() => this.QSetViewInParent({ page: "novice" })}
+              onClick={() => this.QSetViewInParent({ page: "teams" })}
               className="btn btn-primary"
             >
-              Return news
+              Return to Teams
             </button>
           </div>
         </div>
@@ -50,4 +50,4 @@ class SingleNovicaView extends Component {
   }
 }
 
-export default SingleNovicaView;
+export default SingleTeamView;

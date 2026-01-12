@@ -1,11 +1,11 @@
-const News = require('../models/News'); 
+const Teams = require('../models/Teams'); 
 
 let dataPool = {};
 
-// 1. GET ALL
-dataPool.allNovice = async () => {
+// 1. GET ALL TEAMS
+dataPool.allTeams = async () => {
     try {
-        const res = await News.find(); 
+        const res = await Teams.find(); 
         return res;
     } catch (err) {
         throw err;
@@ -13,19 +13,19 @@ dataPool.allNovice = async () => {
 }
 
 // 2. GET ONE BY ID
-dataPool.oneNovica = async (id) => {
+dataPool.oneTeam = async (id) => {
     try {
-        const res = await News.findById(id);
+        const res = await Teams.findById(id);
         return res;
     } catch (err) {
         throw err;
     }
 }
 
-// 3. CREATE NEW NEWS ITEM
-dataPool.createNovica = async (title, slug, text) => {
+// 3. CREATE NEW TEAM
+dataPool.createTeam = async (title, slug, text) => {
     try {
-        const res = await News.create({
+        const res = await Teams.create({
             title: title,
             slug: slug,
             text: text

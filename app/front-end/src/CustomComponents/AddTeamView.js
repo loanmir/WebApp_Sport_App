@@ -1,27 +1,27 @@
 import { Component } from "react";
 import axios from "axios";
 
-class AddNovicaView extends Component {
+class AddTeamView extends Component {
 
   constructor(props) {
     super(props),
       (this.state = {
-        novica: {}
+        team: {}
       });
   }
 
   QGetTextFromField = (e) => {
     this.setState(prevState => ({
-      novica: { ...prevState.novica, [e.target.name]: e.target.value },
+      team: { ...prevState.team, [e.target.name]: e.target.value },
     }));
   };
 
   // Sending POST request to the server -> to novice.js route where the API is present
-  QPostNovica = () => {
-    axios.post("http://localhost:8080/novice",{
-      title: this.state.novica.title,
-      slug: this.state.novica.slug,
-      text: this.state.novica.text
+  QPostTeam = () => {
+    axios.post("http://localhost:8080/teams",{
+      title: this.state.team.title,
+      slug: this.state.team.slug,
+      text: this.state.team.text
     }).then(res => {
       console.log("Sent to server..")
     })
@@ -29,11 +29,11 @@ class AddNovicaView extends Component {
       console.log("Error:", err);
     })
 
-    this.props.QViewFromChild({ page: "novice" });
+    this.props.QViewFromChild({ page: "teams" });
   }
 
   render() {
-    console.log(this.state.novica);
+    console.log(this.state.team);
     return (
       <div className="card" style={{ margin: "10px" }}>
         <h3 style={{ margin: "10px" }}>Welcome user</h3>
@@ -49,7 +49,7 @@ class AddNovicaView extends Component {
           <label className="form-label">Text</label>
           <textarea onChange={(e)=>this.QGetTextFromField(e)} name="text" className="form-control" rows="3"></textarea>
         </div>
-        <button onClick={()=>{this.QPostNovica()}} className="btn btn-primary bt" style={{ margin: "10px" }}>
+        <button onClick={()=>{this.QPostTeam()}} className="btn btn-primary bt" style={{ margin: "10px" }}>
           Send
         </button>
       </div>
@@ -57,4 +57,4 @@ class AddNovicaView extends Component {
   }
 }
 
-export default AddNovicaView;
+export default AddTeamView;

@@ -3,11 +3,11 @@ import axios from "axios";
 // Imported routes for different view Components
 import HomeView from "./CustomComponents/HomeView";
 import AboutView from "./CustomComponents/AboutView";
-import AddNovicaView from "./CustomComponents/AddNovicaView";
+import AddTeamView from "./CustomComponents/AddTeamView";
 import LoginView from "./CustomComponents/LoginView";
-import NoviceView from "./CustomComponents/NoviceView";
+import TeamsView from "./CustomComponents/TeamsView";
 import SignUpView from "./CustomComponents/SignUpView";
-import SingleNovicaView from "./CustomComponents/SingleNovicaView";
+import SingleTeamView from "./CustomComponents/SingleTeamView";
 
 class App extends Component {
   // In-build function "constructor()"
@@ -15,7 +15,7 @@ class App extends Component {
     super(props);
     this.state = {
       currentPage: "none",
-      novicaID: 0,
+      teamID: 0,
       userStatus: {logged:false}
     };
   }
@@ -24,7 +24,7 @@ class App extends Component {
   QSetView = (obj) => {
     this.setState({
       currentPage: obj.page,
-      novicaID: obj.id || 0,
+      teamID: obj.id || 0,
     });
   };
 
@@ -33,16 +33,16 @@ class App extends Component {
     switch (page) {
       case "about":
         return <AboutView />;
-      case "novice":
-        return <NoviceView QIDFromChild={this.QSetView} />;
-      case "addnovica":
-        return state.userStatus.logged ? <AddNovicaView QViewFromChild={this.QSetView} /> : "";
+      case "teams":
+        return <TeamsView QIDFromChild={this.QSetView} />;
+      case "addteam":
+        return state.userStatus.logged ? <AddTeamView QViewFromChild={this.QSetView} /> : "";
       case "signup":
         return <SignUpView  />;
       case "login":
         return <LoginView QUserFromChild={this.QSetUser} />;
-      case "novica":
-        return <SingleNovicaView QViewFromChild={this.QSetView} data={this.state.novicaID} />;
+      case "team":
+        return <SingleTeamView QViewFromChild={this.QSetView} data={this.state.teamID} />;
       default:
         return <HomeView />;
     }
@@ -110,24 +110,24 @@ class App extends Component {
                   <li className="nav-item">
                     <a
                       onClick={() => {
-                        this.QSetView({ page: "novice" });
+                        this.QSetView({ page: "teams" });
                       }}
                       className="nav-link "
                       href="#"
                     >
-                      News
+                      Teams
                     </a>
                   </li>
 
                   <li className="nav-item">
                     <a
                       onClick={() => {
-                        this.QSetView({ page: "addnovica" });
+                        this.QSetView({ page: "addteam" });
                       }}
                       className="nav-link"
                       href="#"
                     >
-                      Add news
+                      Add new Team
                     </a>
                   </li>
 

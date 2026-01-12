@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 
-const newsSchema = new mongoose.Schema({
+const teamsSchema = new mongoose.Schema({
   title: String,
   slug: String,
   text: String,
@@ -10,4 +10,4 @@ const newsSchema = new mongoose.Schema({
 });
 
 
-module.exports = mongoose.model('News', newsSchema);
+module.exports = mongoose.model('Teams', teamsSchema);
