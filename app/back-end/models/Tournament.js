@@ -13,7 +13,7 @@ const TournamentSchema = new mongoose.Schema({
   creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
   status: { 
     type: String, 
-    enum: ['Open', 'Active', 'Finished'], 
+    enum: ['Open', 'Active', 'Completed'], 
     default: 'Open' 
 }
 });

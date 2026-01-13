@@ -1,0 +1,51 @@
+const express= require("express")
+const tournaments = express.Router();
+const tournamentsData = require('../db/tournamentsData');
+
+
+tournaments.get('/', async (req, res, next) => {
+    try {
+        console.log("Fetching all tournaments...");
+        const results = await tournamentsData.allTournaments();
+        res.json(results);
+        
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error fetching tournaments");
+    }
+});
+
+// Getting one specific news item by ID
+tournaments.get('/:id', async (req, res, next) => {
+    try {
+        const result = await tournamentsData.oneTournament(req.params.id);
+        res.json(result);
+    } catch (err) {
+        res.status(500).send("Error fetching specific tournament");
+    }
+});
+
+tournaments.post('/', async (req, res, next) => {
+    try {
+
+        const creatorId = req.session.user ? req.session.user._id : req.body.creator;
+        const { name, sport, startDate, maxTeams } = req.body;
+        
+        // Simple validation
+        if (!name || !sport || !startDate || !maxTeams) {
+            return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        // Call the helper function from tournamentsData.js
+        const newEntry = await tournamentsData.createTournament(name, sport, startDate, maxTeams, creatorId);
+        
+        // Return 201 (Created)
+        res.status(201).json(newEntry);
+        console.log("New tournament created:", newEntry);
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error creating tournament");
+    }
+});
+
+module.exports=tournaments

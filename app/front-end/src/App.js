@@ -9,6 +9,10 @@ import LoginView from "./CustomComponents/LoginView";
 import TeamsView from "./CustomComponents/TeamsView";
 import SignUpView from "./CustomComponents/SignUpView";
 import SingleTeamView from "./CustomComponents/SingleTeamView";
+import SingleFieldView from "./CustomComponents/SingleFieldView";
+import TournamentsView from "./CustomComponents/TournamentsView";
+import AddTournamentView from "./CustomComponents/AddTournamentView";
+
 
 class App extends Component {
   // In-build function "constructor()"
@@ -17,6 +21,7 @@ class App extends Component {
     this.state = {
       currentPage: "none",
       teamID: 0,
+      fieldID: 0,
       userStatus: {logged:false}
     };
   }
@@ -25,7 +30,9 @@ class App extends Component {
   QSetView = (obj) => {
     this.setState({
       currentPage: obj.page,
-      teamID: obj.id || 0,
+      teamID: obj.teamID || 0,
+      fieldID: obj.fieldID || 0,
+      tournamentID: obj.tournamentID || 0,
     });
   };
 
@@ -36,10 +43,16 @@ class App extends Component {
         return <FieldsView QIDFromChild={this.QSetView} />;
       case "addfield":
         return <AddFieldView QViewFromChild={this.QSetView} />;
+      case "field":
+        return <SingleFieldView QViewFromChild={this.QSetView} data={this.state.fieldID} />;
       case "teams":
-        return <TeamsView QIDFromChild={this.QSetView} />;
+        return <TeamsView QIDFromChild={this.QSetView} data={this.state.tournamentID} />;
       case "addteam":
         return state.userStatus.logged ? <AddTeamView QViewFromChild={this.QSetView} /> : "";
+      case "tournaments":
+        return <TournamentsView QIDFromChild={this.QSetView} />;
+      case "addtournament":
+        return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : "";
       case "signup":
         return <SignUpView  />;
       case "login":
@@ -110,7 +123,7 @@ class App extends Component {
                     </a>
                   </li>
 
-                  <li className="nav-item">
+                  {/*<li className="nav-item">
                     <a
                       onClick={() => {
                         this.QSetView({ page: "teams" });
@@ -120,7 +133,7 @@ class App extends Component {
                     >
                       Teams
                     </a>
-                  </li>
+                  </li>*/}
 
                   <li className="nav-item">
                     <a
@@ -131,6 +144,18 @@ class App extends Component {
                       href="#"
                     >
                       Add new Team
+                    </a>
+                  </li>
+
+                  <li className="nav-item">
+                    <a
+                      onClick={() => {
+                        this.QSetView({ page: "tournaments" });
+                      }}
+                      className="nav-link"
+                      href="#"
+                    >
+                      Tournaments
                     </a>
                   </li>
 

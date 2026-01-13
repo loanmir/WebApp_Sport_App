@@ -1,13 +1,25 @@
-// Defining the schema of the News collection in MongoDB (like a table in SQL)
-
 const mongoose = require('mongoose');
 
-const teamsSchema = new mongoose.Schema({
-  title: String,
-  slug: String,
-  text: String,
-  // date: 
+// Sub-schema for Players (embedded inside the Team)
+const PlayerSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  surname: { type: String, required: true },
+  number: { type: Number } // Optional jersey number
 });
 
+// Main Team Schema
+const TeamSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  
+  // Link to the Tournament this team belongs to
+  tournament: { 
+    type: mongoose.Schema.Types.ObjectId, 
+    ref: 'Tournament', 
+    required: true 
+  },
+  
+  // Array of player objects
+  players: [PlayerSchema] 
+});
 
-module.exports = mongoose.model('Team', teamsSchema);
+module.exports = mongoose.model('Team', TeamSchema);

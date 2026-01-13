@@ -26,9 +26,9 @@ dataPool.oneTeam = async (id) => {
 dataPool.createTeam = async (title, slug, text) => {
     try {
         const res = await Teams.create({
-            title: title,
-            slug: slug,
-            text: text
+            name: name,
+            tournament: tournament,
+            players: players || []
         });
         return res;
     } catch (err) {

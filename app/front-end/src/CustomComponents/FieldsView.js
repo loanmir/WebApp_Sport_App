@@ -7,6 +7,8 @@ class FieldsView extends Component {
     super(props);
     this.state = {
       fields: [],
+      searchQuery:"",
+      selectedSport:""
     }
   }
 
@@ -26,28 +28,75 @@ class FieldsView extends Component {
       });
   }
 
+  QHandleInputChange = (e) => {
+    this.setState({
+      [e.target.name]: e.target.value // Remember the name for each input and select -> They have specific names in order to easily update the state
+    });
+  }
+
   render() {
-    let data = this.state.fields;
+    let filteredData = this.state.fields.filter(d => {
+      
+      // Check Sport
+      const matchesSport = this.state.selectedSport === "" || d.sport === this.state.selectedSport;
+      
+      // Check Search Text (Name OR Address)
+      const query = this.state.searchQuery.toLowerCase();
+      const matchesSearch = d.name.toLowerCase().includes(query) || 
+                            d.address.toLowerCase().includes(query);
+
+      return matchesSport && matchesSearch;
+    });
+
     return (
       <div>
 
-        <div className="d-flex justify-content-end" style={{ margin: "10px" }}>
-          <button 
-            className="btn btn-success"
-            // Ensure "addfield" matches the case in your App.js switch statement
-            onClick={() => this.QSetViewInParent({ page: "addfield" })} 
-          >
-            Add New Field
-          </button>
+        
+        <div className="card" style={{ margin: "10px", padding: "15px" }}>
+            <div className="row g-3 align-items-center">
+                
+                {/* Search Bar */}
+                <div className="col-md-5">
+                    <input 
+                        type="text" 
+                        name="searchQuery"
+                        className="form-control" 
+                        placeholder="Search fields by name or address..." 
+                        onChange={this.QHandleInputChange}
+                    />
+                </div>
+
+                {/* Sport Dropdown Filter */}
+                <div className="col-md-4">
+                    <select 
+                        name="selectedSport" 
+                        className="form-select" 
+                        onChange={this.QHandleInputChange}
+                    >
+                        <option value="">All Sports</option>
+                        <option value="Football">Football</option>
+                        <option value="Volleyball">Volleyball</option>
+                        <option value="Basketball">Basketball</option>
+                    </select>
+                </div>
+
+                {/* Add Button */}
+                <div className="col-md-3 text-end">
+                    <button 
+                        className="btn btn-success w-100"
+                        onClick={() => this.QSetViewInParent({ page: "addfield" })} 
+                    >
+                      Add New Field
+                    </button>
+                </div>
+            </div>
         </div>
-
-
         <div
           className="row row-cols-1 row-cols-md-3 g-4"
           style={{ margin: "10px" }}
         >
-        {data.length > 0 ? 
-          data.map(d => {
+        {filteredData.length > 0 ? 
+          filteredData.map(d => {
             return (
               <div className="col" key={d._id}>
                 <div className="card">
@@ -71,7 +120,7 @@ class FieldsView extends Component {
 
                 <div className="card-footer bg-white border-top-0">
                   <button
-                  onClick={() => this.QSetViewInParent({ page: "field", id: d._id })}
+                  onClick={() => this.QSetViewInParent({ page: "field", fieldID: d._id })}
                   className="btn btn-primary w-100"
                 >
                   Book Now
@@ -82,7 +131,11 @@ class FieldsView extends Component {
           )
         })
           :
-          "Loading..."}
+          // Fallback if search finds nothing
+          <div className="col-12 text-center p-5">
+             {this.state.fields.length === 0 ? "Loading..." : "No fields found matching your search."}
+          </div>
+        }
         </div>
       </div>
     );

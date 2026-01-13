@@ -28,15 +28,15 @@ teams.get('/:id', async (req, res, next) => {
 
 teams.post('/', async (req, res, next) => {
     try {
-        const { title, slug, text } = req.body;
+        const { name, tournament, players } = req.body;
         
         // Simple validation
-        if (!title || !slug || !text) {
+        if (!name || !tournament) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
         // Call the helper function from teamsData.js
-        const newEntry = await teamsData.createTeam(title, slug, text);
+        const newEntry = await teamsData.createTeam(name, tournament, players);
         
         // Return 201 (Created)
         res.status(201).json(newEntry);
