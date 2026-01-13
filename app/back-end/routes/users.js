@@ -99,10 +99,7 @@ users.post('/logout', (req, res) => {
             console.error("Error destroying session:", err);
             return res.status(500).send("Could not log out.");
         }
-
-        
-        // 'connect.sid' is the default name. If you changed 'name' in app.js, use that instead.
-        res.clearCookie('connect.sid'); 
+        res.clearCookie('connect.sid');  // this is default cookie name -> Found on "expressjs.com"
 
         // 3. Send success response
         return res.json({ message: "Logout successful" });
