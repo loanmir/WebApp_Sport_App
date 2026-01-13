@@ -21,7 +21,7 @@ class LoginView extends Component {
     this.props.QUserFromChild(obj);
   };
 
-// REMEMBER!!!!! -> Add the implementation of the session -> So that you refresh than it does not reset but it stilò has that user logged in
+
 
   QPostLogin = () =>{
     let user = this.state.user;
@@ -75,8 +75,21 @@ class LoginView extends Component {
           style={{ margin: "10px" }}
           className="btn btn-primary bt"
         >
-          Log in
+          Log in - REMEMBER TO CHANGE HERE THE REDIRECT AFTER LOGIN
         </button>
+
+        <hr />
+
+        
+        <div className="text-center mb-2">
+            <p className="small text-muted mb-1">Don't have an account?</p>
+            <button
+            onClick={() => this.props.QViewFromChild({ page: "signup" })}
+            className="btn btn-outline-secondary btn-sm"
+            >
+            Sign Up
+            </button>
+        </div>
       </div>
     );
   }

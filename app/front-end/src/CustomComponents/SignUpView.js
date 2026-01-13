@@ -6,7 +6,10 @@ class SignUpView extends Component {
     super(props),
       (this.state = {
         user: {
-          type: "login",
+          username: "",
+          password: "",
+          name: "",
+          surname: ""
         },
       });
   }
@@ -33,6 +36,7 @@ class SignUpView extends Component {
     })
     .then(res => {
       console.log("Sent to server...") // HERE then check whether user already exists in database!!
+      this.props.QViewFromChild({ page: "login" })
     }).catch(err => {
       console.log(err)
     })
@@ -58,7 +62,7 @@ class SignUpView extends Component {
               name="username"
               type="text"
               className="form-control"
-              id="exampleInputEmail1"
+              id="inputUsername"
               aria-describedby="emailHelp"
             />
           </div>
@@ -69,7 +73,7 @@ class SignUpView extends Component {
               name="password"
               type="password"
               className="form-control"
-              id="exampleInputPassword1"
+              id="inputPassword"
             />
           </div>
           <div className="mb-3">
@@ -79,7 +83,7 @@ class SignUpView extends Component {
               name="name"
               type="text"
               className="form-control"
-              id="exampleInputPassword1"
+              id="inputName"
             />
           </div>
           <div className="mb-3">
@@ -89,7 +93,7 @@ class SignUpView extends Component {
               name="surname"
               type="text"
               className="form-control"
-              id="exampleInputPassword1"
+              id="inputSurname"
             />
           </div>
         </form>

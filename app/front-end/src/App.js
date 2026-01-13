@@ -55,9 +55,9 @@ class App extends Component {
       case "addtournament":
         return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : "";
       case "signup":
-        return <SignUpView  />;
+        return <SignUpView QViewFromChild={this.QSetView} />;
       case "login":
-        return <LoginView QUserFromChild={this.QSetUser} />;
+        return <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView}  />;
       case "team":
         return <SingleTeamView QViewFromChild={this.QSetView} data={this.state.teamID} />;
       default:
@@ -184,7 +184,7 @@ class App extends Component {
                     </a>
                   </li>
 
-                  <li className="nav-item">
+                  {/*<li className="nav-item">
                     <a
                       onClick={() => {
                         this.QSetView({ page: "signup" });
@@ -194,7 +194,7 @@ class App extends Component {
                     >
                       Sign up
                     </a>
-                  </li>
+                  </li>*/}
 
                   {this.state.userStatus.logged ? (
                     <li className="nav-item">
