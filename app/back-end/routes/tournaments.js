@@ -28,6 +28,10 @@ tournaments.get('/:id', async (req, res, next) => {
 tournaments.post('/', async (req, res, next) => {
     try {
 
+        if (!req.session || !req.session.user) {
+            return res.status(401).json({ error: "Unauthorized: You must be logged in to create a tournament." });
+        }
+
         const creatorId = req.session.user ? req.session.user._id : req.body.creator;
         const { name, sport, startDate, maxTeams } = req.body;
         

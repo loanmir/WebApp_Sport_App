@@ -22,6 +22,7 @@ class App extends Component {
       currentPage: "none",
       teamID: 0,
       fieldID: 0,
+      tournamentID: 0,
       userStatus: {logged:false}
     };
   }
@@ -66,18 +67,42 @@ class App extends Component {
 
   QSetUser = (obj) => {
     this.setState({
-      userStatus:{logged:true, user: obj}
+      userStatus:{logged:true, user: obj.user}
     })
   };
 
 
   componentDidMount() {
-    axios.get("http://localhost:8080/users/login")
+    axios.get("http://localhost:8080/users/login", {withCredentials:true})
     .then(res => {
-        console.log(res.data)
+        console.log("Session Check", res.data);
+        if(res.data.logged) {
+            this.setState({
+                userStatus: {
+                    logged: true,
+                    // The GET /login route usually returns the whole user object or just the name. 
+                    // Adjust '.username' based on what your backend sends in 'req.session.user'
+                    user: res.data.user.user_username 
+                }
+            })
+        }
       }) 
       .catch(err => { 
-        console.log("Error:", err);
+        console.log("Error checking session:", err);
+      });
+  }
+
+  QLogout = () => {
+    axios.post("http://localhost:8080/users/logout")
+      .then(res => {
+        console.log("Logged out successfully");
+        this.setState({
+          userStatus: { logged: false },
+          currentPage: "login"  
+        });
+      })
+      .catch(err => {
+        console.log("Error logging out:", err);
       });
   }
 
@@ -171,17 +196,27 @@ class App extends Component {
                     </a>
                   </li>
 
-                  <li className="nav-item">
-                    <a
-                      onClick={() => {
-                        this.QSetView({ page: "login" });
-                      }}
-                      className="nav-link "
+                  {this.state.userStatus.logged ? (
+                    <li className="nav-item">
+                      <a
+                      onClick={() => this.QLogout()} // Call the logout function
+                      className="nav-link"
                       href="#"
-                    >
-                      Login
-                    </a>
-                  </li>
+                      >
+                        Logout ({this.state.userStatus.user}) {/* Optional: Show username */}
+                      </a>
+                    </li>
+                  ) : (
+                    <li className="nav-item">
+                      <a
+                      onClick={() => this.QSetView({ page: "login" })}
+                      className="nav-link"
+                      href="#"
+                      >
+                        Login
+                      </a>
+                    </li>
+                  )}
                 </ul>
               </div>
             </div>

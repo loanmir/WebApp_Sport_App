@@ -1,17 +1,7 @@
 const express= require("express")
 const users = express.Router();
 const userData = require('../db/userData');
-const session = require("express-session");
 
-// CHECK AGAIN THIS session.parameters!!! -> TAKE A LOOK AT THE MEANING
-users.use(session({
-    secret: "somesecret",
-    resave: false,
-    saveUninitialized: false,
-    cookie:{
-        expires: 60*2 // 2 minutes
-    }
-}))
 
 users.get("/login", (req, res) => {
     if(req.session.user){
@@ -101,5 +91,23 @@ users.post('/register', async (req, res) => {
         return res.sendStatus(500);
     }
 });
+
+
+users.post('/logout', (req, res) => {
+    req.session.destroy(err => {
+        if (err) {
+            console.error("Error destroying session:", err);
+            return res.status(500).send("Could not log out.");
+        }
+
+        
+        // 'connect.sid' is the default name. If you changed 'name' in app.js, use that instead.
+        res.clearCookie('connect.sid'); 
+
+        // 3. Send success response
+        return res.json({ message: "Logout successful" });
+    });
+})
+
 
 module.exports=users;

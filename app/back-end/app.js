@@ -3,6 +3,7 @@ const app = express()
 const port = 8080
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
+const session = require("express-session");
 
 
 // Imports
@@ -14,6 +15,17 @@ const connectDB = require('./db/dbConnection');
 
 
 connectDB();
+
+
+// CHECK AGAIN THIS session.parameters!!! -> TAKE A LOOK AT THE MEANING
+app.use(session({
+    secret: "somesecret",
+    resave: false,
+    saveUninitialized: false,
+    cookie:{
+        expires: 1000 * 60 * 2 // 2 minutes
+    }
+}))
 
 app.use(express.json()); //JSON parsing directive so that front-end can send JSON data to the back-end -> TAKE A LOOK AGAIN
 app.use(express.urlencoded({ extended: true }));

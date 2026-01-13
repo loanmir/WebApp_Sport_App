@@ -39,7 +39,7 @@ class AddTournamentView extends Component {
       sport: this.state.tournament.sport,
       startDate: this.state.tournament.startDate,
       maxTeams: parseInt(this.state.tournament.maxTeams), // Ensure it's a number
-    })
+    }, {withCredentials: true})
     .then(res => {
       console.log("Tournament created:", res.data);
       console.log("Sent tournament to server...");
