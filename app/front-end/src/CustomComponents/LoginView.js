@@ -33,7 +33,12 @@ class LoginView extends Component {
         console.log("Sent to server...")
         console.log(res.data)
         this.QSendUserToParent(res.data);
+        this.props.QViewFromChild({ page: "home" })
     })
+    .catch(err => {
+      console.log("Error:", err)
+      alert("Login failed! Please check your credentials.");
+    });
   }
 
   render() {
@@ -75,7 +80,7 @@ class LoginView extends Component {
           style={{ margin: "10px" }}
           className="btn btn-primary bt"
         >
-          Log in - REMEMBER TO CHANGE HERE THE REDIRECT AFTER LOGIN
+          Log in 
         </button>
 
         <hr />

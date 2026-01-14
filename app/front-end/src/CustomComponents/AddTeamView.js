@@ -24,12 +24,13 @@ class AddTeamView extends Component {
       text: this.state.team.text
     }).then(res => {
       console.log("Sent to server..")
+      this.props.QViewFromChild({ page: "teams" });
     })
     .catch(err => {
       console.log("Error:", err);
     })
 
-    this.props.QViewFromChild({ page: "teams" });
+    
   }
 
   render() {

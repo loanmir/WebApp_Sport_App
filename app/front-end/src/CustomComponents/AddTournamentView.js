@@ -9,7 +9,7 @@ class AddTournamentView extends Component {
       // Initialize with default values
       tournament: {
         name: "",
-        sport: "", // Default selection
+        sport: "Football", // Default selection
         startDate: "",
         maxTeams: ""
       }
@@ -43,13 +43,14 @@ class AddTournamentView extends Component {
     .then(res => {
       console.log("Tournament created:", res.data);
       console.log("Sent tournament to server...");
+      this.props.QViewFromChild({ page: "tournaments" });
     })
     .catch(err => {
       console.log("Error creating tournament:", err);
       alert("Error creating tournament. Check console for details.");
     });
 
-    this.props.QViewFromChild({ page: "tournaments" });
+    
   }
 
   render() {

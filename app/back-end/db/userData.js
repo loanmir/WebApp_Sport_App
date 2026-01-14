@@ -32,4 +32,13 @@ dataPool.AddUser = async (username, password, name, surname) => {
     }
 }
 
+dataPool.AllUsers = async () =>{
+    try {
+            const res = await User.find({}, '-user_password -__v'); // Exclude password and __v fields
+            return res;
+        } catch (err) {
+            throw err;
+        }
+}
+
 module.exports = dataPool;

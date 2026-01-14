@@ -32,6 +32,11 @@ tournaments.post('/', async (req, res, next) => {
             return res.status(401).json({ error: "Unauthorized: You must be logged in to create a tournament." });
         }
 
+        console.log("--------------------------------");
+        console.log("Creating Tournament Attempt:");
+        console.log("1. Session User:", req.session.user);
+        console.log("2. Data Received:", req.body);
+
         const creatorId = req.session.user ? req.session.user._id : req.body.creator;
         const { name, sport, startDate, maxTeams } = req.body;
         

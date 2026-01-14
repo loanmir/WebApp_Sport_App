@@ -107,4 +107,16 @@ users.post('/logout', (req, res) => {
 })
 
 
+users.get("/", async (req, res) => {
+    try {
+        console.log("Fetching all users...");
+        const results = await userData.AllUsers();
+        res.json(results);
+                
+    }catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
 module.exports=users;

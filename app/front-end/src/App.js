@@ -12,6 +12,7 @@ import SingleTeamView from "./CustomComponents/SingleTeamView";
 import SingleFieldView from "./CustomComponents/SingleFieldView";
 import TournamentsView from "./CustomComponents/TournamentsView";
 import AddTournamentView from "./CustomComponents/AddTournamentView";
+import UsersView from "./CustomComponents/UsersView";
 
 
 class App extends Component {
@@ -49,17 +50,19 @@ class App extends Component {
       case "teams":
         return <TeamsView QIDFromChild={this.QSetView} data={this.state.tournamentID} />;
       case "addteam":
-        return state.userStatus.logged ? <AddTeamView QViewFromChild={this.QSetView} /> : "";
+        return state.userStatus.logged ? <AddTeamView QViewFromChild={this.QSetView} /> : alert("You must be logged in to add a team!!");;
       case "tournaments":
         return <TournamentsView QIDFromChild={this.QSetView} />;
       case "addtournament":
-        return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : "";
+        return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : alert("You must be logged in to add a tournament!!");
       case "signup":
         return <SignUpView QViewFromChild={this.QSetView} />;
       case "login":
         return <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView}  />;
       case "team":
         return <SingleTeamView QViewFromChild={this.QSetView} data={this.state.teamID} />;
+      case "users":
+        return <UsersView />;
       default:
         return <HomeView />;
     }
@@ -117,7 +120,10 @@ class App extends Component {
                 className="navbar-brand"
                 href="#"
               >
-                Home
+                {this.state.userStatus.logged 
+                  ? `Home - ${this.state.userStatus.user}`
+                  : "Home"
+                }
               </a>
               <button
                 className="navbar-toggler"
@@ -145,6 +151,18 @@ class App extends Component {
                       href="#"
                     >
                       Fields
+                    </a>
+                  </li>
+
+                  <li className="nav-item">
+                    <a
+                      onClick={() => {
+                        this.QSetView({ page: "users" });
+                      }}
+                      className="nav-link "
+                      href="#"
+                    >
+                      Users
                     </a>
                   </li>
 
@@ -203,7 +221,7 @@ class App extends Component {
                       className="nav-link"
                       href="#"
                       >
-                        Logout ({this.state.userStatus.user}) {/* Optional: Show username */}
+                        Logout 
                       </a>
                     </li>
                   ) : (

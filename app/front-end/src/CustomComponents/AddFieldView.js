@@ -25,12 +25,13 @@ class AddFieldView extends Component {
       bookableSlots: this.state.field.bookableSlots ? this.state.field.bookableSlots.split(",").map(slot => slot.trim()) : []
     }).then(res => {
       console.log("Sent to server..")
+      this.props.QViewFromChild({ page: "fields" });
     })
     .catch(err => {
       console.log("Error:", err);
     })
 
-    this.props.QViewFromChild({ page: "fields" });
+    
   }
 
   render() {
