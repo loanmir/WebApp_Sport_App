@@ -13,6 +13,7 @@ import SingleFieldView from "./CustomComponents/SingleFieldView";
 import TournamentsView from "./CustomComponents/TournamentsView";
 import AddTournamentView from "./CustomComponents/AddTournamentView";
 import UsersView from "./CustomComponents/UsersView";
+import EditTournamentView from "./CustomComponents/EditTournamentView";
 
 
 class App extends Component {
@@ -55,6 +56,8 @@ class App extends Component {
         return <TournamentsView QIDFromChild={this.QSetView} data={this.state.userStatus}/>;
       case "addtournament":
         return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : alert("You must be logged in to add a tournament!!");
+      case "edittournament":
+        return <EditTournamentView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} />;
       case "signup":
         return <SignUpView QViewFromChild={this.QSetView} />;
       case "login":

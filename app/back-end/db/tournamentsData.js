@@ -49,4 +49,18 @@ dataPool.deleteTournament = async (id) => {
     }
 }
 
+
+dataPool.editTournament = async (id, newData) => {
+    try {
+        const updatedTournament = await Tournaments.findByIdAndUpdate(
+            id,
+            newData,
+            { new: true } // this option tells mongoose to return the modified document
+        );
+        return updatedTournament;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = dataPool;

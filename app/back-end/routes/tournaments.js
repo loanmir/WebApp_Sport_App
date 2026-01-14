@@ -78,4 +78,49 @@ tournaments.delete('/:id', async (req, res, next) => {
     }
 });
 
+
+tournaments.get('/:id', async (req, res) => {
+    try {
+        const t = await tournamentsData.oneTournament(req.params.id);
+        if (!t) return res.status(404).json({ error: "Not found" });
+        res.json(t);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
+
+tournaments.put('/:id', async (req, res) => {
+    try {
+        const tournamentId = req.params.id;
+        const userId = req.session.user ? req.session.user._id : null;
+
+        // Security: First checking the login
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        // Checking if model exists
+        const tournament = await tournamentsData.oneTournament(tournamentId);
+        if (!tournament) return res.status(404).json({ error: "Not found" });
+
+        // Checking if current users owns the tournament
+        if (tournament.creator.toString() !== userId.toString()) {
+            return res.status(403).json({ error: "Forbidden: You are not the creator" });
+        }
+
+        
+        const updates = {
+            name: req.body.name,
+            sport: req.body.sport,
+            maxTeams: req.body.maxTeams,
+            status: req.body.status 
+        };
+
+        const updated = await tournamentsData.editTournament(tournamentId, updates);
+        res.json(updated);
+
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+});
+
 module.exports=tournaments
