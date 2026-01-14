@@ -43,7 +43,7 @@ users.post('/login', async (req, res) => {
                 }
 
                 // Send success response
-                return res.json({ message: "Login successful", user: user.user_username });
+                return res.json({ message: "Login successful", user: user });
             } else {
                 console.log("INCORRECT PASSWORD");
                 return res.status(401).json({ error: "Incorrect password" });

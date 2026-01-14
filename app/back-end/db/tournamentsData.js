@@ -39,4 +39,14 @@ dataPool.createTournament = async (name, sport, startDate, maxTeams, creator) =>
     }
 }
 
+
+dataPool.deleteTournament = async (id) => {
+    try{
+        const res = await Tournaments.findByIdAndDelete(id);
+        return res;
+    } catch (err) {
+        throw err;
+    }
+}
+
 module.exports = dataPool;

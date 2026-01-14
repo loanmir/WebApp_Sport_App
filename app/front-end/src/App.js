@@ -52,7 +52,7 @@ class App extends Component {
       case "addteam":
         return state.userStatus.logged ? <AddTeamView QViewFromChild={this.QSetView} /> : alert("You must be logged in to add a team!!");;
       case "tournaments":
-        return <TournamentsView QIDFromChild={this.QSetView} />;
+        return <TournamentsView QIDFromChild={this.QSetView} data={this.state.userStatus}/>;
       case "addtournament":
         return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : alert("You must be logged in to add a tournament!!");
       case "signup":
@@ -85,7 +85,7 @@ class App extends Component {
                     logged: true,
                     // The GET /login route usually returns the whole user object or just the name. 
                     // Adjust '.username' based on what your backend sends in 'req.session.user'
-                    user: res.data.user.user_username 
+                    user: res.data.user
                 }
             })
         }
@@ -121,7 +121,7 @@ class App extends Component {
                 href="#"
               >
                 {this.state.userStatus.logged 
-                  ? `Home - ${this.state.userStatus.user}`
+                  ? `Home - ${this.state.userStatus.user.user_username}`
                   : "Home"
                 }
               </a>

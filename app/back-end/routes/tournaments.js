@@ -32,11 +32,6 @@ tournaments.post('/', async (req, res, next) => {
             return res.status(401).json({ error: "Unauthorized: You must be logged in to create a tournament." });
         }
 
-        console.log("--------------------------------");
-        console.log("Creating Tournament Attempt:");
-        console.log("1. Session User:", req.session.user);
-        console.log("2. Data Received:", req.body);
-
         const creatorId = req.session.user ? req.session.user._id : req.body.creator;
         const { name, sport, startDate, maxTeams } = req.body;
         
@@ -54,6 +49,32 @@ tournaments.post('/', async (req, res, next) => {
     } catch (err) {
         console.error(err);
         res.status(500).send("Error creating tournament");
+    }
+});
+
+
+tournaments.delete('/:id', async (req, res, next) => {
+    try{
+        const tournamentId = req.params.id;
+        const userId = req.session.user ? req.session.user._id : null;
+        // Check if user is logged in
+        if (!userId) return res.status(401).json({ error: "Unauthorized" });
+
+        
+        const tournament = await tournamentsData.oneTournament(tournamentId); 
+        // Security check: If the tournament exists
+        if (!tournament) return res.status(404).json({ error: "Tournament not found" });
+
+        // 2. Check ownership
+        if (tournament.creator.toString() !== userId.toString()) {
+            return res.status(403).json({ error: "You are not the creator of this tournament" });
+        }
+
+        // 3. Delete it
+        await tournamentsData.deleteTournament(tournamentId);
+        res.json({ message: "Tournament deleted successfully" });
+    }catch (err) {
+        console.error(err);
     }
 });
 

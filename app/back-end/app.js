@@ -31,7 +31,7 @@ app.use(express.json()); //JSON parsing directive so that front-end can send JSO
 app.use(express.urlencoded({ extended: true }));
 app.use(cors({
     origin: ["http://localhost:3000"],
-    methods: ["GET","POST"],
+    methods: ["GET","POST", "PUT", "DELETE"],
     credentials: true
 }));
 app.use(cookieParser("somesecret"));
