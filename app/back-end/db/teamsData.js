@@ -2,7 +2,7 @@ const Teams = require('../models/Team');
 
 let dataPool = {};
 
-// 1. GET ALL TEAMS
+// GET ALL TEAMS
 dataPool.allTeams = async () => {
     try {
         const res = await Teams.find(); 
@@ -12,7 +12,7 @@ dataPool.allTeams = async () => {
     }
 }
 
-// 2. GET ONE BY ID
+// GET ONE BY ID
 dataPool.oneTeam = async (id) => {
     try {
         const res = await Teams.findById(id);
@@ -22,15 +22,26 @@ dataPool.oneTeam = async (id) => {
     }
 }
 
-// 3. CREATE NEW TEAM
-dataPool.createTeam = async (title, slug, text) => {
+// CREATE NEW TEAM
+dataPool.createTeam = async (name, players) => {
     try {
         const res = await Teams.create({
             name: name,
-            tournament: tournament,
             players: players || []
         });
         return res;
+    } catch (err) {
+        throw err;
+    }
+}
+
+// UPDATE TEAM - LINK TO TOURNAMENT
+dataPool.updateTeam = async (id, newData, options = { new: true }) => {
+    try {
+        // Mongoose findByIdAndUpdate takes (id, update, options)
+        // We pass the 'options' argument through so { new: true } works
+        const updatedTeam = await Teams.findByIdAndUpdate(id, newData, options);
+        return updatedTeam;
     } catch (err) {
         throw err;
     }

@@ -1,6 +1,9 @@
 import { Component } from "react";
 import axios from "axios";
 
+// REMEMBER to implement the team reset! -> If tournament gets deleted, all the teams related to it must NOT relate to that tournament
+
+
 class TeamsView extends Component {
 
   constructor(props) {
@@ -27,12 +30,12 @@ class TeamsView extends Component {
   }
 
   render() {
+
+    const {logged} = this.props.userStatus || {};
     let data = this.state.teams;
     
-    // FILTERING LOGIC:
-    // If 'this.props.data' exists, it means we came from a specific Tournament.
     // We only show teams where team.tournament matches that ID.
-    const filterId = this.props.data;
+    const filterId = this.props.tournamentID;
     
     if (filterId) {
       data = data.filter(team => team.tournament === filterId);
@@ -52,6 +55,18 @@ class TeamsView extends Component {
                 </button>
             </div>
         ) : null}
+
+        {/* CREATE TEAM BUTTON*/}
+        {logged && (
+          <div className="d-flex justify-content-end mb-3">
+            <button
+              className="btn btn-success"
+              onClick={() => this.QSetViewInParent({page: "addteam"})}
+            >
+                Create your own team!
+            </button>
+          </div>
+        )}
 
         <div className="row row-cols-1 row-cols-md-3 g-4">
             {data.length > 0 ? 

@@ -26,17 +26,41 @@ teams.get('/:id', async (req, res, next) => {
     }
 });
 
+
+// UPDATE TEAM (e.g. Assign to Tournament)
+teams.put('/:id', async (req, res) => {
+    try {
+        const teamId = req.params.id;
+        const { tournament } = req.body; // Expecting { tournament: "TOURNAMENT_ID" }
+
+        // Find and Update
+        const updatedTeam = await teamsData.updateTeam(
+            teamId,
+            { tournament: tournament }, 
+            { new: true }
+        );
+
+        if (!updatedTeam) return res.status(404).json({ error: "Team not found" });
+
+        res.json(updatedTeam);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: "Could not update team" });
+    }
+});
+
+
 teams.post('/', async (req, res, next) => {
     try {
-        const { name, tournament, players } = req.body;
+        const { name, players } = req.body;
         
         // Simple validation
-        if (!name || !tournament) {
+        if (!name) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
         // Call the helper function from teamsData.js
-        const newEntry = await teamsData.createTeam(name, tournament, players);
+        const newEntry = await teamsData.createTeam(name, players);
         
         // Return 201 (Created)
         res.status(201).json(newEntry);

@@ -15,7 +15,7 @@ const TeamSchema = new mongoose.Schema({
   tournament: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Tournament', 
-    required: true 
+    required: false 
   },
   
   // Array of player objects

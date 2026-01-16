@@ -20,6 +20,7 @@ connectDB();
 // CHECK AGAIN THIS session.parameters!!! -> TAKE A LOOK AT THE MEANING
 app.use(session({
     secret: "somesecret",
+    name: "sport_app_session",
     resave: false,
     saveUninitialized: false,
     cookie:{

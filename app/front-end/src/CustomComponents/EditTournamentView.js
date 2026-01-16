@@ -9,6 +9,8 @@ class EditTournamentView extends Component {
       sport: "",
       maxTeams: 0,
       status: "Open",
+
+      allTeams: [],
       loading: true
     };
   }
@@ -16,27 +18,31 @@ class EditTournamentView extends Component {
   componentDidMount() {
     // Fetch the existing data for this tournament
     const id = this.props.tournamentID;
-    axios.get("http://localhost:8080/tournaments/"+id)
-      .then(res => {
-        const t = res.data;
+    
+    Promise.all([
+        axios.get("http://localhost:8080/tournaments/"+id), // Get Tournament
+        axios.get("http://localhost:8080/teams")            // Get All Teams
+    ])
+    .then(([tournamentRes, teamsRes]) => {
+        const t = tournamentRes.data;
         // 2. Pre-fill the state
         this.setState({
           name: t.name,
           sport: t.sport,
           maxTeams: t.maxTeams,
           status: t.status,
+          allTeams: teamsRes.data,
           loading: false
         });
       })
       .catch(err => {
         console.error("Error loading tournament:", err);
-        alert("Could not load tournament data.");
+        alert("Could not load data.");
         this.props.QViewFromChild({ page: "tournaments" }); // If error, go back
       });
   }
 
   
-
   QSaveEdit = () => {
     const id = this.props.tournamentID;
     axios.put("http://localhost:8080/tournaments/"+id, {
@@ -55,62 +61,133 @@ class EditTournamentView extends Component {
   }
 
 
-
   QHandleInputChange = (e) => {
     this.setState({ [e.target.name]: e.target.value });
+  }
+
+  
+  QAddTeamToTournament = (teamId) => {
+      const tournamentId = this.props.tournamentID;
+      
+      axios.put("http://localhost:8080/teams/"+teamId, {
+          tournament: tournamentId
+      }, { withCredentials: true })
+      .then(res => {
+          // Update the local state so the UI changes instantly
+          this.setState(prevState => ({
+              allTeams: prevState.allTeams.map(t => 
+                  t._id === teamId ? { ...t, tournament: tournamentId } : t
+              )
+          }));
+      })
+      .catch(err => alert("Could not add team."));
+  }
+
+
+
+  QRemoveTeamFromTournament = (teamId) => {
+      axios.put("http://localhost:8080/teams/"+teamId, {
+          tournament: null // Set tournament to null
+      }, { withCredentials: true })
+      .then(res => {
+          this.setState(prevState => ({
+              allTeams: prevState.allTeams.map(t => 
+                  t._id === teamId ? { ...t, tournament: null } : t
+              )
+          }));
+      })
+      .catch(err => alert("Could not remove team."));
   }
 
   render() {
     if (this.state.loading) return <div className="p-5 text-center">Loading Data...</div>;
 
+    const currentTournamentID = this.props.tournamentID;
+
+    // Teams already present in the tournament
+    const myTeams = this.state.allTeams.filter(t => t.tournament === currentTournamentID);
+
+    // Teams available to add
+    const availableTeams = this.state.allTeams.filter(t => !t.tournament);
+
     return (
       <div className="container mt-4">
-        <div className="card shadow p-4">
-            <h2 className="mb-4">Edit Tournament</h2>
+        <div className="row">
             
-            <div className="mb-3">
-                <label className="form-label">Tournament Name</label>
-                <input type="text" className="form-control" name="name" 
-                    value={this.state.name} onChange={this.QHandleInputChange} />
-            </div>
+            {/* LEFT COLUMN: Edit Tournament Details */}
+            <div className="col-md-6">
+                <div className="card shadow p-4 mb-4">
+                    <h4 className="mb-4">Edit Details</h4>
+                    
+                    <div className="mb-3">
+                        <label className="form-label">Tournament Name</label>
+                        <input type="text" className="form-control" name="name" 
+                            value={this.state.name} onChange={this.QHandleInputChange} />
+                    </div>
 
-            <div className="row">
-                <div className="col-md-4 mb-3">
-                    <label className="form-label">Sport</label>
-                    <select className="form-select" name="sport" 
-                        value={this.state.sport} onChange={this.QHandleInputChange}>
-                        <option value="Soccer">Soccer</option>
-                        <option value="Basketball">Basketball</option>
-                        <option value="Volleyball">Volleyball</option>
-                        <option value="Tennis">Tennis</option>
-                    </select>
-                </div>
+                    <div className="mb-3">
+                        <label className="form-label">Status</label>
+                        <select className="form-select" name="status" 
+                            value={this.state.status} onChange={this.QHandleInputChange}>
+                            <option value="Open">Open</option>
+                            <option value="Active">Active</option>
+                            <option value="Completed">Completed</option>
+                        </select>
+                    </div>
 
-                <div className="col-md-4 mb-3">
-                    <label className="form-label">Max Teams</label>
-                    <input type="number" className="form-control" name="maxTeams" 
-                        value={this.state.maxTeams} onChange={this.QHandleInputChange} />
-                </div>
-
-                <div className="col-md-4 mb-3">
-                    <label className="form-label">Status</label>
-                    <select className="form-select" name="status" 
-                        value={this.state.status} onChange={this.QHandleInputChange}>
-                        <option value="Open">Open</option>
-                        <option value="Active">Active</option>
-                        <option value="Completed">Completed</option>
-                    </select>
+                    <div className="d-flex justify-content-between mt-4">
+                        <button className="btn btn-secondary" 
+                            onClick={() => this.props.QViewFromChild({ page: "tournaments" })}>
+                            Cancel
+                        </button>
+                        <button className="btn btn-warning" onClick={this.QSaveEdit}>
+                            Save Changes
+                        </button>
+                    </div>
                 </div>
             </div>
 
-            <div className="d-flex justify-content-between mt-4">
-                <button className="btn btn-secondary" 
-                    onClick={() => this.props.QViewFromChild({ page: "tournaments" })}>
-                    Cancel
-                </button>
-                <button className="btn btn-warning" onClick={this.QSaveEdit}>
-                    Save Changes
-                </button>
+            {/* RIGHT COLUMN: Manage Teams */}
+            <div className="col-md-6">
+                
+                {/* 1. CURRENT TEAMS LIST */}
+                <div className="card shadow mb-4">
+                    <div className="card-header bg-primary text-white">
+                        Participating Teams ({myTeams.length} / {this.state.maxTeams})
+                    </div>
+                    <ul className="list-group list-group-flush">
+                        {myTeams.length > 0 ? myTeams.map(t => (
+                            <li key={t._id} className="list-group-item d-flex justify-content-between align-items-center">
+                                {t.name}
+                                <button className="btn btn-sm btn-outline-danger" 
+                                    onClick={() => this.QRemoveTeamFromTournament(t._id)}>
+                                    Remove
+                                </button>
+                            </li>
+                        )) : <li className="list-group-item text-muted">No teams joined yet.</li>}
+                    </ul>
+                </div>
+
+                {/* 2. AVAILABLE TEAMS LIST */}
+                <div className="card shadow">
+                    <div className="card-header bg-success text-white">
+                        Available Free Agent Teams
+                    </div>
+                    <div className="card-body p-0" style={{ maxHeight: "300px", overflowY: "auto" }}>
+                        <ul className="list-group list-group-flush">
+                            {availableTeams.length > 0 ? availableTeams.map(t => (
+                                <li key={t._id} className="list-group-item d-flex justify-content-between align-items-center">
+                                    {t.name}
+                                    <button className="btn btn-sm btn-success" 
+                                        onClick={() => this.QAddTeamToTournament(t._id)}>
+                                        Add
+                                    </button>
+                                </li>
+                            )) : <li className="list-group-item p-3 text-muted">No free teams available.</li>}
+                        </ul>
+                    </div>
+                </div>
+
             </div>
         </div>
       </div>

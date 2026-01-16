@@ -39,6 +39,13 @@ class App extends Component {
     });
   };
 
+
+  QNotLogged = () => {
+    alert("You must be logged in to access this page.");
+    this.QSetView({ page: "login" });
+    return;
+  }
+
   QGetView = (state) => {
     let page = state.currentPage;
     switch (page) {
@@ -49,13 +56,13 @@ class App extends Component {
       case "field":
         return <SingleFieldView QViewFromChild={this.QSetView} data={this.state.fieldID} />;
       case "teams":
-        return <TeamsView QIDFromChild={this.QSetView} data={this.state.tournamentID} />;
+        return <TeamsView QIDFromChild={this.QSetView} tournamentID={this.state.tournamentID} userStatus={this.state.userStatus}/>;
       case "addteam":
-        return state.userStatus.logged ? <AddTeamView QViewFromChild={this.QSetView} /> : alert("You must be logged in to add a team!!");;
+        return state.userStatus.logged ? <AddTeamView QViewFromChild={this.QSetView} /> : this.QNotLogged();
       case "tournaments":
         return <TournamentsView QIDFromChild={this.QSetView} data={this.state.userStatus}/>;
       case "addtournament":
-        return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : alert("You must be logged in to add a tournament!!");
+        return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : this.QNotLogged();
       case "edittournament":
         return <EditTournamentView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} />;
       case "signup":
@@ -99,7 +106,7 @@ class App extends Component {
   }
 
   QLogout = () => {
-    axios.post("http://localhost:8080/users/logout")
+    axios.post("http://localhost:8080/users/logout", {}, {withCredentials:true})
       .then(res => {
         console.log("Logged out successfully");
         this.setState({
@@ -184,12 +191,12 @@ class App extends Component {
                   <li className="nav-item">
                     <a
                       onClick={() => {
-                        this.QSetView({ page: "addteam" });
+                        this.QSetView({ page: "teams" });
                       }}
                       className="nav-link"
                       href="#"
                     >
-                      Add new Team
+                      Teams
                     </a>
                   </li>
 
