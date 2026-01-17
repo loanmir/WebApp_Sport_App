@@ -16,7 +16,7 @@ fields.get('/', async (req, res, next) => {
     }
 });
 
-// Getting one specific news item by ID
+// Getting one specific field by ID
 fields.get('/:id', async (req, res, next) => {
     try {
         const result = await fieldsData.oneField(req.params.id);

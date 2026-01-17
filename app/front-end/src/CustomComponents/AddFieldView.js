@@ -25,6 +25,7 @@ class AddFieldView extends Component {
       bookableSlots: this.state.field.bookableSlots ? this.state.field.bookableSlots.split(",").map(slot => slot.trim()) : []
     }).then(res => {
       console.log("Sent to server..")
+      alert("Field added successfully!")
       this.props.QViewFromChild({ page: "fields" });
     })
     .catch(err => {

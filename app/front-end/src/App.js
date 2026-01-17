@@ -14,6 +14,7 @@ import TournamentsView from "./CustomComponents/TournamentsView";
 import AddTournamentView from "./CustomComponents/AddTournamentView";
 import UsersView from "./CustomComponents/UsersView";
 import EditTournamentView from "./CustomComponents/EditTournamentView";
+import BookFieldView from "./CustomComponents/BookFieldView";
 
 
 class App extends Component {
@@ -73,6 +74,8 @@ class App extends Component {
         return <SingleTeamView QViewFromChild={this.QSetView} data={this.state.teamID} />;
       case "users":
         return <UsersView />;
+      case "bookfield":
+        return state.userStatus.logged ? <BookFieldView fieldID={this.state.fieldID} QViewFromChild={this.QSetView} /> : this.QNotLogged();
       default:
         return <HomeView />;
     }
@@ -132,7 +135,7 @@ class App extends Component {
               >
                 {this.state.userStatus.logged 
                   ? `Home - ${this.state.userStatus.user.user_username}`
-                  : "Home"
+                  : "Home - SHOW BOOKINGS VIEW WHEN LOGGED IN"
                 }
               </a>
               <button

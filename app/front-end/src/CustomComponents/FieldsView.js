@@ -50,12 +50,10 @@ class FieldsView extends Component {
 
     return (
       <div>
-
-        
         <div className="card" style={{ margin: "10px", padding: "15px" }}>
             <div className="row g-3 align-items-center">
                 
-                {/* Search Bar */}
+                
                 <div className="col-md-5">
                     <input 
                         type="text" 
@@ -66,7 +64,7 @@ class FieldsView extends Component {
                     />
                 </div>
 
-                {/* Sport Dropdown Filter */}
+                
                 <div className="col-md-4">
                     <select 
                         name="selectedSport" 
@@ -80,7 +78,7 @@ class FieldsView extends Component {
                     </select>
                 </div>
 
-                {/* Add Button */}
+                
                 <div className="col-md-3 text-end">
                     <button 
                         className="btn btn-success w-100"
@@ -99,36 +97,47 @@ class FieldsView extends Component {
           filteredData.map(d => {
             return (
               <div className="col" key={d._id}>
-                <div className="card">
-                  <div className="card-header">
+                <div className="card h-100 shadow-sm">
+                  <div className="card-header fw-bold text-uppercase text-secondary">
                     {d.sport}
                   </div>
 
-                <div className="card-body">
-                  <h5 className="card-title">{d.name}</h5>
-                  <p className="card-text">
-                    <strong>Address:</strong> {d.address}
-                  </p>
-                  
-                  <p className="card-text">
-                    <small className="text-muted">
-                      <strong>Slots: </strong> 
-                      {d.bookableSlots ? d.bookableSlots.join(", ") : "No slots listed"}
-                    </small>
-                  </p>
-                </div>
+                  <div className="card-body">
+                    <h5 className="card-title fw-bold">{d.name}</h5>
+                    <p className="card-text text-muted mb-3">
+                       <i className="bi bi-geo-alt-fill me-1"></i> {d.address}
+                    </p>
+                    
+                    
+                    <div>
+                      <small className="text-muted d-block mb-1">Available Schedule:</small>
+                      <div className="d-flex flex-wrap gap-1">
+                        {/* Check if slots exist and is an array */}
+                        {d.bookableSlots && d.bookableSlots.length > 0 ? (
+                          d.bookableSlots.map((slot, index) => (
+                              // CRITICAL FIX: We access 'slot.time' because 'slot' is now an object {id, time}
+                              <span key={index} className="badge bg-light text-dark border">
+                                  {slot.time}
+                              </span>
+                          ))
+                        ) : (
+                            <span className="text-muted small fst-italic">No schedule defined</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
 
-                <div className="card-footer bg-white border-top-0">
-                  <button
-                  onClick={() => this.QSetViewInParent({ page: "field", fieldID: d._id })}
-                  className="btn btn-primary w-100"
-                >
-                  Book Now
-                </button>
+                  <div className="card-footer bg-white border-top-0 pt-0 pb-3">
+                    <button
+                      onClick={() => this.QSetViewInParent({ page: "bookfield", fieldID: d._id })}
+                      className="btn btn-primary w-100 mt-2"
+                    >
+                      Book Now
+                    </button>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          )
+            )
         })
           :
           // Fallback if search finds nothing

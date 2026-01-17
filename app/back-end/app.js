@@ -11,11 +11,23 @@ const teamsRouter = require("./routes/teams");
 const usersRouter = require("./routes/users");
 const fieldsRouter = require("./routes/fields");
 const tournamentsRouter = require("./routes/tournaments");
+const bookingsRouter = require("./routes/bookings");
 const connectDB = require('./db/dbConnection');
 
 
 connectDB();
 
+
+
+app.use(cors({
+    origin: ["http://localhost:3000"],
+    methods: ["GET","POST", "PUT", "DELETE"],
+    credentials: true
+}));
+
+
+app.use(express.json()); //JSON parsing directive so that front-end can send JSON data to the back-end -> TAKE A LOOK AGAIN
+app.use(express.urlencoded({ extended: true }));
 
 // CHECK AGAIN THIS session.parameters!!! -> TAKE A LOOK AT THE MEANING
 app.use(session({
@@ -28,13 +40,6 @@ app.use(session({
     }
 }))
 
-app.use(express.json()); //JSON parsing directive so that front-end can send JSON data to the back-end -> TAKE A LOOK AGAIN
-app.use(express.urlencoded({ extended: true }));
-app.use(cors({
-    origin: ["http://localhost:3000"],
-    methods: ["GET","POST", "PUT", "DELETE"],
-    credentials: true
-}));
 app.use(cookieParser("somesecret"));
 
 
@@ -47,6 +52,7 @@ app.use("/teams", teamsRouter);
 app.use("/users", usersRouter);
 app.use("/fields", fieldsRouter);
 app.use("/tournaments", tournamentsRouter);
+app.use("/bookings", bookingsRouter);
 
 
 ///App listening on port

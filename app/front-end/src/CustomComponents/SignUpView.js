@@ -36,6 +36,7 @@ class SignUpView extends Component {
     })
     .then(res => {
       console.log("Sent to server...") // HERE then check whether user already exists in database!!
+      alert("Registration successful! You can now log in.")
       this.props.QViewFromChild({ page: "login" })
     }).catch(err => {
       console.log(err)
