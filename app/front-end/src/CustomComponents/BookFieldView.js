@@ -41,12 +41,9 @@ class BookFieldView extends Component {
     .catch(err => {
         console.error("Error loading data:", err);
         // Fallback: If bookings fail (e.g. no bookings yet), just load the field
-        if (err.response && err.response.status === 404) {
-             // If 404 on bookings, it might just mean "no bookings found", so takenSlots is empty
-             // But we need the field data first. Ideally, handle this more robustly.
-             // For now, let's assume if Promise.all fails, we might still want to try loading just the field.
-             // A better backend approach is to return [] instead of 404 for empty bookings.
-        }
+        //if (err.response && err.response.status === 404) {
+             // If 404 on bookings, it might just mean "no bookings found"
+        //}
         alert("Could not load booking data. Please try again.");
         this.props.QViewFromChild({ page: "fields" });
     });
@@ -69,8 +66,8 @@ class BookFieldView extends Component {
     axios.post("http://localhost:8080/bookings", {
         field: this.props.fieldID,
         date: this.state.selectedDate,
-        slotTime: this.state.selectedSlot.time // Send the specific time string
-    }, { withCredentials: true }) // <--- Important for User Session
+        slotTime: this.state.selectedSlot.time 
+    }, { withCredentials: true }) // for user session
     .then(res => {
         alert("Booking Successful!");
         this.props.QViewFromChild({ page: "fields" });

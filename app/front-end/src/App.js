@@ -15,6 +15,7 @@ import AddTournamentView from "./CustomComponents/AddTournamentView";
 import UsersView from "./CustomComponents/UsersView";
 import EditTournamentView from "./CustomComponents/EditTournamentView";
 import BookFieldView from "./CustomComponents/BookFieldView";
+import BookingsView from "./CustomComponents/BookingsView";
 
 
 class App extends Component {
@@ -55,7 +56,7 @@ class App extends Component {
       case "addfield":
         return <AddFieldView QViewFromChild={this.QSetView} />;
       case "field":
-        return <SingleFieldView QViewFromChild={this.QSetView} data={this.state.fieldID} />;
+        return <SingleFieldView QViewFromChild={this.QSetView} data={this.state.fieldID} />;    // SINGLE FIELD VIEW IS NOT USED!!!!!!
       case "teams":
         return <TeamsView QIDFromChild={this.QSetView} tournamentID={this.state.tournamentID} userStatus={this.state.userStatus}/>;
       case "addteam":
@@ -76,6 +77,8 @@ class App extends Component {
         return <UsersView />;
       case "bookfield":
         return state.userStatus.logged ? <BookFieldView fieldID={this.state.fieldID} QViewFromChild={this.QSetView} /> : this.QNotLogged();
+      case "bookings":
+        return <BookingsView QViewFromChild={this.QSetView} />;
       default:
         return <HomeView />;
     }
@@ -135,7 +138,7 @@ class App extends Component {
               >
                 {this.state.userStatus.logged 
                   ? `Home - ${this.state.userStatus.user.user_username}`
-                  : "Home - SHOW BOOKINGS VIEW WHEN LOGGED IN"
+                  : "Home"
                 }
               </a>
               <button
@@ -228,15 +231,30 @@ class App extends Component {
                   </li>*/}
 
                   {this.state.userStatus.logged ? (
-                    <li className="nav-item">
-                      <a
-                      onClick={() => this.QLogout()} // Call the logout function
-                      className="nav-link"
-                      href="#"
-                      >
+                    <div>
+                      <li className="nav-item">
+                        <a
+                          onClick={() => {
+                          this.QSetView({ page: "bookings" });
+                          }}
+                          className="nav-link"
+                          href="#"
+                        >
+                        Bookings
+                        </a>
+                      </li>
+                    
+                    
+                      <li className="nav-item">
+                        <a
+                        onClick={() => this.QLogout()} // Call the logout function
+                        className="nav-link"
+                        href="#"
+                        >
                         Logout 
-                      </a>
-                    </li>
+                        </a>
+                      </li>
+                    </div>
                   ) : (
                     <li className="nav-item">
                       <a

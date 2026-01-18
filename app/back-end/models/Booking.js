@@ -9,7 +9,7 @@ const BookingSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now }
 });
 
-// Optional: Prevent double booking at the database level
+
 // This ensures no two bookings can exist for the same field, date, and slot
 BookingSchema.index({ field: 1, date: 1, timeSlot: 1 }, { unique: true });
 

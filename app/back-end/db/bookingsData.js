@@ -24,6 +24,26 @@ dataPool.getBookingsByFieldAndDateAndSlotTime = async (field, date, slotTime) =>
 }
 
 
+dataPool.getBookingsByUser = async (userID) => {
+    try{
+        const res = await Bookings.find({user: userID}).populate('field');
+        // .populate('field') -> USEFUL to get field details along with booking -> tells mongoose to get details for a specific field ID
+        return res;
+    }catch(err){
+        throw err;
+    }
+}
+
+dataPool.getBookingByID = async (bookingID) => {
+    try{
+        const res = await Bookings.findById(bookingID);
+        return res;
+    }catch(err){
+        throw err;
+    }
+}
+
+
 dataPool.createBooking = async (field, date, slotTime, user) => {
     try{
         const res = await Bookings.create({
@@ -33,6 +53,16 @@ dataPool.createBooking = async (field, date, slotTime, user) => {
             user: user
         });
         return res;
+    }catch(err){
+        throw err;
+    }
+}
+
+
+dataPool.deleteBooking = async (bookingID) => {
+    try{
+        const res = await Bookings.findByIdAndDelete(bookingID);
+        return res; 
     }catch(err){
         throw err;
     }

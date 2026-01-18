@@ -21,6 +21,24 @@ bookings.get('/', async (req, res, next) => {
 })
 
 
+bookings.get('/user', async (req, res, next) => {
+    try{
+        if (!req.session || !req.session.user) {
+            return res.status(401).json({ error: "Unauthorized: Please log in." });
+        }
+        const userID = req.session.user._id;
+
+        const userBookings = await bookingsData.getBookingsByUser(userID);
+
+        res.json(userBookings);
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({ error: "Error fetching user bookings" });
+    }
+})
+
+
 
 bookings.post('/', async (req, res, next) => {
     try{
@@ -64,9 +82,49 @@ bookings.post('/', async (req, res, next) => {
         res.status(201).json(newBooking);
 
     }catch(err){
+        // 11000 is MongoDB code for duplicate key error -> REMEMBER Booking collection schema
+        if (err.code === 11000){
+            return res.status(409).json({ error: "This time slot is already booked." });
+        }
+
         console.error(err);
         res.status(500).json({ error: "Error creating booking" });
     }
 })
+
+
+
+
+bookings.delete('/:id', async (req, res, next) => {
+    try{
+        const bookingID =  req.params.id;
+
+        // Checking if the user is actually logged in
+        if (!req.session || !req.session.user) {
+            return res.status(401).json({ error: "Unauthorized: Please log in." });
+        }
+
+        const userID = req.session.user._id;
+
+        const bookingToDelete = await bookingsData.getBookingByID(bookingID);
+
+        //Check if desired booking actually exists
+        if(!bookingToDelete){
+            return res.status(404).json({ error: "Booking not found" });
+        }
+
+        //  checking if booking is actually owned by current user 
+        if(bookingToDelete.user.toString() !== userID){
+            return res.status(403).json({ error: "You are not allowed to delete this booking." });
+        }
+
+        await bookingsData.deleteBooking(bookingID);
+        res.status(200).json({ message: "Booking cancelled successfully" });
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({ error: "Error cancelling booking" });
+    }
+});
 
 module.exports=bookings
