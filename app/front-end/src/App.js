@@ -37,7 +37,7 @@ class App extends Component {
       currentPage: obj.page,
       teamID: obj.teamID || 0,
       fieldID: obj.fieldID || 0,
-      tournamentID: obj.tournamentID || 0,
+      tournamentID: obj.tournamentID || obj.fromTournamentID || 0,
     });
   };
 
@@ -72,7 +72,7 @@ class App extends Component {
       case "login":
         return <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView}  />;
       case "team":
-        return <SingleTeamView QViewFromChild={this.QSetView} data={this.state.teamID} />;
+        return <SingleTeamView QViewFromChild={this.QSetView} data={this.state.teamID} fromTournamentID={this.state.tournamentID} />;
       case "users":
         return <UsersView />;
       case "bookfield":

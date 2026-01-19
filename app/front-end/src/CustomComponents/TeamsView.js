@@ -57,7 +57,7 @@ class TeamsView extends Component {
         ) : null}
 
         {/* CREATE TEAM BUTTON*/}
-        {logged && (
+        {logged && !filterId && (     // Ensuring that user is looking at all teams in "general"
           <div className="d-flex justify-content-end mb-3">
             <button
               className="btn btn-success"
@@ -88,7 +88,7 @@ class TeamsView extends Component {
                     </div>
                     
                     <button
-                        onClick={() => this.QSetViewInParent({ page: "team", teamID: d._id })}
+                        onClick={() => this.QSetViewInParent({ page: "team", teamID: d._id, fromTournamentID: this.props.tournamentID })}
                         style={{ margin: "10px" }}
                         className="btn btn-primary bt"
                     >

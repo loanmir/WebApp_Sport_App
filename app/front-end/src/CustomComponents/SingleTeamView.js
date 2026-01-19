@@ -26,6 +26,7 @@ class SingleTeamView extends Component {
 render() {
     let team = this.state.team;
     let isEmpty = Object.keys(team).length === 0;
+    const sourceID = this.props.fromTournamentID;
 
     return (
       <div className="card" style={{ margin: "10px" }}>
@@ -74,12 +75,21 @@ render() {
 
             {/* RETURN BUTTON */}
             <div className="mt-4">
-              <button
-                onClick={() => this.QSetViewInParent({ page: "teams" , tournamentID: team.tournament})}
-                className="btn btn-outline-primary"
-              >
-                &larr; Return to Tournaments' Teams 
-              </button>
+                <button 
+                    className="btn btn-outline-secondary"
+                    onClick={() => {
+                        if (sourceID) {
+                            // If we came from a tournament, go back to THAT tournament
+                            this.props.QViewFromChild({ page: "teams", tournamentID: sourceID });
+                        } else {
+                            // If sourceID is undefined, we came from "All Teams"
+                            this.props.QViewFromChild({ page: "teams" });
+                        }
+                    }}
+                >
+                    {/* Dynamic Label for better UX */}
+                    {sourceID ? "← Back to Tournament" : "← Back to All Teams"}
+                </button>
             </div>
 
           </div>
