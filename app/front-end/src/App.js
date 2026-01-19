@@ -16,6 +16,7 @@ import UsersView from "./CustomComponents/UsersView";
 import EditTournamentView from "./CustomComponents/EditTournamentView";
 import BookFieldView from "./CustomComponents/BookFieldView";
 import BookingsView from "./CustomComponents/BookingsView";
+import SearchView from "./CustomComponents/SearchView";
 
 
 class App extends Component {
@@ -27,7 +28,9 @@ class App extends Component {
       teamID: 0,
       fieldID: 0,
       tournamentID: 0,
-      userStatus: {logged:false}
+      userStatus: {logged:false},
+      searchQuery: "",
+      tempSearch: ""
     };
   }
 
@@ -41,13 +44,6 @@ class App extends Component {
     });
   };
 
-
-  QNotLogged = () => {
-    alert("You must be logged in to access this page.");
-    this.QSetView({ page: "login" });
-    return;
-  }
-
   QGetView = (state) => {
     let page = state.currentPage;
     switch (page) {
@@ -60,11 +56,11 @@ class App extends Component {
       case "teams":
         return <TeamsView QIDFromChild={this.QSetView} tournamentID={this.state.tournamentID} userStatus={this.state.userStatus}/>;
       case "addteam":
-        return state.userStatus.logged ? <AddTeamView QViewFromChild={this.QSetView} /> : this.QNotLogged();
+        return state.userStatus.logged ? <AddTeamView QViewFromChild={this.QSetView} /> : <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView} />;
       case "tournaments":
         return <TournamentsView QIDFromChild={this.QSetView} data={this.state.userStatus}/>;
       case "addtournament":
-        return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : this.QNotLogged();
+        return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView} />;
       case "edittournament":
         return <EditTournamentView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} />;
       case "signup":
@@ -76,9 +72,11 @@ class App extends Component {
       case "users":
         return <UsersView />;
       case "bookfield":
-        return state.userStatus.logged ? <BookFieldView fieldID={this.state.fieldID} QViewFromChild={this.QSetView} /> : this.QNotLogged();
+        return state.userStatus.logged ? <BookFieldView fieldID={this.state.fieldID} QViewFromChild={this.QSetView} /> : <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView} />;
       case "bookings":
         return <BookingsView QViewFromChild={this.QSetView} />;
+      case "search":
+        return <SearchView QViewFromChild={this.QSetView} searchQuery={this.state.searchQuery} />;
       default:
         return <HomeView />;
     }
@@ -216,7 +214,7 @@ class App extends Component {
                       className="nav-link"
                       href="#"
                     >
-                      Tournaments - Implement Status management
+                      Tournaments
                     </a>
                   </li>
 
@@ -269,6 +267,33 @@ class App extends Component {
                     </li>
                   )}
                 </ul>
+
+                {/* SEARCH BAR FOR QUERY SEARCH */}
+                <form 
+                    className="d-flex ms-3" 
+                    onSubmit={(e) => {
+                        e.preventDefault();  // stopping the reload of the page when hitting enter
+                        
+                        const searchValue = this.state.tempSearch;
+                        if(searchValue) {
+                            this.setState({ 
+                                searchQuery: searchValue, 
+                                currentPage: "search" 
+                            });
+                        }
+                    }}
+                >
+                    <input 
+                        className="form-control me-2" 
+                        type="search" 
+                        placeholder="Search..." 
+                        aria-label="Search"
+                        // Storing in temp variable to avoid searching on every keystroke
+                        onChange={(e) => this.setState({ tempSearch: e.target.value })}
+                    />
+                    <button className="btn btn-outline-light" type="submit">Search</button>
+                </form>
+
               </div>
             </div>
           </nav>

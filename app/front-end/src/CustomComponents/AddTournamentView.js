@@ -27,12 +27,6 @@ class AddTournamentView extends Component {
   };
 
   QPostTournament = () => {
-    
-    // POST request
-    // Note: The backend expects: { name, sport, startDate, maxTeams }
-    // The 'creator' ID is usually handled by the backend (req.session) 
-    // or you might need to hardcode it temporarily if you aren't logged in.
-    
     axios.post("http://localhost:8080/tournaments", {
       name: this.state.tournament.name,
       sport: this.state.tournament.sport,

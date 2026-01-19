@@ -35,10 +35,15 @@ tournaments.post('/', async (req, res, next) => {
 
         const creatorId = req.session.user._id;
         const { name, sport, startDate, maxTeams } = req.body;
+        const today = new Date().toISOString().split('T')[0]; // get today's date in "YYYY-MM-DD" format
         
         // Simple validation
         if (!name || !sport || !startDate || !maxTeams) {
             return res.status(400).json({ error: "Missing required fields" });
+        }
+
+        if (startDate < today){
+            return res.status(400).json({ error: "The start date cannot be in the past!" });
         }
 
         // Call the helper function from tournamentsData.js
