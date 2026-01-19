@@ -91,6 +91,8 @@ class App extends Component {
   };
 
 
+
+
   componentDidMount() {
     axios.get("http://localhost:8080/users/login", {withCredentials:true})
     .then(res => {
@@ -214,7 +216,7 @@ class App extends Component {
                       className="nav-link"
                       href="#"
                     >
-                      Tournaments
+                      Tournaments - Implement Status management
                     </a>
                   </li>
 

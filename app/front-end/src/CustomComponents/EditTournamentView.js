@@ -68,6 +68,15 @@ class EditTournamentView extends Component {
   
   QAddTeamToTournament = (teamId) => {
       const tournamentId = this.props.tournamentID;
+
+      const maxTeams = this.state.maxTeams;
+      const currentCount = this.state.allTeams.filter(t => t.tournament === tournamentId).length;
+
+      // Checking if we have reached the limit!
+      if (currentCount >= maxTeams) {
+        alert("Maximum number of teams reached!");
+        return;
+      }
       
       axios.put("http://localhost:8080/teams/"+teamId, {
           tournament: tournamentId
@@ -102,13 +111,13 @@ class EditTournamentView extends Component {
   render() {
     if (this.state.loading) return <div className="p-5 text-center">Loading Data...</div>;
 
+    
     const currentTournamentID = this.props.tournamentID;
-
     // Teams already present in the tournament
     const myTeams = this.state.allTeams.filter(t => t.tournament === currentTournamentID);
-
     // Teams available to add
     const availableTeams = this.state.allTeams.filter(t => !t.tournament);
+    const isFull = myTeams.length >= this.state.maxTeams;
 
     return (
       <div className="container mt-4">
@@ -170,16 +179,20 @@ class EditTournamentView extends Component {
 
                 {/* 2. AVAILABLE TEAMS LIST */}
                 <div className="card shadow">
-                    <div className="card-header bg-success text-white">
-                        Available Free Agent Teams
+                    <div className={`card-header text-white ${isFull ? "bg-secondary" : "bg-success"}`}>
+                        {isFull ? "Tournament Full" : "Available Free Agent Teams"}
                     </div>
                     <div className="card-body p-0" style={{ maxHeight: "300px", overflowY: "auto" }}>
                         <ul className="list-group list-group-flush">
                             {availableTeams.length > 0 ? availableTeams.map(t => (
                                 <li key={t._id} className="list-group-item d-flex justify-content-between align-items-center">
                                     {t.name}
-                                    <button className="btn btn-sm btn-success" 
-                                        onClick={() => this.QAddTeamToTournament(t._id)}>
+                                    <button 
+                                        className="btn btn-sm btn-success" 
+                                        onClick={() => this.QAddTeamToTournament(t._id)}
+                                        disabled={isFull} 
+                                        style={isFull ? {cursor: "not-allowed", opacity: 0.6} : {}}
+                                    >
                                         Add
                                     </button>
                                 </li>
