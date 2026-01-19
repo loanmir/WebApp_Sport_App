@@ -1,7 +1,7 @@
 import { Component } from "react";
 import axios from "axios";
 
-// REMEMBER to implement the team reset! -> If tournament gets deleted, all the teams related to it must NOT relate to that tournament
+
 
 
 class TeamsView extends Component {

@@ -1,6 +1,7 @@
 const express= require("express")
 const tournaments = express.Router();
 const tournamentsData = require('../db/tournamentsData');
+const teamModel = require('../models/Team');
 
 
 tournaments.get('/', async (req, res, next) => {
@@ -69,6 +70,11 @@ tournaments.delete('/:id', async (req, res, next) => {
         if (tournament.creator.toString() !== userId.toString()) {
             return res.status(403).json({ error: "You are not the creator of this tournament" });
         }
+
+        await teamModel.updateMany(
+            { tournament: tournamentId },
+            { $set: {tournament: null}}
+        ); 
 
         // 3. Delete it
         await tournamentsData.deleteTournament(tournamentId);
