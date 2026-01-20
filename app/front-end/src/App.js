@@ -17,6 +17,7 @@ import EditTournamentView from "./CustomComponents/EditTournamentView";
 import BookFieldView from "./CustomComponents/BookFieldView";
 import BookingsView from "./CustomComponents/BookingsView";
 import SearchView from "./CustomComponents/SearchView";
+import TournamentScheduleView from "./CustomComponents/TournamentScheduleView";
 
 
 class App extends Component {
@@ -58,7 +59,7 @@ class App extends Component {
       case "addteam":
         return state.userStatus.logged ? <AddTeamView QViewFromChild={this.QSetView} /> : <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView} />;
       case "tournaments":
-        return <TournamentsView QIDFromChild={this.QSetView} data={this.state.userStatus}/>;
+        return <TournamentsView QIDFromChild={this.QSetView} QViewFromChild={this.QSetView} data={this.state.userStatus}/>;
       case "addtournament":
         return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView} />;
       case "edittournament":
@@ -77,6 +78,8 @@ class App extends Component {
         return <BookingsView QViewFromChild={this.QSetView} />;
       case "search":
         return <SearchView QViewFromChild={this.QSetView} searchQuery={this.state.searchQuery} />;
+      case "schedule":
+        return <TournamentScheduleView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} />;
       default:
         return <HomeView />;
     }
@@ -214,7 +217,7 @@ class App extends Component {
                       className="nav-link"
                       href="#"
                     >
-                      Tournaments
+                      Tournaments - Round Robin works but check more
                     </a>
                   </li>
 

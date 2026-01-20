@@ -194,6 +194,20 @@ return (
             
               {/* Footer with Buttons */}
               <div className="card-footer bg-white border-top-0">
+
+                {/* Match Schedule button */}
+                {d.status === "Active" && (
+                  <button 
+                    className="btn btn-success w-100 mb-2"
+                    onClick={() => this.props.QViewFromChild({ 
+                      page: "schedule", 
+                      tournamentID: d._id 
+                    })}
+                  >
+                    <i className="bi bi-calendar-check me-2"></i>
+                    View Schedule
+                  </button>
+                )} 
                 
                 {/* Standard View Button */}
                 <button

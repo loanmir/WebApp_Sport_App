@@ -108,6 +108,29 @@ class EditTournamentView extends Component {
       .catch(err => alert("Could not remove team."));
   }
 
+
+
+  QStartTournament = () => {
+    if (!window.confirm("Are you sure you want to start the tournament? This will lock the teams.")) {
+        return;
+    }
+
+    const id = this.props.tournamentID;
+
+    axios.post("http://localhost:8080/tournaments/"+id+"/matches/generate", {}, { withCredentials: true })
+    .then(res =>{
+        alert("Tournament started and matches generated!");
+        //this.componentDidMount();
+        this.setState({ status: "Active" });
+    })
+    .catch(err =>{
+        console.error(err);
+        alert("Could not start the tournament")
+    })
+  }
+
+
+
   render() {
     if (this.state.loading) return <div className="p-5 text-center">Loading Data...</div>;
 
@@ -153,6 +176,21 @@ class EditTournamentView extends Component {
                             Save Changes
                         </button>
                     </div>
+
+                    {this.state.status === "Open" && (
+                        <div className="mt-4 border-top pt-3">
+                            <p className="text-muted small mb-2">
+                                Ready to start? This will generate the schedule automatically.
+                            </p>
+                            <button
+                                className="btn btn-success w-100"
+                                onClick={this.QStartTournament}
+                                disabled={myTeams.length < 2}       // If less than 2 teams, button is disabled
+                            >
+                                Start Tournament
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
 
@@ -202,6 +240,7 @@ class EditTournamentView extends Component {
                 </div>
 
             </div>
+
         </div>
       </div>
     );

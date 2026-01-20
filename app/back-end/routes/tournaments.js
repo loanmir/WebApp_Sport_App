@@ -2,6 +2,7 @@ const express= require("express")
 const tournaments = express.Router();
 const tournamentsData = require('../db/tournamentsData');
 const teamModel = require('../models/Team');
+const matchModel = require('../models/Match');
 
 
 tournaments.get('/', async (req, res, next) => {
@@ -16,6 +17,9 @@ tournaments.get('/', async (req, res, next) => {
     }
 });
 
+
+
+
 // Getting one specific news item by ID
 tournaments.get('/:id', async (req, res, next) => {
     try {
@@ -25,6 +29,9 @@ tournaments.get('/:id', async (req, res, next) => {
         res.status(500).send("Error fetching specific tournament");
     }
 });
+
+
+
 
 tournaments.post('/', async (req, res, next) => {
     try {
@@ -59,6 +66,8 @@ tournaments.post('/', async (req, res, next) => {
 });
 
 
+
+
 tournaments.delete('/:id', async (req, res, next) => {
     try{
         const tournamentId = req.params.id;
@@ -90,6 +99,9 @@ tournaments.delete('/:id', async (req, res, next) => {
 });
 
 
+
+
+
 tournaments.get('/:id', async (req, res) => {
     try {
         const t = await tournamentsData.oneTournament(req.params.id);
@@ -99,6 +111,9 @@ tournaments.get('/:id', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+
+
 
 
 tournaments.put('/:id', async (req, res) => {
@@ -133,5 +148,91 @@ tournaments.put('/:id', async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 });
+
+
+
+
+
+tournaments.post('/:id/matches/generate', async (req, res) => {
+    try {
+        const tournamentId = req.params.id;
+        const tournament = await tournamentsData.oneTournament(tournamentId);
+
+        if (!tournament) {
+            return res.status(404).json({ error: "Tournament not found" });
+        }
+            
+        const teams = await teamModel.find({ tournament: tournamentId });
+
+        if (teams.length < 2) {
+            return res.status(400).json({ error: "Not enough teams to generate matches." });
+        }
+
+
+        // PREPARING THE ROUND-ROBIN SCHEDULE
+        const rotation = teams.map(t => t._id); //array of team IDs
+
+        if (rotation.length % 2 !== 0){     // Taking care of the situation when there is an ODD number of teams
+            rotation.push(null); // adding a "null" team -> So called BYE
+        }
+
+        const numTeams = rotation.length;
+        const numRounds = numTeams - 1;
+        const halfSize = numTeams / 2;
+        const matches = [];
+
+        for (let round = 0; round < numRounds; round++) {
+            for (let i = 0; i < halfSize; i++) {
+                const t1 = rotation[i];
+                const t2 = rotation[numTeams - 1 - i];
+
+                // Create match only if both are real teams -> Ignoring the "null" teams
+                if (t1 && t2) {
+                    matches.push({
+                        tournament: tournamentId,
+                        teamA: t1,      
+                        teamB: t2,      
+                        round: round + 1,
+                        field: null,    
+                        date: null      
+                    });
+                }
+            } // inner-loop
+
+            rotation.splice(1, 0, rotation.pop()); // Rotating the teams -> So that each team plays against each other
+        }// outer-loop
+
+        await matchModel.insertMany(matches);
+        res.json({ message: "Matches generated successfully", totalMatches: matches.length });
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({ error: "Error generating matches" });
+    }
+})
+
+
+
+
+tournaments.get('/:id/matches', async (req, res, next) =>{
+    try{
+        const tournamentId = req.params.id;
+        const matches = await matchModel.find({tournament: tournamentId})
+            .populate('teamA', 'name')
+            .populate('teamB', 'name')
+            .populate('field', 'name')
+            .sort({round: 1});
+
+        res.json(matches);
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({ error: "Error fetching matches" });
+    }
+});
+
+
+
+
 
 module.exports=tournaments
