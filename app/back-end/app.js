@@ -13,6 +13,7 @@ const fieldsRouter = require("./routes/fields");
 const tournamentsRouter = require("./routes/tournaments");
 const bookingsRouter = require("./routes/bookings");
 const searchRouter = require("./routes/search");
+const matchesRouter = require("./routes/matches");
 const connectDB = require('./db/dbConnection');
 
 
@@ -55,6 +56,7 @@ app.use("/fields", fieldsRouter);
 app.use("/tournaments", tournamentsRouter);
 app.use("/bookings", bookingsRouter);
 app.use("/search", searchRouter);
+app.use("/matches", matchesRouter);
 
 
 ///App listening on port

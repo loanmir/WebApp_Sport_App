@@ -49,8 +49,15 @@ class TournamentScheduleView extends Component {
         const rounds = this.groupMatchesByRound();
 
         return (
-            <div className="mt-4">
-                <h3 className="mb-3">Match Schedule</h3>
+            <div className="container mt-4">
+                
+                <div className="d-flex justify-content-between align-items-center mb-4">
+                     <h3>Match Schedule</h3>
+                     <button className="btn btn-secondary btn-sm" 
+                        onClick={() => this.props.QViewFromChild({ page: "tournaments" })}>
+                        Back
+                     </button>
+                </div>
                 
                 {Object.keys(rounds).map(roundNum => (
                     <div key={roundNum} className="card mb-4 shadow-sm">
@@ -58,30 +65,55 @@ class TournamentScheduleView extends Component {
                             <strong>Round {roundNum}</strong>
                         </div>
                         <ul className="list-group list-group-flush">
-                            {rounds[roundNum].map(match => (
-                                <li key={match._id} className="list-group-item d-flex justify-content-between align-items-center">
-                                    
-                                    {/* Home Team */}
-                                    <div className="text-end" style={{ width: "40%" }}>
-                                        <span className="fw-bold">{match.teamA.name}</span>
-                                    </div>
+                            {rounds[roundNum].map(match => {
+                                
+                                const matchDate = match.date ? new Date(match.date) : null;
 
-                                    {/* Score / VS */}
-                                    <div className="text-center text-muted px-2" style={{ width: "20%" }}>
-                                        {match.isPlayed ? (
-                                            <span className="badge bg-dark">{match.homeScore} - {match.awayScore}</span>
+                                return (
+                                <li key={match._id}  
+                                    className="list-group-item d-flex align-items-center list-group-item-action" 
+                                    style={{cursor: "pointer"}}
+                                    onClick={() => this.props.QViewFromChild({
+                                        page: "match",
+                                        matchID: match._id
+                                    })}>
+                                    
+                                    {/* DATE COLUMN */}
+                                    <div className="text-secondary" style={{ width: "20%", fontSize: "0.85rem", borderRight: "1px solid #eee" }}>
+                                        {matchDate ? (
+                                            <>
+                                                {/* Date: e.g. 22/01/2026 */}
+                                                <div className="fw-bold">{matchDate.toLocaleDateString()}</div>
+                                                {/* Time: e.g. 14:30 */}
+                                                <div className="small">{matchDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
+                                            </>
                                         ) : (
-                                            <small>vs</small>
+                                            <span className="fst-italic">Date TBD</span>
                                         )}
                                     </div>
 
-                                    {/* Away Team */}
-                                    <div className="text-start" style={{ width: "40%" }}>
+                                    {/*  HOME TEAM  */}
+                                    <div className="text-end pe-3" style={{ width: "30%" }}>
+                                        <span className="fw-bold">{match.teamA.name}</span>
+                                    </div>
+
+                                    {/*  SCORE  */}
+                                    <div className="text-center" style={{ width: "10%" }}>
+                                        {match.isPlayed ? (
+                                            <span className="badge bg-dark">{match.homeScore} - {match.awayScore}</span>
+                                        ) : (
+                                            <small className="text-muted">vs</small>
+                                        )}
+                                    </div>
+
+                                    {/* AWAY TEAM */}
+                                    <div className="text-start ps-3" style={{ width: "30%" }}>
                                         <span className="fw-bold">{match.teamB.name}</span>
                                     </div>
                                     
                                 </li>
-                            ))}
+                                );
+                            })}
                         </ul>
                     </div>
                 ))}

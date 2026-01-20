@@ -180,21 +180,37 @@ tournaments.post('/:id/matches/generate', async (req, res) => {
         const numRounds = numTeams - 1;
         const halfSize = numTeams / 2;
         const matches = [];
+        
+        // The start date is the first day of matches   
+        let baseDate = new Date(tournament.startDate);
 
         for (let round = 0; round < numRounds; round++) {
+
+            const roundDate = new Date(baseDate);
+            roundDate.setDate(baseDate.getDate() + (round * 1)); // Matches every day - for now
+            
             for (let i = 0; i < halfSize; i++) {
                 const t1 = rotation[i];
                 const t2 = rotation[numTeams - 1 - i];
 
                 // Create match only if both are real teams -> Ignoring the "null" teams
                 if (t1 && t2) {
+
+                    matchDate = new Date(roundDate);
+
+                    const maxVariation = 0; //  =0 since the matches are every day and at a fixed time
+                    matchDate.setDate(matchDate.getDate() + maxVariation);
+
+                    const randomHour = 10 + Math.floor(Math.random() * 11); // Random hour between 10 AM and 8 PM (20:00)
+                    matchDate.setHours(randomHour, 0, 0, 0);
+
                     matches.push({
                         tournament: tournamentId,
                         teamA: t1,      
                         teamB: t2,      
                         round: round + 1,
                         field: null,    
-                        date: null      
+                        date: matchDate      
                     });
                 }
             } // inner-loop

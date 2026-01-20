@@ -18,6 +18,7 @@ import BookFieldView from "./CustomComponents/BookFieldView";
 import BookingsView from "./CustomComponents/BookingsView";
 import SearchView from "./CustomComponents/SearchView";
 import TournamentScheduleView from "./CustomComponents/TournamentScheduleView";
+import SingleMatchView from "./CustomComponents/SingleMatchView";
 
 
 class App extends Component {
@@ -29,6 +30,7 @@ class App extends Component {
       teamID: 0,
       fieldID: 0,
       tournamentID: 0,
+      matchID: 0,
       userStatus: {logged:false},
       searchQuery: "",
       tempSearch: ""
@@ -42,6 +44,7 @@ class App extends Component {
       teamID: obj.teamID || 0,
       fieldID: obj.fieldID || 0,
       tournamentID: obj.tournamentID || obj.fromTournamentID || 0,
+      matchID: obj.matchID || 0
     });
   };
 
@@ -80,6 +83,8 @@ class App extends Component {
         return <SearchView QViewFromChild={this.QSetView} searchQuery={this.state.searchQuery} />;
       case "schedule":
         return <TournamentScheduleView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} />;
+      case "match":
+        return <SingleMatchView QViewFromChild={this.QSetView} matchID={this.state.matchID} />;
       default:
         return <HomeView />;
     }
@@ -169,7 +174,7 @@ class App extends Component {
                       className="nav-link "
                       href="#"
                     >
-                      Fields
+                      Fields  - Check score problem - NOT SAVING
                     </a>
                   </li>
 
@@ -217,7 +222,7 @@ class App extends Component {
                       className="nav-link"
                       href="#"
                     >
-                      Tournaments - Round Robin works but check more
+                      Tournaments - Round Robin - Implement that goes back to tournaments view *Optional*
                     </a>
                   </li>
 
