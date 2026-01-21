@@ -174,7 +174,7 @@ class App extends Component {
                       className="nav-link "
                       href="#"
                     >
-                      Fields  - Check score problem - NOT SAVING
+                      Fields 
                     </a>
                   </li>
 

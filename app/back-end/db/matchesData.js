@@ -8,7 +8,7 @@ dataPool.oneMatch = async (id) => {
         const res = await Matches.findById(id)
             .populate('teamA', 'name')
             .populate('teamB', 'name')
-            .populate('tournament', 'name')
+            .populate('tournament', 'creator name')
         return res;
     }catch(err){
         throw err;
