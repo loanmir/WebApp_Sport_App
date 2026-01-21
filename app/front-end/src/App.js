@@ -222,7 +222,7 @@ class App extends Component {
                       className="nav-link"
                       href="#"
                     >
-                      Tournaments - Round Robin - Implement that goes back to tournaments view *Optional*
+                      Tournaments
                     </a>
                   </li>
 

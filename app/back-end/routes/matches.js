@@ -15,7 +15,6 @@ matches.get('/:id', async (req, res, next) => {
             return res.status(404).json({ error: "Match not found" });
         }
         
-        console.log(userId + " "+ match.tournament.creator);
         if (userId && match.tournament.creator.equals(userId)){
             canEdit = true;
         }
@@ -56,6 +55,13 @@ matches.put('/:id/result', async (req, res, next) => {
             return res.status(403).json({ error: "Unathorized: You are not the creator of the tournament for this match" });
         }
 
+
+        const now = new Date();
+        const matchDate = new Date(matchExist.date);
+        if (matchDate > now){
+            console.log("Cannot update match result before the match date");
+            return res.status(400).json({ error: "Cannot update match result before the match date" });
+        }
 
 
         const {scoreA, scoreB, isPlayed} = req.body;

@@ -99,8 +99,8 @@ class TournamentScheduleView extends Component {
 
                                     {/*  SCORE  */}
                                     <div className="text-center" style={{ width: "10%" }}>
-                                        {match.isPlayed ? (
-                                            <span className="badge bg-dark">{match.homeScore} - {match.awayScore}</span>
+                                        {match.played ? (
+                                            <span className="badge bg-dark">{match.scoreA} - {match.scoreB}</span>
                                         ) : (
                                             <small className="text-muted">vs</small>
                                         )}

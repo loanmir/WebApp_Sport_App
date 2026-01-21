@@ -21,15 +21,17 @@ class SingleMatchView extends Component {
         axios.get("http://localhost:8080/matches/"+id, {withCredentials: true})
             .then(res => {
                 const m = res.data;
+                const formattedDate = new Date(m.date).toLocaleString('sv').replace(' ', 'T').slice(0,16);
+                // toLocaleString('sv') gives local time in Sweden format (YYYY-MM-DDTHH:mm:ss)
+                // Needed for solving the Local Time vs UTC problem. -> In TournamentScheduleView the date is formatted using toLocaleDateString.
+                // 'T' instead of space, because the HTML inputs strictly requires this format in order to display it!!
                 this.setState({
                     match: m,
                     loading: false,
-                    // Pre-fill form inputs
                     homeScore: m.scoreA ?? 0,
                     awayScore: m.scoreB ?? 0,
                     isPlayed: m.played || false,
-                    // Format date (YYYY-MM-DDTHH:mm)
-                    matchDate: m.date ? new Date(m.date).toISOString().slice(0, 16) : "",
+                    matchDate: formattedDate,
                     canEdit: m.canEdit
                 });
             })
@@ -51,10 +53,24 @@ class SingleMatchView extends Component {
         .then(res => {
             console.log("Update response:", res.data); // Debug log
             alert("Match Updated Successfully!");
-            // Update local main object to reflect changes immediately
             this.setState({ match: res.data });
         })
-        .catch(err => alert("Error updating match"));
+        .catch(err => {
+                if (err.response.status === 400) {
+                    alert("Cannot update the match details before the match date");
+                } 
+                else if (err.response.status === 403) {
+                    alert("Unauthorized: You are not the creator of this tournament.");
+                }
+                else if (err.response.status === 401) {
+                    alert("You must be logged in to save changes.");
+                }
+                else {
+                    // Fallback for 500 or other errors
+                    alert("An error occurred: " + err.response.status);
+                }
+        });
+
     }
 
     render() {
