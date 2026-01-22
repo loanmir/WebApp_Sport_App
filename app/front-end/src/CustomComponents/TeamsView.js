@@ -38,7 +38,7 @@ class TeamsView extends Component {
     const filterId = this.props.tournamentID;
     
     if (filterId) {
-      data = data.filter(team => team.tournament._id === filterId);
+      data = data.filter(team => team.tournament && team.tournament._id === filterId);
     }
 
     //console.log("TeamsView Render - filterId:", filterId, " data:", data);
@@ -78,7 +78,7 @@ class TeamsView extends Component {
                     <div className="card">
                     
                     <div className="card-header text-muted">
-                        <small>Tournament ID: {d.tournament._id}</small>
+                        <small>Tournament ID: {d.tournament ? d.tournament._id : "N/A"}</small>
                     </div>
 
                     <div className="card-body">

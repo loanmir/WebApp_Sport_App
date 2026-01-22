@@ -249,6 +249,119 @@ tournaments.get('/:id/matches', async (req, res, next) =>{
 
 
 
+tournaments.get('/:id/standings', async (req, res, next) =>{
+    try{
+        const tournamentId = req.params.id;
+
+        // Fetching the tournament
+        const tournament = await tournamentsData.oneTournament(tournamentId);
+        if (!tournament){
+            return res.status(404).json({error: "Tournament not found"});
+        }
+
+        // Fetching the teams playing in this tournament
+        const teams = await teamModel.find({tournament: tournamentId});
+
+        // Fetching matches that are already played -> So that are already given the points
+        const matches = await matchModel.find({
+            tournament: tournamentId,
+            played: true
+        });
+
+        // Storing the main statistics for each team
+        let standings = {};
+
+        teams.forEach(team => {
+            standings[team._id] = {
+                _id: team._id,
+                name: team.name,
+                points: 0,
+                matchesPlayed: 0,
+                matchesWon: 0,
+                matchesDrawn: 0,
+                matchesLost: 0,
+                goalsFor: 0,
+                goalsAgainst: 0
+            };
+        });
+
+        // Calculating the statistics based on played matches - LOOP
+        matches.forEach(match => {
+            const teamA = standings[match.teamA];
+            const teamB = standings[match.teamB];
+
+            if (!teamA || !teamB){
+                return; // Skip if teams are not found in the standings
+            } 
+
+            // Updting the statistics
+            teamA.matchesPlayed += 1;
+            teamB.matchesPlayed += 1;
+
+            teamA.goalsFor += match.scoreA;
+            teamA.goalsAgainst += match.scoreB;
+
+            teamB.goalsFor += match.scoreB;
+            teamB.goalsAgainst += match.scoreA;
+
+            // Setting the points for each match result
+            if (match.scoreA > match.scoreB){
+                
+                // Team A wins
+                teamA.matchesWon += 1;
+                teamB.matchesLost += 1;
+
+                if(tournament.sport === "Football"){
+                    teamA.points += 3; // 3 points for Football win
+                } else {
+                    // Basketball/Volleyball -> Either win or lose
+                    teamA.points += 2; // 2 points for win
+                    //teamB.points += 0; // 0 points for loss
+                } //closing else
+
+            } else if (match.scoreA < match.scoreB){
+
+                // Team B wins
+                teamB.matchesWon += 1;
+                teamA.matchesLost += 1;
+                if(tournament.sport === "Football"){
+                    teamB.points += 3; 
+                } else {
+                    teamB.points += 2;
+                } //closing else
+
+            } else {
+                // Else it is a draw - in Football
+                teamA.matchesDrawn += 1;
+                teamB.matchesDrawn += 1;
+                teamA.points += 1;
+                teamB.points += 1;
+            } //closing else
+        });
+
+        // Converting the standings object to an array -> So that it can be sorted
+        const standingsArray = Object.values(standings);
+        
+        standingsArray.sort((a, b) => {
+            if(b.points !== a.points){
+                return b.points - a.points; // Sorting by points -> If positive, then B has more points and so it is positioned higher on the standings
+            } 
+            // If a and b have same points, then check goal difference
+            const goalDifferenceA = a.goalsFor - a.goalsAgainst;
+            const goalDifferenceB = b.goalsFor - b.goalsAgainst;
+            return goalDifferenceB - goalDifferenceA; // Sort by goal difference
+        });
+
+        res.json(standingsArray);
+
+    }catch(err){
+        console.error(err);
+        res.status(500).json({ error: "Could not compute the standings" });
+    }
+})
+
+
+
 
 
 module.exports=tournaments

@@ -70,7 +70,7 @@ class EditTournamentView extends Component {
       const tournamentId = this.props.tournamentID;
 
       const maxTeams = this.state.maxTeams;
-      const currentCount = this.state.allTeams.filter(t => t.tournament === tournamentId).length;
+      const currentCount = this.state.allTeams.filter(t => t.tournament._id === tournamentId).length;
 
       // Checking if we have reached the limit!
       if (currentCount >= maxTeams) {
@@ -137,7 +137,9 @@ class EditTournamentView extends Component {
     
     const currentTournamentID = this.props.tournamentID;
     // Teams already present in the tournament
-    const myTeams = this.state.allTeams.filter(t => t.tournament === currentTournamentID);
+    
+    const myTeams = this.state.allTeams.filter(t => t.tournament._id === currentTournamentID);
+    
     // Teams available to add
     const availableTeams = this.state.allTeams.filter(t => !t.tournament);
     const isFull = myTeams.length >= this.state.maxTeams;

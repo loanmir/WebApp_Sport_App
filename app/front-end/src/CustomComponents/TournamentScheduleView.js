@@ -53,10 +53,25 @@ class TournamentScheduleView extends Component {
                 
                 <div className="d-flex justify-content-between align-items-center mb-4">
                      <h3>Match Schedule</h3>
-                     <button className="btn btn-secondary btn-sm" 
-                        onClick={() => this.props.QViewFromChild({ page: "tournaments" })}>
-                        Back
-                     </button>
+
+                     <div>
+                        <button
+                            className="btn btn-primary btn-sm me-2" // me-2 adds margin to the right - so that buttons don't touch
+                            onClick={() => this.props.QViewFromChild({
+                                page: "standings",
+                                tournamentID: this.props.tournamentID
+                            })}
+                        >
+                            Standings
+                        </button>
+
+                        <button 
+                            className="btn btn-secondary btn-sm" 
+                            onClick={() => this.props.QViewFromChild({ page: "tournaments" })}
+                        >
+                            Back
+                        </button>
+                     </div>
                 </div>
                 
                 {Object.keys(rounds).map(roundNum => (

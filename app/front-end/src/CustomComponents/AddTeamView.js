@@ -70,14 +70,14 @@ class AddTeamView extends Component {
 
     axios.post("http://localhost:8080/teams", {
       name: this.state.name,
-      // We send the array of players we built
+      
       players: this.state.players,
       // We do NOT send a tournament ID yet
     }, { withCredentials: true })
     .then(res => {
       alert("Team created successfully!");
       // Go back to the general teams view (or wherever you want)
-      this.props.QViewFromChild({ page: "teams" }); 
+      this.props.QViewFromChild({ page: "teams", tournamentID: null }); 
     })
     .catch(err => {
       console.log("Error:", err);

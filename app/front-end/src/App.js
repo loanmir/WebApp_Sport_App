@@ -19,6 +19,7 @@ import BookingsView from "./CustomComponents/BookingsView";
 import SearchView from "./CustomComponents/SearchView";
 import TournamentScheduleView from "./CustomComponents/TournamentScheduleView";
 import SingleMatchView from "./CustomComponents/SingleMatchView";
+import StandingsView from "./CustomComponents/StandingsView";
 
 
 class App extends Component {
@@ -85,6 +86,8 @@ class App extends Component {
         return <TournamentScheduleView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} />;
       case "match":
         return <SingleMatchView QViewFromChild={this.QSetView} matchID={this.state.matchID} />;
+      case "standings":
+        return <StandingsView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} />;
       default:
         return <HomeView />;
     }
