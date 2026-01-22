@@ -3,7 +3,7 @@ const teams = express.Router();
 const teamsData = require('../db/teamsData');
 
 
-// Getting all the news
+// Getting all the teams
 teams.get('/', async (req, res, next) => {
     try {
         console.log("Fetching all teams...");
@@ -16,7 +16,7 @@ teams.get('/', async (req, res, next) => {
     }
 });
 
-// Getting one specific news item by ID
+// Getting one specific team by ID
 teams.get('/:id', async (req, res, next) => {
     try {
         const result = await teamsData.oneTeam(req.params.id);

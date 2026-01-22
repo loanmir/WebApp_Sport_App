@@ -34,12 +34,14 @@ class TeamsView extends Component {
     const {logged} = this.props.userStatus || {};
     let data = this.state.teams;
     
-    // We only show teams where team.tournament matches that ID.
+    // We only show teams where team.tournament._id matches that ID.
     const filterId = this.props.tournamentID;
     
     if (filterId) {
-      data = data.filter(team => team.tournament === filterId);
+      data = data.filter(team => team.tournament._id === filterId);
     }
+
+    //console.log("TeamsView Render - filterId:", filterId, " data:", data);
 
     return (
       <div style={{ margin: "10px" }}>
@@ -47,7 +49,7 @@ class TeamsView extends Component {
         {/* HEADER: Show a special header if we are filtering by tournament */}
         {filterId ? (
             <div className="alert alert-info d-flex justify-content-between align-items-center">
-                <span>Showing teams for Tournament ID: <strong>{filterId}</strong></span>
+                <span>Showing teams for Tournament: <strong>{data.length > 0 ? data[0].tournament.name : filterId}</strong></span>
                 <button
                     className="btn btn-sm btn-secondary"
                     onClick={() => this.QSetViewInParent({ page: "tournaments" })}>
@@ -76,7 +78,7 @@ class TeamsView extends Component {
                     <div className="card">
                     
                     <div className="card-header text-muted">
-                        <small>Tournament ID: {d.tournament}</small>
+                        <small>Tournament ID: {d.tournament._id}</small>
                     </div>
 
                     <div className="card-body">

@@ -27,6 +27,10 @@ render() {
     let team = this.state.team;
     let isEmpty = Object.keys(team).length === 0;
     const sourceID = this.props.fromTournamentID;
+    
+
+    console.log("Team:", team);
+    console.log("Source ID:", sourceID);
 
     return (
       <div className="card" style={{ margin: "10px" }}>
@@ -40,7 +44,7 @@ render() {
           <div className="card-body">
             
             {/* OPTIONAL: Show Tournament ID */}
-            <p className="text-muted">Participating in Tournament ID: {team.tournament}</p>
+            <p className="text-muted">Participating in Tournament: <strong>{team.tournament.name}</strong></p>
 
             <h5 className="mt-4 mb-3">Player Roster</h5>
 

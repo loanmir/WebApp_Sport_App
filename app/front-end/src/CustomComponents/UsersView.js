@@ -105,7 +105,9 @@ class UsersView extends Component {
                         <div style={{ maxHeight: "150px", overflowY: "auto" }}>
                             <ul className="list-group list-group-flush">
                                 {userTournaments.map(t => (
-                                    <li key={t._id} className="list-group-item px-0 py-1 d-flex justify-content-between">
+                                    <li key={t._id} className="list-group-item px-0 py-1 d-flex justify-content-between" 
+                                    onClick={() => this.props.QViewFromChild({page:"teams", tournamentID: t._id})}
+                                    >
                                         <small className="fw-bold">{t.name}</small>
                                         <small className="badge bg-secondary text-wrap" style={{width: "60px"}}>{t.sport}</small>
                                     </li>

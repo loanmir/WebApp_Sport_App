@@ -74,7 +74,7 @@ class App extends Component {
       case "team":
         return <SingleTeamView QViewFromChild={this.QSetView} data={this.state.teamID} fromTournamentID={this.state.tournamentID} />;
       case "users":
-        return <UsersView />;
+        return <UsersView QViewFromChild={this.QSetView} />;
       case "bookfield":
         return state.userStatus.logged ? <BookFieldView fieldID={this.state.fieldID} QViewFromChild={this.QSetView} /> : <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView} />;
       case "bookings":

@@ -5,7 +5,7 @@ let dataPool = {};
 // GET ALL TEAMS
 dataPool.allTeams = async () => {
     try {
-        const res = await Teams.find(); 
+        const res = await Teams.find().populate('tournament'); 
         return res;
     } catch (err) {
         throw err;
@@ -15,7 +15,7 @@ dataPool.allTeams = async () => {
 // GET ONE BY ID
 dataPool.oneTeam = async (id) => {
     try {
-        const res = await Teams.findById(id);
+        const res = await Teams.findById(id).populate('tournament');
         return res;
     } catch (err) {
         throw err;
