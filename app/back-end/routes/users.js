@@ -3,7 +3,7 @@ const users = express.Router();
 const userData = require('../db/userData');
 
 
-users.get("/login", (req, res) => {
+users.get("/login", (req, res, next) => {
     if(req.session.user){
         res.send({
             logged:true,
@@ -16,7 +16,7 @@ users.get("/login", (req, res) => {
 
 
 // USER LOGIN 
-users.post('/login', async (req, res) => {
+users.post('/login', async (req, res, next) => {
     const { username, password  } = req.body;
 
     // CHECKING IF USERNAME AND PASSWORD ARE PROVIDED
@@ -60,7 +60,7 @@ users.post('/login', async (req, res) => {
 
 
 // USER REGISTRATION
-users.post('/register', async (req, res) => {
+users.post('/register', async (req, res, next) => {
     const { username, password, name, surname } = req.body;
 
     // CHECKING IF ALL FIELDS ARE PROVIDED
@@ -93,7 +93,7 @@ users.post('/register', async (req, res) => {
 });
 
 
-users.post('/logout', (req, res) => {
+users.post('/logout', (req, res, next) => {
     req.session.destroy(err => {
         if (err) {
             console.error("Error destroying session:", err);
@@ -107,14 +107,29 @@ users.post('/logout', (req, res) => {
 })
 
 
-users.get("/", async (req, res) => {
+users.get("/", async (req, res, next) => {
     try {
-        console.log("Fetching all users...");
-        const results = await userData.AllUsers();
+        const q = req.query.q;
+        console.log("Query param:", q);
+
+        const results = await userData.AllUsers(q);
         res.json(results);
                 
     }catch (err) {
-        res.status(500).json({ error: err.message });
+        console.error(err);
+        res.status(500).json("Error retrieving users");
+    }
+});
+
+
+
+users.get("/:id", async (req, res, next) => {
+    try {
+        const result = await userData.getUserById(req.params.id);
+        res.json(result);
+    }catch(err){
+        console.error(err);
+        res.status(500).json("Error retrieving user");
     }
 });
 

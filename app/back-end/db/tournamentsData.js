@@ -3,9 +3,21 @@ const Tournaments = require('../models/Tournament');
 let dataPool = {};
 
 // 1. GET ALL TEAMS
-dataPool.allTournaments = async () => {
+dataPool.allTournaments = async (queryText, statusFilter) => {
     try {
-        const res = await Tournaments.find(); 
+        let filter = {};
+
+        if (statusFilter){
+            filter.status = statusFilter;
+        }
+
+        if (queryText){
+            filter.name = {
+                $regex: queryText, $options: 'i'  // Case-insensitive
+            }
+        }
+
+        const res = await Tournaments.find(filter); 
         return res;
     } catch (err) {
         throw err;

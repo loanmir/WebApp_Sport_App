@@ -3,9 +3,19 @@ const Fields = require('../models/Field');
 let dataPool = {};
 
 // 1. GET ALL TEAMS
-dataPool.allFields = async () => {
+dataPool.allFields = async (queryText, sportFilter) => {
     try {
-        const res = await Fields.find(); 
+        let filter = {};
+
+        if (sportFilter) {
+            filter.sport = sportFilter;
+        }
+
+        if (queryText) {
+            filter.name = { $regex: queryText, $options: 'i' }; // Case-insensitive
+        }
+
+        const res = await Fields.find(filter); 
         return res;
     } catch (err) {
         throw err;

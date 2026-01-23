@@ -16,8 +16,11 @@ class FieldsView extends Component {
     this.props.QIDFromChild(obj);
   };
 
-  componentDidMount() {
-    axios.get("http://localhost:8080/fields")
+
+  QFetchFields = () => {
+    const {searchQuery, selectedSport} = this.state;
+
+    axios.get("http://localhost:8080/fields?q="+searchQuery+"&sport="+selectedSport)
       .then(res => {
         this.setState({
           fields: res.data
@@ -28,25 +31,26 @@ class FieldsView extends Component {
       });
   }
 
+
+
+  componentDidMount() {
+    this.QFetchFields();
+  }
+
+
+
   QHandleInputChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value // Remember the name for each input and select -> They have specific names in order to easily update the state
+    }, () => {
+      this.QFetchFields(); // Fetch again after state update
     });
   }
 
   render() {
-    let filteredData = this.state.fields.filter(d => {
-      
-      // Check Sport
-      const matchesSport = this.state.selectedSport === "" || d.sport === this.state.selectedSport;
-      
-      // Check Search Text (Name OR Address)
-      const query = this.state.searchQuery.toLowerCase();
-      const matchesSearch = d.name.toLowerCase().includes(query) || 
-                            d.address.toLowerCase().includes(query);
+    
 
-      return matchesSport && matchesSearch;
-    });
+    let filteredData = this.state.fields;
 
     return (
       <div>

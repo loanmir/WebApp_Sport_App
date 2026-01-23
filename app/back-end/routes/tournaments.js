@@ -7,8 +7,12 @@ const matchModel = require('../models/Match');
 
 tournaments.get('/', async (req, res, next) => {
     try {
-        console.log("Fetching all tournaments...");
-        const results = await tournamentsData.allTournaments();
+
+        const {q, status} = req.query;
+        console.log("Searching tournaments... Query: "+q+", Status: "+status);
+
+        
+        const results = await tournamentsData.allTournaments(q, status);
         res.json(results);
         
     } catch (err) {
@@ -281,7 +285,8 @@ tournaments.get('/:id/standings', async (req, res, next) =>{
                 matchesDrawn: 0,
                 matchesLost: 0,
                 goalsFor: 0,
-                goalsAgainst: 0
+                goalsAgainst: 0,
+                sport: tournament.sport
             };
         });
 

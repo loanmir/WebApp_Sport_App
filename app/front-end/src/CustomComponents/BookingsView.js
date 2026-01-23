@@ -34,7 +34,7 @@ class BookingsView extends Component {
         if(!window.confirm("Are you sure you want to cancel this booking?")) {
             return;
         }
-         axios.delete("http://localhost:8080/bookings/" + bookingID, { withCredentials: true })
+         axios.delete("http://localhost:8080/bookings/"+bookingID, { withCredentials: true })
          .then(res => {
             // If everything goes right, then show again the list of bookings except the one we have just deleted -> Update the state -> auto render refresh
             const updatedList = this.state.bookings.filter(b => b._id !== bookingID);

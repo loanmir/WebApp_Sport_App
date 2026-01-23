@@ -5,7 +5,7 @@ const Teams = require('../models/Team');
 const Tournaments = require('../models/Tournament');
 const Users = require('../models/User');  
 
-// GET /search?q=someText
+
 search.get('/', async (req, res) => {
     try {
         const query = req.query.q;
@@ -15,7 +15,7 @@ search.get('/', async (req, res) => {
         }
 
         // $regex with 'i' (case-insensitive) matches partial strings
-        const regex = { $regex: query, $options: 'i' };
+        const regex = { $regex: "^" + query, $options: 'i' };
 
         // Run all 4 queries simultaneously for speed
         const [fields, teams, tournaments, users] = await Promise.all([

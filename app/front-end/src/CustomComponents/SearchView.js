@@ -11,19 +11,19 @@ class SearchView extends Component {
     }
 
     componentDidMount() {
-        this.performSearch(this.props.searchQuery);
+        this.QPerformSearch(this.props.searchQuery);
     }
 
     // Re-run search if the query changes (e.g., user types a new word while on this page)
     componentDidUpdate(prevProps) {
         if (prevProps.searchQuery !== this.props.searchQuery) {
-            this.performSearch(this.props.searchQuery);
+            this.QPerformSearch(this.props.searchQuery);
         }
     }
 
-    performSearch = (query) => {
+    QPerformSearch = (query) => {
         this.setState({ loading: true });
-        axios.get(`http://localhost:8080/search?q=${query}`)
+        axios.get("http://localhost:8080/search?q="+query)
             .then(res => {
                 this.setState({ results: res.data, loading: false });
             })
@@ -49,7 +49,7 @@ class SearchView extends Component {
                                 if(type === "field") this.props.QViewFromChild({ page: "bookfield", fieldID: item._id }); 
                                 if(type === "team") this.props.QViewFromChild({ page: "team", teamID: item._id });
                                 if(type === "tournament") this.props.QViewFromChild({ page: "tournaments"}); 
-                                //if(type === "user") this.props.QViewFromChild({ page: "users", userID: item._id });
+                                if(type === "user") this.props.QViewFromChild({ page: "singleUser", userID: item._id });
                             }}
                         >
                             {type === "user" ? (

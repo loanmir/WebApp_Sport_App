@@ -6,8 +6,11 @@ const fieldsData = require('../db/fieldsData');
 // Getting all the news
 fields.get('/', async (req, res, next) => {
     try {
-        console.log("Fetching all fields...");
-        const results = await fieldsData.allFields();
+
+        const {q, sport} = req.query;
+        console.log("Searching fields... Query: "+q+", Sport: "+sport);
+        
+        const results = await fieldsData.allFields(q, sport);
         res.json(results);
         
     } catch (err) {

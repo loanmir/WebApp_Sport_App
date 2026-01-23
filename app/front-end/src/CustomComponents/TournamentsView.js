@@ -17,8 +17,11 @@ class TournamentsView extends Component {
     this.props.QIDFromChild(obj);
   };
 
-  componentDidMount() {
-    axios.get("http://localhost:8080/tournaments")
+
+  QFetchTournaments = () => {
+    const {searchQuery, selectedStatus} = this.state;
+
+    axios.get("http://localhost:8080/tournaments?q="+searchQuery+"&status="+selectedStatus)
       .then(res => {
         this.setState({
           tournaments: res.data
@@ -27,6 +30,12 @@ class TournamentsView extends Component {
       .catch(err => {
         console.log("Error:", err);
       });
+
+  }
+
+
+  componentDidMount() {
+    this.QFetchTournaments();
   }
 
   QDeleteTournament = (tournamentId) => {
@@ -35,9 +44,7 @@ class TournamentsView extends Component {
     }
     axios.delete("http://localhost:8080/tournaments/" + tournamentId, { withCredentials: true })
     .then(res => {
-        this.setState((prevState) => ({
-          tournaments: prevState.tournaments.filter(t => t._id !== tournamentId) // Recreating the tournaments list without the deleted one
-        }));
+        this.QFetchTournaments();
         alert("Tournament deleted successfully.");
         this.props.QIDFromChild({ page: "tournaments"});
     })
@@ -51,6 +58,8 @@ class TournamentsView extends Component {
   QHandleInputChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value
+    }, () => {
+      this.QFetchTournaments(); 
     });
   }
 
@@ -74,13 +83,8 @@ class TournamentsView extends Component {
         const creatorId = d.creator && (d.creator._id || d.creator);
         if (creatorId !== currentUserId) return false; // Hiding the tournament if ID do not match
       }
-      // FILTER BY STATUS
-      const matchesStatus = this.state.selectedStatus === "" || d.status === this.state.selectedStatus;
-      // FILTER BY NAME
-      const query = this.state.searchQuery.toLowerCase();
-      const matchesSearch = d.name.toLowerCase().includes(query);
 
-      return matchesStatus && matchesSearch;
+      return true;
     });
 
 return (

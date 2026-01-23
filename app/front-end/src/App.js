@@ -20,6 +20,7 @@ import SearchView from "./CustomComponents/SearchView";
 import TournamentScheduleView from "./CustomComponents/TournamentScheduleView";
 import SingleMatchView from "./CustomComponents/SingleMatchView";
 import StandingsView from "./CustomComponents/StandingsView";
+import SingleUserView from "./CustomComponents/SingleUserView";
 
 
 class App extends Component {
@@ -32,6 +33,7 @@ class App extends Component {
       fieldID: 0,
       tournamentID: 0,
       matchID: 0,
+      userID: 0,
       userStatus: {logged:false},
       searchQuery: "",
       tempSearch: ""
@@ -45,7 +47,8 @@ class App extends Component {
       teamID: obj.teamID || 0,
       fieldID: obj.fieldID || 0,
       tournamentID: obj.tournamentID || obj.fromTournamentID || 0,
-      matchID: obj.matchID || 0
+      matchID: obj.matchID || 0,
+      userID: obj.userID || 0
     });
   };
 
@@ -88,6 +91,8 @@ class App extends Component {
         return <SingleMatchView QViewFromChild={this.QSetView} matchID={this.state.matchID} />;
       case "standings":
         return <StandingsView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} />;
+      case "singleUser":
+        return <SingleUserView QViewFromChild={this.QSetView} userID={this.state.userID} />;
       default:
         return <HomeView />;
     }

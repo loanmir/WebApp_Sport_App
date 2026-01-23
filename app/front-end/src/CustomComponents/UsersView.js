@@ -12,18 +12,31 @@ class UsersView extends Component {
     };
   }
 
-  componentDidMount() {
-    // Fetch Users and Tournaments in parallel -> Using Promise.all so that user waits "less" - Parallel req. execution
-    Promise.all([
-      axios.get("http://localhost:8080/users"),
-      axios.get("http://localhost:8080/tournaments")
-    ])
-    .then(([usersRes, tournamentsRes]) => {
+  QFetchUsers = () => {
+    const search = this.state.search;
+
+    axios.get("http://localhost:8080/users?q="+search)
+    .then(res => {
       this.setState({
-        users: usersRes.data,
-        tournaments: tournamentsRes.data,
+        users: res.data,
         loading: false
       });
+    })
+    .catch(err => {
+      console.error("Error fetching users:", err);
+      this.setState({ loading: false });
+    })
+  }
+
+  componentDidMount() {
+    this.setState({ loading: true });
+
+    axios.get("http://localhost:8080/tournaments")
+    .then(res => {
+      this.setState({
+        tournaments: res.data
+      });
+      this.QFetchUsers();
     })
     .catch(err => {
       console.error("Error fetching data:", err);
@@ -42,16 +55,13 @@ class UsersView extends Component {
   QHandleInputChange = (e) => {
     this.setState({
         [e.target.name]: e.target.value
-    })
+    }, () =>{
+      this.QFetchUsers();
+    });
   }
 
   render() {
-    // FILTER: Filter users by username, name, or surname
-    const filteredUsers = this.state.users.filter(user => 
-      user.user_username.toLowerCase().includes(this.state.search.toLowerCase()) ||
-      (user.user_firstName && user.user_firstName.toLowerCase().includes(this.state.search.toLowerCase())) ||
-      (user.user_surname && user.user_surname.toLowerCase().includes(this.state.search.toLowerCase()))
-    );
+    let filteredUsers = this.state.users;
 
     return (
       <div className="container mt-4">
@@ -86,7 +96,11 @@ class UsersView extends Component {
                 <div className="card h-100 shadow-sm">
                   
                   {/* Card Header: Username & Badge */}
-                  <div className="card-header bg-dark text-white d-flex justify-content-between align-items-center">
+                  <div 
+                    className="card-header bg-dark text-white d-flex justify-content-between align-items-center"
+                    style={{cursor: "pointer"}}
+                    onClick={() => this.props.QViewFromChild({page: "singleUser", userID: user._id})}
+                  >
                     <h5 className="mb-0">{user.user_username}</h5>
                     <span className="badge bg-light text-dark">{userTournaments.length} Tournaments</span>
                   </div>

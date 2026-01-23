@@ -32,13 +32,33 @@ dataPool.AddUser = async (username, password, name, surname) => {
     }
 }
 
-dataPool.AllUsers = async () =>{
+dataPool.AllUsers = async (queryText) =>{
     try {
-            const res = await User.find({}, '-user_password -__v'); // Exclude password and __v fields
+
+        let filter = {};
+
+        if(queryText){
+            filter.$or = [
+                {user_username: { $regex: queryText, $options: 'i' } },
+                {user_firstName: { $regex: queryText, $options: 'i' } },
+                {user_surname: { $regex: queryText, $options: 'i' } }
+            ];
+        }
+            const res = await User.find(filter, '-user_password -__v'); // Exclude password and __v fields
             return res;
         } catch (err) {
             throw err;
         }
+}
+
+
+dataPool.getUserById = async (id) => {
+    try {
+        const res = await User.findById(id, '-user_password -__v'); // Exclude password and __v fields
+        return res;
+    }catch(err){
+        throw err;
+    }
 }
 
 module.exports = dataPool;
