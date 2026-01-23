@@ -70,7 +70,18 @@ class EditTournamentView extends Component {
       const tournamentId = this.props.tournamentID;
 
       const maxTeams = this.state.maxTeams;
-      const currentCount = this.state.allTeams.filter(t => t.tournament._id === tournamentId).length;
+      const currentCount = this.state.allTeams.filter(t => {
+          // 1. If tournament is null/undefined, it's not in the tournament
+          if (!t.tournament) return false; 
+
+          // 2. If it is an object (populated), check ._id
+          if (typeof t.tournament === 'object') {
+              return t.tournament._id === tournamentId;
+          }
+          
+          // 3. If it is a string (local update), check directly
+          return t.tournament === tournamentId;
+      }).length;
 
       // Checking if we have reached the limit!
       if (currentCount >= maxTeams) {
@@ -134,11 +145,23 @@ class EditTournamentView extends Component {
   render() {
     if (this.state.loading) return <div className="p-5 text-center">Loading Data...</div>;
 
+    const isActive_Completed = this.state.status === "Active" || this.state.status === "Completed";
     
     const currentTournamentID = this.props.tournamentID;
+
     // Teams already present in the tournament
+    const myTeams = this.state.allTeams.filter(t => {
+        // If team has no tournament, it definitely isn't in THIS one.
+        if (!t.tournament) {
+            return false;
+        } 
     
-    const myTeams = this.state.allTeams.filter(t => t.tournament._id === currentTournamentID);
+        // If it has a tournament, check the ID safely
+        if (typeof t.tournament === 'object') {
+            return t.tournament._id === currentTournamentID;
+        }
+        return t.tournament === currentTournamentID;
+});
     
     // Teams available to add
     const availableTeams = this.state.allTeams.filter(t => !t.tournament);
@@ -163,7 +186,7 @@ class EditTournamentView extends Component {
                         <label className="form-label">Status</label>
                         <select className="form-select" name="status" 
                             value={this.state.status} onChange={this.QHandleInputChange}>
-                            <option value="Open">Open</option>
+                            {/*<option value="Open">Open</option>*/}
                             <option value="Active">Active</option>
                             <option value="Completed">Completed</option>
                         </select>
@@ -209,7 +232,10 @@ class EditTournamentView extends Component {
                             <li key={t._id} className="list-group-item d-flex justify-content-between align-items-center">
                                 {t.name}
                                 <button className="btn btn-sm btn-outline-danger" 
-                                    onClick={() => this.QRemoveTeamFromTournament(t._id)}>
+                                    onClick={() => this.QRemoveTeamFromTournament(t._id)}
+                                    disabled={isActive_Completed}
+                                    style={isActive_Completed ? {cursor: "not-allowed", opacity: 0.6} : {}}
+                                >
                                     Remove
                                 </button>
                             </li>
@@ -219,8 +245,8 @@ class EditTournamentView extends Component {
 
                 {/* 2. AVAILABLE TEAMS LIST */}
                 <div className="card shadow">
-                    <div className={`card-header text-white ${isFull ? "bg-secondary" : "bg-success"}`}>
-                        {isFull ? "Tournament Full" : "Available Free Agent Teams"}
+                    <div className={`card-header text-white ${isFull || isActive_Completed ? "bg-secondary" : "bg-success"}`}>
+                        {isActive_Completed ? "Tournament Locked": (isFull ? "Tournament Full" : "Available Free Agent Teams")}
                     </div>
                     <div className="card-body p-0" style={{ maxHeight: "300px", overflowY: "auto" }}>
                         <ul className="list-group list-group-flush">
@@ -230,7 +256,7 @@ class EditTournamentView extends Component {
                                     <button 
                                         className="btn btn-sm btn-success" 
                                         onClick={() => this.QAddTeamToTournament(t._id)}
-                                        disabled={isFull} 
+                                        disabled={isFull || isActive_Completed} 
                                         style={isFull ? {cursor: "not-allowed", opacity: 0.6} : {}}
                                     >
                                         Add

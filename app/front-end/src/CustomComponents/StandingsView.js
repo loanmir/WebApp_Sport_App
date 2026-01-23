@@ -41,12 +41,13 @@ class StandingsView extends Component {
 
                     <div>
                         <button
-                            className="btn btn-sm btn-info me-2 text-white"
+                            className="btn btn-sm btn-outline-dark fw-bold"
                             onClick={() => this.props.QViewFromChild({
                                 page: "schedule",
                                 tournamentID: this.props.tournamentID
                             })}
                         >
+                            <i className="bi bi-arrow-left me-2"></i>
                             Back to Schedule
                         </button>
                     </div>
