@@ -32,7 +32,7 @@ class StandingsView extends Component {
         const labelDifference = isFootball ? "Goal Difference" : "Pts Difference";
 
         return (
-            <div className="card shadow-sm mt-4">
+            <div className="card shadow-sm mt-4 border-0 overflow-hidden p-0">
                 <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
                         <h5 className="mb-0 me-3">Tournament Standings</h5>
@@ -41,7 +41,7 @@ class StandingsView extends Component {
 
                     <div>
                         <button
-                            className="btn btn-sm btn-outline-dark fw-bold"
+                            className="btn btn-sm btn-outline-light fw-bold"
                             onClick={() => this.props.QViewFromChild({
                                 page: "schedule",
                                 tournamentID: this.props.tournamentID
@@ -53,8 +53,8 @@ class StandingsView extends Component {
                     </div>
                 </div>
 
-                <div className="table-responsive">
-                    <table className="table table-hover table-striped mb-0">
+                <div className="table-responsive m-0">
+                    <table className="table table-hover table-striped mb-0 w-100">
                         <thead className="table-light">
                             <tr>
                                 <th>Pos</th>

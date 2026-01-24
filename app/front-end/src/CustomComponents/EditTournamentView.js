@@ -186,7 +186,7 @@ class EditTournamentView extends Component {
                         <label className="form-label">Status</label>
                         <select className="form-select" name="status" 
                             value={this.state.status} onChange={this.QHandleInputChange}>
-                            {/*<option value="Open">Open</option>*/}
+                            <option value="Open">Open</option>
                             <option value="Active">Active</option>
                             <option value="Completed">Completed</option>
                         </select>

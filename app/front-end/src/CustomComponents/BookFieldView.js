@@ -40,10 +40,7 @@ class BookFieldView extends Component {
     })
     .catch(err => {
         console.error("Error loading data:", err);
-        // Fallback: If bookings fail (e.g. no bookings yet), just load the field
-        //if (err.response && err.response.status === 404) {
-             // If 404 on bookings, it might just mean "no bookings found"
-        //}
+        
         alert("Could not load booking data. Please try again.");
         this.props.QViewFromChild({ page: "fields" });
     });
@@ -125,7 +122,7 @@ class BookFieldView extends Component {
                         const isTaken = takenSlots.includes(slot.time);
                         
                         // Checking if slot is currently selected
-                        const isSelected = selectedSlot && selectedSlot.id === slot.id;
+                        const isSelected = selectedSlot && selectedSlot._id === slot._id;
 
                         // £ different colors for each state -> taken, selected, available
                         let btnClass = "btn-outline-success"; 
@@ -134,7 +131,7 @@ class BookFieldView extends Component {
 
                         return (
                             <button 
-                                key={slot.id} 
+                                key={slot._id} 
                                 disabled={isTaken}
                                 className={`btn ${btnClass} py-3 px-4 shadow-sm`}
                                 style={{ minWidth: "140px" }}

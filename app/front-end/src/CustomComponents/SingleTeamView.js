@@ -33,7 +33,7 @@ render() {
     console.log("Source ID:", sourceID);
 
     return (
-      <div className="card" style={{ margin: "10px" }}>
+      <div className="card p-0" style={{ margin: "10px" }}>
         {!isEmpty ? 
         <div>
           {/* HEADER: Team Name */}
@@ -41,10 +41,17 @@ render() {
             {team.name}
           </h3>
 
-          <div className="card-body">
+          <div className="card-body w-100">
             
             {/* OPTIONAL: Show Tournament ID */}
-            <p className="text-muted">Participating in Tournament: <strong>{team.tournament.name}</strong></p>
+            <p className="text-muted">
+              Participating in Tournament: 
+              {team.tournament ? (
+                  <strong>{team.tournament.name}</strong>
+              ):(
+                  <span className="badge bg-success ms-2">Free Agent (Available)</span>
+              )}
+            </p>
 
             <h5 className="mt-4 mb-3">Player Roster</h5>
 

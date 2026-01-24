@@ -19,7 +19,13 @@ const TeamSchema = new mongoose.Schema({
   },
   
   // Array of player objects
-  players: [PlayerSchema] 
+  players: [PlayerSchema],
+  
+  creator: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  }
 });
 
 module.exports = mongoose.model('Team', TeamSchema);

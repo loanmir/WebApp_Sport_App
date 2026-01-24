@@ -18,11 +18,30 @@ class AddFieldView extends Component {
 
   // Sending POST request to the server -> to novice.js route where the API is present
   QPostField = () => {
+    let slotsToSend = [];
+    const inputSlots = this.state.field.bookableSlots;
+    // If User has typed its own timeSlots -> "Did not leave empty for default values"
+    if (inputSlots && inputSlots.trim().length > 0) {
+      slotsToSend = inputSlots.split(",").map(slot => ({
+        time: slot.trim(),
+      }));
+    } else {
+      const defaultTimes = [
+        "09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00",
+        "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00", "18:00-19:00",
+        "19:00-20:00", "20:00-21:00"
+      ];
+
+      slotsToSend = defaultTimes.map(t => ({ time: t}))
+      
+    }
+
+
     axios.post("http://localhost:8080/fields",{
       name: this.state.field.name,
       sport: this.state.field.sport,
       address: this.state.field.address,
-      bookableSlots: this.state.field.bookableSlots ? this.state.field.bookableSlots.split(",").map(slot => slot.trim()) : []
+      bookableSlots: slotsToSend
     }).then(res => {
       console.log("Sent to server..")
       alert("Field added successfully!")
@@ -81,17 +100,16 @@ class AddFieldView extends Component {
       />
     </div>
 
-    {/* BOOKABLE SLOTS (Optional Text Input) */}
-    {/* You can let the backend use the default, or let users type them in CSV format */}
+    {/* BOOKABLE SLOTS  */}
     <div className="mb-3" style={{ margin: "10px" }}>
         <label className="form-label">Bookable Slots (Optional)</label>
-        <small className="text-muted d-block">Separate times with commas (e.g. 09:00, 10:00)</small>
+        <small className="text-muted d-block">Separate time with commas (e.g. 09:00-10:00, 10:00-11:00)</small>
         <input 
           onChange={(e) => this.QGetTextFromField(e)} 
           name="bookableSlots" 
           type="text" 
           className="form-control" 
-          placeholder="Leave empty for default (09:00 - 20:00)" 
+          placeholder="Leave empty for default (09:00 - 21:00)" 
         />
     </div>
 

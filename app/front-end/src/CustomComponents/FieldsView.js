@@ -47,6 +47,15 @@ class FieldsView extends Component {
     });
   }
 
+  QHandleAddClick = () => {
+    const { logged } = this.props.userStatus || {};
+    if (!logged) {
+      this.QSetViewInParent({ page: "login" });
+    } else{
+      this.QSetViewInParent({ page: "addfield" });
+    }
+  }
+
   render() {
     
 
@@ -86,7 +95,7 @@ class FieldsView extends Component {
                 <div className="col-md-3 text-end">
                     <button 
                         className="btn btn-success w-100"
-                        onClick={() => this.QSetViewInParent({ page: "addfield" })} 
+                        onClick={this.QHandleAddClick} 
                     >
                       Add New Field
                     </button>

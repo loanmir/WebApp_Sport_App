@@ -21,6 +21,7 @@ import TournamentScheduleView from "./CustomComponents/TournamentScheduleView";
 import SingleMatchView from "./CustomComponents/SingleMatchView";
 import StandingsView from "./CustomComponents/StandingsView";
 import SingleUserView from "./CustomComponents/SingleUserView";
+import AddPlayerView from "./CustomComponents/AddPlayerView";
 
 
 class App extends Component {
@@ -56,7 +57,7 @@ class App extends Component {
     let page = state.currentPage;
     switch (page) {
       case "fields":
-        return <FieldsView QIDFromChild={this.QSetView} />;
+        return <FieldsView QIDFromChild={this.QSetView} userStatus={this.state.userStatus}/>;
       case "addfield":
         return <AddFieldView QViewFromChild={this.QSetView} />;
       case "field":
@@ -93,6 +94,8 @@ class App extends Component {
         return <StandingsView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} />;
       case "singleUser":
         return <SingleUserView QViewFromChild={this.QSetView} userID={this.state.userID} />;
+      case "addplayer":
+        return <AddPlayerView QViewFromChild={this.QSetView} teamID={this.state.teamID} />;
       default:
         return <HomeView />;
     }

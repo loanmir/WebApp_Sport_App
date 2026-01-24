@@ -23,11 +23,12 @@ dataPool.oneTeam = async (id) => {
 }
 
 // CREATE NEW TEAM
-dataPool.createTeam = async (name, players) => {
+dataPool.createTeam = async (name, players, creator) => {
     try {
         const res = await Teams.create({
             name: name,
-            players: players || []
+            players: players || [],
+            creator: creator
         });
         return res;
     } catch (err) {
@@ -43,6 +44,21 @@ dataPool.updateTeam = async (id, newData, options = { new: true }) => {
         const updatedTeam = await Teams.findByIdAndUpdate(id, newData, options);
         return updatedTeam;
     } catch (err) {
+        throw err;
+    }
+}
+
+
+dataPool.addPlayerToTeam = async (teamId, playerData) => {
+    try {
+        const res = await Teams.findByIdAndUpdate(
+            teamId,
+            { $push: { players: playerData } },
+            { new: true }
+        );
+
+        return res;
+    }catch(err){
         throw err;
     }
 }
