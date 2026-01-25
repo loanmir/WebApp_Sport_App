@@ -14,7 +14,7 @@ class TournamentsView extends Component {
   }
 
   QSetViewInParent = (obj) => {
-    this.props.QIDFromChild(obj);
+    this.props.QViewFromChild(obj);
   };
 
 

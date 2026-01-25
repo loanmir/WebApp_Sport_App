@@ -57,17 +57,17 @@ class App extends Component {
     let page = state.currentPage;
     switch (page) {
       case "fields":
-        return <FieldsView QIDFromChild={this.QSetView} userStatus={this.state.userStatus}/>;
+        return <FieldsView QViewFromChild={this.QSetView} userStatus={this.state.userStatus}/>;
       case "addfield":
         return <AddFieldView QViewFromChild={this.QSetView} />;
       case "field":
         return <SingleFieldView QViewFromChild={this.QSetView} data={this.state.fieldID} />;    // SINGLE FIELD VIEW IS NOT USED!!!!!!
       case "teams":
-        return <TeamsView QIDFromChild={this.QSetView} tournamentID={this.state.tournamentID} userStatus={this.state.userStatus}/>;
+        return <TeamsView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} userStatus={this.state.userStatus}/>;
       case "addteam":
         return state.userStatus.logged ? <AddTeamView QViewFromChild={this.QSetView} /> : <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView} />;
       case "tournaments":
-        return <TournamentsView QIDFromChild={this.QSetView} QViewFromChild={this.QSetView} data={this.state.userStatus}/>;
+        return <TournamentsView QViewFromChild={this.QSetView} data={this.state.userStatus}/>;
       case "addtournament":
         return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView} />;
       case "edittournament":
@@ -97,7 +97,7 @@ class App extends Component {
       case "addplayer":
         return <AddPlayerView QViewFromChild={this.QSetView} teamID={this.state.teamID} />;
       default:
-        return <HomeView />;
+        return <HomeView QViewFromChild={this.QSetView} userStatus={this.state.userStatus} />;
     }
   };
 
@@ -155,10 +155,28 @@ class App extends Component {
                 className="navbar-brand"
                 href="#"
               >
-                {this.state.userStatus.logged 
-                  ? `Home - ${this.state.userStatus.user.user_username}`
-                  : "Home"
-                }
+                {this.state.userStatus.logged ? (
+                  <>
+                  {/* Circle Avatar Background */}
+                    <div 
+                      className="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center me-2 shadow-sm" 
+                      style={{ width: "35px", height: "35px", fontSize: "1.2rem", fontWeight: "bold", border: "2px solid white" }}
+                    >
+                  {/* User Icon */}
+                      <i className="bi bi-person-fill fs-5"></i>
+                    </div>
+       
+                  {/* Username Text */}
+                    <span className="fw-bold">
+                      {this.state.userStatus.user.user_username}
+                    </span>
+                  </>
+                ) : (
+                  <span className="fw-bold fst-italic">
+                    <i className="bi bi-trophy-fill me-2"></i>
+                    SportManager
+                  </span>
+                )}
               </a>
               <button
                 className="navbar-toggler"

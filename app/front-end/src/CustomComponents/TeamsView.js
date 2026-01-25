@@ -13,7 +13,7 @@ class TeamsView extends Component {
   }
 
   QSetViewInParent = (obj) => {
-    this.props.QIDFromChild(obj); 
+    this.props.QViewFromChild(obj); 
   };
 
   componentDidMount() {
