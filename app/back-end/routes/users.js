@@ -16,7 +16,7 @@ const userData = require('../db/userData');
 
 
 // USER LOGIN 
-users.post('/login', async (req, res, next) => {
+users.post('/signin', async (req, res, next) => {
     const { username, password  } = req.body;
 
     // CHECKING IF USERNAME AND PASSWORD ARE PROVIDED
@@ -25,25 +25,25 @@ users.post('/login', async (req, res, next) => {
     }
 
     try {
-        // 2. Fetch user from MongoDB
         // Mongoose returns 'null' if not found, or the User object if found.
         // It does NOT return an array like MySQL.
         const user = await userData.AuthUser(username);
 
         if (user) {
             // CHECKING THE PASSWORD - IF IT IS CORRECT FOR THAT ONE USER
-            
+            const userFromDoc = await user.toObject();
+
             if (password === user.user_password) {
                 
-                // SETTING UP THE SESSION
-                // (Requires express-session middleware in app.js)          !!!!!!!!!!!
+                const { user_password, ...userWithoutPassword } = userFromDoc; // Exclude password from session data
+                
                 if (req.session) {
-                    req.session.user = user;
+                    req.session.user = userWithoutPassword;
                     console.log("SESSION VALID:", req.session.user);
                 }
 
                 // Send success response
-                return res.json({ message: "Login successful", user: user });
+                return res.json({ message: "Login successful", user: userWithoutPassword });
             } else {
                 console.log("INCORRECT PASSWORD");
                 return res.status(401).json({ error: "Incorrect password" });
@@ -59,9 +59,15 @@ users.post('/login', async (req, res, next) => {
 });
 
 
+
+
 // USER REGISTRATION
-users.post('/register', async (req, res, next) => {
-    const { username, password, name, surname } = req.body;
+users.post('/signup', async (req, res, next) => {
+    // Trimming to remove accidental spaces
+    const username = req.body.username?.trim();
+    const password = req.body.password;
+    const name = req.body.name?.trim();
+    const surname = req.body.surname?.trim();
 
     // CHECKING IF ALL FIELDS ARE PROVIDED
     if (!username || !password || !name || !surname) {
@@ -83,14 +89,15 @@ users.post('/register', async (req, res, next) => {
         });
 
     } catch (err) {
-        console.error(err);
-        // MongoDB throws code 11000 if username/email is duplicate
-        //if (err.code === 11000) {
-             //return res.status(409).json({ error: "Username or Email already exists" });
-        //}
-        return res.sendStatus(500);
+        console.error("Registration error:", err);
+        // MongoDB throws code 11000 for duplicates
+        if (err.code === 11000) {
+             return res.status(409).json({ error: "Username is already taken. Please choose another." });
+        }
+        return res.sendStatus(500).json({error: "Internal server error"});
     }
 });
+
 
 
 users.post('/logout', (req, res, next) => {

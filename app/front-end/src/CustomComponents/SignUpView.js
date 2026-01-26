@@ -11,100 +11,187 @@ class SignUpView extends Component {
           name: "",
           surname: ""
         },
+        // Variables for tracking empty fields, errors, visibility etc.
+        errors: {},
+        errorMessage: "",
+        loading: false,
+        showPassword: false
       });
   }
 
   QGetTextFromField = (e) => {
     this.setState((prevState) => ({
       user: { ...prevState.user, [e.target.name]: e.target.value },
+      errors: { ...prevState.errors, [e.target.name]: "" } // Clear error for this field
     }));
   };
 
-  // CHANGE THIS FUNCTION SO THAT IT CHECKS WHETER ALL THE FIELDS ARE NOT EMPTY. IF SOME ARE EMPTY THEN DON'T SEND TO PARENT (HOME)!!
-  // EXAMPLE: TOOLTIP on Bootstrap!
-  QSendUserToParent = (state) => {
-    this.props.QUserFromChild(state.user);
-  };
+
+  QTogglePassword = () => {
+    this.setState(prev => ({
+      showPassword: !prev.showPassword
+    }));
+  }
+
+  QValidateFields = () => {
+    const { username, password, name, surname } = this.state.user;
+    let errors = {};
+    let isValid = true;
+
+    if (!username.trim()) { errors.username = "Username is required"; isValid = false; }
+    if (!password) { errors.password = "Password is required"; isValid = false; }
+    if (!name.trim()) { errors.name = "First Name is required"; isValid = false; }
+    if (!surname.trim()) { errors.surname = "Surname is required"; isValid = false; }
+
+    this.setState({ errors });
+    return isValid;
+  }
+
+ 
+  //QSendUserToParent = (state) => {
+    //this.props.QUserFromChild(state.user);
+  //};
 
   QPostSignUp = () => {
+    if (!this.QValidateFields()) {
+      return; // Stop if validation fails
+    }
+
+    this.setState({ loading: true, errorMessage: "" });
+
     let user = this.state.user;
-    axios.post("http://localhost:8080/users/register",{
-      username: user.username,           // remember to check also the email format!! If it is valid, like @, domain etc.
+    axios.post("http://localhost:8080/users/signup",{
+      username: user.username,           
       password: user.password,
       name: user.name,
       surname: user.surname
     })
     .then(res => {
-      console.log("Sent to server...") // HERE then check whether user already exists in database!!
+      console.log("Sent to server...") 
       alert("Registration successful! You can now log in.")
       this.props.QViewFromChild({ page: "login" })
     }).catch(err => {
-      console.log(err)
+      const serverError = err.response?.data?.error || "Registration failed. Please try again.";
+      this.setState({ errorMessage: serverError, loading: false });
     })
   }
 
   render() {
+    const {user, errors, loading, errorMessage, showPassword} = this.state;
     return (
-      <div
-        className="card"
-        style={{
-          width: "400px",
-          marginLeft: "auto",
-          marginRight: "auto",
-          marginTop: "10px",
-          marginBottom: "10px",
-        }}
-      >
-        <form style={{ margin: "20px" }}>
-          <div className="mb-3">
-            <label className="form-label">Username</label>
-            <input
-              onChange={(e) => this.QGetTextFromField(e)}
-              name="username"
-              type="text"
-              className="form-control"
-              id="inputUsername"
-              aria-describedby="emailHelp"
-            />
+      <div className="card shadow-sm p-0 overflow-hidden" style={{maxWidth: "450px", margin: "40px auto" }}>
+        
+        {/* Header */}
+        <div className="card-header bg-primary text-white text-center py-3">
+            <h4 className="mb-0">Create Account</h4>
+        </div>
+
+        <div className="card-body p-4">
+          
+          {/* Server Error Alert */}
+          {errorMessage && (
+            <div className="alert alert-danger text-center" role="alert">
+                {errorMessage}
+            </div>
+          )}
+
+          <form>
+            {/* USERNAME */}
+            <div className="mb-3">
+              <label className="form-label">Username</label>
+              <input
+                onChange={this.QGetTextFromField}
+                name="username"
+                type="text"
+                value={user.username}
+                className={`form-control ${errors.username ? "is-invalid" : ""}`}
+                placeholder="Choose a username"
+              />
+              <div className="invalid-feedback">{errors.username}</div>
+            </div>
+
+            {/* PASSWORD*/}
+            <div className="mb-3">
+              <label className="form-label">Password</label>
+              <div className="input-group">
+                <input
+                    onChange={this.QGetTextFromField}
+                    name="password"
+                    type={showPassword ? "text" : "password"}
+                    value={user.password}
+                    className={`form-control ${errors.password ? "is-invalid" : ""}`}
+                    placeholder="Create a password"
+                />
+                <button 
+                    className="btn btn-outline-secondary" 
+                    type="button" 
+                    onClick={this.QTogglePassword}
+                    style={{zIndex: 0}}
+                >
+                    <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
+                </button>
+                <div className="invalid-feedback">{errors.password}</div>
+              </div>
+            </div>
+
+            {/* FIRST NAME */}
+            <div className="mb-3">
+              <label className="form-label">First Name</label>
+              <input
+                onChange={this.QGetTextFromField}
+                name="name"
+                type="text"
+                value={user.name}
+                className={`form-control ${errors.name ? "is-invalid" : ""}`}
+                placeholder="e.g. Mario"
+              />
+              <div className="invalid-feedback">{errors.name}</div>
+            </div>
+
+            {/* SURNAME */}
+            <div className="mb-3">
+              <label className="form-label">Surname</label>
+              <input
+                onChange={this.QGetTextFromField}
+                name="surname"
+                type="text"
+                value={user.surname}
+                className={`form-control ${errors.surname ? "is-invalid" : ""}`}
+                placeholder="e.g. Rossi"
+              />
+              <div className="invalid-feedback">{errors.surname}</div>
+            </div>
+          </form>
+
+          {/* SUBMIT BUTTON */}
+          <button
+            onClick={this.QPostSignUp}
+            disabled={loading} // Disable button while loading
+            className="btn btn-primary w-100 mt-3"
+          >
+            {loading ? (
+                <>
+                    <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Registering...
+                </>
+            ) : (
+                "Sign Up"
+            )}
+          </button>
+          
+          {/* BACK TO LOGIN LINK */}
+          <div className="text-center mt-3">
+            <small className="text-muted">Already have an account? </small>
+            <a 
+                href="#" 
+                onClick={(e) => { e.preventDefault(); this.props.QViewFromChild({ page: "login" }); }}
+                className="text-decoration-none"
+            >
+                Login here
+            </a>
           </div>
-          <div className="mb-3">
-            <label className="form-label">Password</label>
-            <input
-              onChange={(e) => this.QGetTextFromField(e)}
-              name="password"
-              type="password"
-              className="form-control"
-              id="inputPassword"
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">First Name</label>
-            <input
-              onChange={(e) => this.QGetTextFromField(e)}
-              name="name"
-              type="text"
-              className="form-control"
-              id="inputName"
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Surname</label>
-            <input
-              onChange={(e) => this.QGetTextFromField(e)}
-              name="surname"
-              type="text"
-              className="form-control"
-              id="inputSurname"
-            />
-          </div>
-        </form>
-        <button
-          onClick={() => this.QPostSignUp()}
-          style={{ margin: "10px" }}
-          className="btn btn-primary bt"
-        >
-          Submit
-        </button>
+
+        </div>
       </div>
     );
   }

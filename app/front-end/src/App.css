@@ -1,0 +1,38 @@
+.hero-section {
+  background: linear-gradient(135deg, #0d6efd 0%, #0dcaf0 100%); /*Dynamic coloring of the blue gradient background - from dark to cyan*/
+  color: white;
+  border-radius: 15px;
+  padding: 3rem;
+  box-shadow: 0 10px 20px rgba(13, 110, 253, 0.2); /*Glow of the box color -> 10 px pushed down and 20 px blur */
+  margin-bottom: 30px;
+}
+
+
+
+.feature-card {
+  border: none; /* Remove border */
+  border-radius: 12px;
+  background: white;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* Very low shadow - separating the background of page and white card */
+  transition: transform 0.3s ease, box-shadow 0.3s ease; 
+  height: 100%;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px); /* Moves the card up by 5 pixels */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1); /* the shadow grows -> Dynamic change when you hover/press on the shadow*/
+  
+}
+
+.icon-circle {
+  background-color: #e7f1ff; /* Very light blue circle */
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 15px auto;
+  color: #0d6efd;
+  font-size: 1.5rem;
+}

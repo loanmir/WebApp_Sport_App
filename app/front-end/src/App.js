@@ -1,5 +1,6 @@
 import { Component } from "react";
 import axios from "axios";
+import "./App.css";
 // Imported routes for different view Components
 import HomeView from "./CustomComponents/HomeView";
 import FieldsView from "./CustomComponents/FieldsView";
