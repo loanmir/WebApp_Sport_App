@@ -162,8 +162,8 @@ class App extends Component {
                       className="rounded-circle bg-secondary text-white d-flex justify-content-center align-items-center me-2 shadow-sm" 
                       style={{ width: "35px", height: "35px", fontSize: "1.2rem", fontWeight: "bold", border: "2px solid white" }}
                     >
-                  {/* User Icon */}
-                      <i className="bi bi-person-fill fs-5"></i>
+                  
+                    {this.state.userStatus.user.user_username.substring(0, 2).toUpperCase()} {/* Taking chars 0 and 1, so first 2 letters and convert them to upper case*/}
                     </div>
        
                   {/* Username Text */}
