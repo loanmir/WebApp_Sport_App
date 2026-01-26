@@ -337,10 +337,15 @@ tournaments.get('/:id/standings', async (req, res, next) =>{
 
             } else {
                 // Else it is a draw - in Football
-                teamA.matchesDrawn += 1;
-                teamB.matchesDrawn += 1;
-                teamA.points += 1;
-                teamB.points += 1;
+                if (tournament.sport === "Football"){
+                    teamA.matchesDrawn += 1;
+                    teamB.matchesDrawn += 1;
+                    teamA.points += 1;
+                    teamB.points += 1;
+                } else {
+                    console.warn("Cannot happen: Draw in Basketball/Volleyball match");
+                }//closing else
+
             } //closing else
         });
 
@@ -357,7 +362,7 @@ tournaments.get('/:id/standings', async (req, res, next) =>{
             return goalDifferenceB - goalDifferenceA; // Sort by goal difference
         });
 
-        res.json(standingsArray);
+        res.json(standingsArray); // sorted array
 
     }catch(err){
         console.error(err);

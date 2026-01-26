@@ -268,7 +268,7 @@ class App extends Component {
                   </li>*/}
 
                   {this.state.userStatus.logged ? (
-                    <div>
+                    <>  {/*React fragment -> It is actually an invisible wrapper for elements*/}
                       <li className="nav-item">
                         <a
                           onClick={() => {
@@ -291,7 +291,7 @@ class App extends Component {
                         Logout 
                         </a>
                       </li>
-                    </div>
+                    </>
                   ) : (
                     <li className="nav-item">
                       <a

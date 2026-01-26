@@ -12,7 +12,7 @@ class StandingsView extends Component {
         axios.get("http://localhost:8080/tournaments/" + this.props.tournamentID + "/standings")
             .then(res => {
                 this.setState({ 
-                    standings: res.data, 
+                    standings: res.data, // REMEMBER THAT res.data is an ARRAY which is sorted in the back-end
                     loading: false 
                 });
             })
@@ -22,21 +22,36 @@ class StandingsView extends Component {
     }
 
     render() {
-        console.log(this.state.standings);
+        console.log(this.state.standings[0]);
         if (this.state.loading) return <div>Loading Standings...</div>;
 
-        const isFootball = this.state.standings.sport === "Football";
+        if (this.state.standings.length === 0){
+            return <div className="alert alert-warning">No teams found in this tournament.</div>;
+        }
 
-        const labelScored = isFootball ? "Goals Scored" : "Pts Scored";
-        const labelConceded = isFootball ? "Goals Conceded" : "Pts Conceded";
-        const labelDifference = isFootball ? "Goal Difference" : "Pts Difference";
+        const sport = this.state.standings[0].sport;
+        let labelScored, labelConceded, labelDifference;
+
+        if (sport === "Football") {
+            labelScored = "Goals Scored"; // Goals For
+            labelConceded = "Goals Conceded"; // Goals Against
+            labelDifference = "Goal Difference";
+        } else if(sport === "Volleyball") {
+            labelScored = "Sets Won";
+            labelConceded = "Sets Lost";
+            labelDifference = "Set Difference";
+        } else {
+            labelScored = "Points Scored";
+            labelConceded = "Points Conceded";
+            labelDifference = "Point Difference";
+        }
 
         return (
             <div className="card shadow-sm mt-4 border-0 overflow-hidden p-0">
                 <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                     <div className="d-flex align-items-center">
                         <h5 className="mb-0 me-3">Tournament Standings</h5>
-                        <span className="badge bg-secondary">{this.state.standings.sport}</span>
+                        <span className="badge bg-secondary">{this.state.standings[0].sport}</span>
                     </div>
 
                     <div>
