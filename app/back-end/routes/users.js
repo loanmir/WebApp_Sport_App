@@ -3,16 +3,16 @@ const users = express.Router();
 const userData = require('../db/userData');
 
 
-users.get("/login", (req, res, next) => {
-    if(req.session.user){
-        res.send({
-            logged:true,
-            user: req.session.user
-        })
-    } else{
-        res.send({logged:false}) // If user doen't exist then we send that there is no logged user
-    }
-})
+//users.get("/login", (req, res, next) => {
+   // if(req.session.user){
+        //res.send({
+          //  logged:true,
+           // user: req.session.user
+       // })
+    //} else{
+    //    res.send({logged:false}) // If user doen't exist then we send that there is no logged user
+    //}
+//})
 
 
 // USER LOGIN 

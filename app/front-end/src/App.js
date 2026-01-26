@@ -111,7 +111,7 @@ class App extends Component {
 
 
   componentDidMount() {
-    axios.get("http://localhost:8080/users/login", {withCredentials:true})
+    axios.get("http://localhost:8080/whoami", {withCredentials:true})
     .then(res => {
         console.log("Session Check", res.data);
         if(res.data.logged) {
@@ -123,6 +123,8 @@ class App extends Component {
                     user: res.data.user
                 }
             })
+        } else {
+            this.setState({userStatus: {logged:false}});
         }
       }) 
       .catch(err => { 

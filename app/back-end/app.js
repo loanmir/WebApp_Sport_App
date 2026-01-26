@@ -14,6 +14,7 @@ const tournamentsRouter = require("./routes/tournaments");
 const bookingsRouter = require("./routes/bookings");
 const searchRouter = require("./routes/search");
 const matchesRouter = require("./routes/matches");
+const whoamiRouter = require("./routes/whoami");
 const connectDB = require('./db/dbConnection');
 
 
@@ -57,6 +58,7 @@ app.use("/tournaments", tournamentsRouter);
 app.use("/bookings", bookingsRouter);
 app.use("/search", searchRouter);
 app.use("/matches", matchesRouter);
+app.use("/whoami", whoamiRouter);
 
 
 ///App listening on port
