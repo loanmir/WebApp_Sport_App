@@ -7,10 +7,7 @@ class AddTeamView extends Component {
     super(props);
     this.state = {
       name: "",
-      
-      // List of players added so far
       players: [], 
-      
       currentPlayer: {
         name: "",
         surname: "",
@@ -22,7 +19,6 @@ class AddTeamView extends Component {
   QHandleTeamName = (e) => {
     this.setState({ name: e.target.value });
   }
-
   
   QHandlePlayerInput = (e) => {
     this.setState(prevState => ({
@@ -37,27 +33,23 @@ class AddTeamView extends Component {
   QAddPlayerToList = () => {
     const { name, surname, number } = this.state.currentPlayer;
 
-    // Basic Validation
     if (!name || !surname) {
       alert("Player Name and Surname are required!");
       return;
     }
 
-    // Add to array and clear inputs
     this.setState(prevState => ({
       players: [...prevState.players, { name, surname, number }],
       currentPlayer: { name: "", surname: "", number: "" } // Reset inputs
     }));
   }
 
-  // Remove a player from the list (optional but helpful)
   QRemovePlayer = (indexToRemove) => {
     this.setState(prevState => ({
       players: prevState.players.filter((_, index) => index !== indexToRemove)
     }));
   }
 
-  // Send everything to the server
   QPostTeam = () => {
     if (!this.state.name) {
         alert("Please enter a Team Name.");
@@ -70,13 +62,10 @@ class AddTeamView extends Component {
 
     axios.post("http://localhost:8080/teams", {
       name: this.state.name,
-      
       players: this.state.players,
-      // We do NOT send a tournament ID yet
     }, { withCredentials: true })
     .then(res => {
       alert("Team created successfully!");
-      // Go back to the general teams view (or wherever you want)
       this.props.QViewFromChild({ page: "teams", tournamentID: null }); 
     })
     .catch(err => {
@@ -87,90 +76,115 @@ class AddTeamView extends Component {
 
   render() {
     return (
-      <div className="card shadow" style={{ margin: "20px", padding: "20px" }}>
-        <h3>Create New Team</h3>
+      <div className="container mt-4" style={{ maxWidth: "800px" }}>
         
-        {/* 1. TEAM NAME */}
-        <div className="mb-4 mt-3">
-          <label className="form-label fw-bold">Team Name</label>
-          <input 
-            type="text" 
-            className="form-control" 
-            placeholder="e.g. The Lions" 
-            value={this.state.name}
-            onChange={this.QHandleTeamName}
-          />
-        </div>
+        {/* Main container */}
+        <div className="card border-0 shadow-sm p-4 bg-white rounded-3">
+            
+            {/* Header */}
+            <div className="mb-4 text-center border-bottom pb-3">
+                <h2 className="fw-bold text-primary">
+                    <i className="bi bi-people-fill me-2"></i> Create New Team
+                </h2>
+                <p className="text-muted mb-0">Start by naming your team and adding the roster</p>
+            </div>
+            
+            <div className="card-body p-0">
+                
+                {/* Team Name input */}
+                <div className="mb-5">
+                    <label className="form-label fw-bold small text-muted text-uppercase">Team Name</label>
+                    <input 
+                        type="text" 
+                        className="form-control form-control-lg bg-light border-0" 
+                        placeholder="e.g. The Lions" 
+                        value={this.state.name}
+                        onChange={this.QHandleTeamName}
+                    />
+                </div>
 
-        <hr />
+                {/* Player entry */}
+                <div className="bg-light p-4 rounded-3 mb-4">
+                    <h5 className="fw-bold mb-3 text-dark">
+                        <i className="bi bi-person-plus-fill me-2 text-primary"></i> Add Players
+                    </h5>
+                    
+                    <div className="row g-2 align-items-end">
+                        <div className="col-md-5">
+                            <label className="form-label small text-muted">First Name</label>
+                            <input 
+                                type="text" name="name" className="form-control border-0 bg-white" placeholder="John"
+                                value={this.state.currentPlayer.name} onChange={this.QHandlePlayerInput} 
+                            />
+                        </div>
+                        <div className="col-md-5">
+                            <label className="form-label small text-muted">Surname</label>
+                            <input 
+                                type="text" name="surname" className="form-control border-0 bg-white" placeholder="Doe"
+                                value={this.state.currentPlayer.surname} onChange={this.QHandlePlayerInput} 
+                            />
+                        </div>
+                        <div className="col-md-2">
+                            <label className="form-label small text-muted">No.</label>
+                            <input 
+                                type="number" name="number" className="form-control border-0 bg-white" placeholder="#"
+                                value={this.state.currentPlayer.number} onChange={this.QHandlePlayerInput} 
+                            />
+                        </div>
+                    </div>
+                    <button 
+                        className="btn btn-outline-primary w-100 mt-3 rounded-pill fw-bold bg-white" 
+                        onClick={this.QAddPlayerToList}
+                    >
+                        <i className="bi bi-plus-lg"></i> Add to Roster
+                    </button>
+                </div>
 
-        {/* 2. PLAYER ENTRY SECTION */}
-        <h5 className="mb-3">Add Players</h5>
-        <div className="row g-2 align-items-end mb-3">
-            <div className="col-md-4">
-                <label className="form-label">Name</label>
-                <input 
-                    type="text" name="name" className="form-control" placeholder="John"
-                    value={this.state.currentPlayer.name} onChange={this.QHandlePlayerInput} 
-                />
-            </div>
-            <div className="col-md-4">
-                <label className="form-label">Surname</label>
-                <input 
-                    type="text" name="surname" className="form-control" placeholder="Doe"
-                    value={this.state.currentPlayer.surname} onChange={this.QHandlePlayerInput} 
-                />
-            </div>
-            <div className="col-md-2">
-                <label className="form-label">Number</label>
-                <input 
-                    type="number" name="number" className="form-control" placeholder="#"
-                    value={this.state.currentPlayer.number} onChange={this.QHandlePlayerInput} 
-                />
-            </div>
-            <div className="col-md-2">
-                <button className="btn btn-outline-primary w-100" onClick={this.QAddPlayerToList}>
-                    + Add
-                </button>
-            </div>
-        </div>
+                {/* Display team*/}
+                {this.state.players.length > 0 && (
+                    <div className="mb-5">
+                        <div className="d-flex justify-content-between align-items-center mb-2">
+                             <label className="fw-bold text-muted small text-uppercase">Current Roster</label>
+                             
+                        </div>
+                        
+                        <div className="list-group">
+                            {this.state.players.map((p, index) => (
+                                <div key={index} className="list-group-item border-0 bg-light mb-2 rounded-3 d-flex justify-content-between align-items-center px-3 py-2">
+                                    <div className="d-flex align-items-center">
+                                        <span className="badge bg-white text-dark border me-3">#{p.number}</span>
+                                        <span className="fw-bold text-dark">{p.name} {p.surname}</span>
+                                    </div>
+                                    <button 
+                                        className="btn btn-sm btn-outline-danger border-0 rounded-circle" 
+                                        onClick={() => this.QRemovePlayer(index)}
+                                        title="Remove Player"
+                                    >
+                                        <i className="bi bi-x-lg"></i>
+                                    </button>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                )}
 
-        {/* 3. ROSTER DISPLAY (List of added players) */}
-        {this.state.players.length > 0 && (
-            <div className="mb-4">
-                <label className="form-label fw-bold">Current Roster ({this.state.players.length})</label>
-                <ul className="list-group">
-                    {this.state.players.map((p, index) => (
-                        <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
-                            <span>
-                                <strong>#{p.number}</strong> {p.name} {p.surname}
-                            </span>
-                            <button 
-                                className="btn btn-sm btn-danger" 
-                                onClick={() => this.QRemovePlayer(index)}
-                            >
-                                X
-                            </button>
-                        </li>
-                    ))}
-                </ul>
-            </div>
-        )}
+                {/* Footer */}
+                <div className="d-flex justify-content-between border-top pt-4 mt-4">
+                    <button 
+                        onClick={() => this.props.QViewFromChild({ page: "teams" })}
+                        className="btn btn-outline-secondary rounded-pill px-4 fw-bold"
+                    >
+                        Cancel
+                    </button>
+                    <button 
+                        onClick={this.QPostTeam} 
+                        className="btn btn-success rounded-pill px-5 fw-bold shadow-sm"
+                    >
+                        <i className="bi bi-check-lg me-2"></i> Create Team
+                    </button>
+                </div>
 
-        {/* 4. FINAL SUBMIT */}
-        <div className="d-flex justify-content-end mt-3 border-top pt-3">
-            <button 
-                onClick={() => this.props.QViewFromChild({ page: "teams" })}
-                className="btn btn-secondary me-2"
-            >
-                Cancel
-            </button>
-            <button 
-                onClick={this.QPostTeam} 
-                className="btn btn-success"
-            >
-                Create Team
-            </button>
+            </div>
         </div>
       </div>
     );

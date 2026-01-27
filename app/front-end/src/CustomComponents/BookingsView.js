@@ -61,7 +61,7 @@ class BookingsView extends Component {
 
         return (
             <div className="container mt-4">
-                <h2 className="mb-4">My Bookings</h2>
+                <h2 className="fw-bold text-dark">My Bookings</h2>
 
                 {this.state.bookings.length > 0 ? (
                     <div className="row row-cols-1 row-cols-md-2 g-4">

@@ -79,7 +79,7 @@ class TeamsView extends Component {
                     </h2>
                 </div>
 
-                {/* InBetween: Toggles (All vs Mine) */}
+                {/* Toggles (All vs Mine) */}
                 <div className="col-md-4 text-center">
                     {logged && !filterId && (
                         <div className="btn-group shadow-sm" role="group">

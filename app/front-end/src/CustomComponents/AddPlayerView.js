@@ -42,11 +42,11 @@ class AddPlayerView extends Component {
         number: parseInt(this.state.number)
     };
 
-    // POST request -> Because we are adding a new entry & not replacing it!
+    // POST request
     axios.post("http://localhost:8080/teams/" + this.props.teamID + "/players", newPlayer, { withCredentials: true })
       .then(res => {
         alert("Player added successfully!");
-        // Clearin the inputs from the form
+        // Clear form
         this.setState({ name: "", surname: "", number: "" });
       })
       .catch(err => {
@@ -58,70 +58,80 @@ class AddPlayerView extends Component {
   render() {
     return (
       <div className="container mt-4" style={{ maxWidth: "600px" }}>
-        <div className="card shadow-sm">
-          <div className="card-header bg-primary text-white">
-            <h4 className="mb-0">Add Player to: {this.state.teamName}</h4>
+        <div className="card border-0 shadow-sm p-4 bg-white rounded-3">
+          
+          {/* Header */}
+          <div className="mb-4 text-center border-bottom pb-3">
+            <h2 className="fw-bold text-primary">
+                <i className="bi bi-person-plus-fill me-2"></i> Add New Player
+            </h2>
+            <p className="text-muted mb-0">
+                Adding to Team: <strong className="text-dark">{this.state.teamName}</strong>
+            </p>
           </div>
 
-          <div className="card-body">
+          <div className="card-body p-0">
             
-            {/* NAME INPUT */}
-            <div className="mb-3">
-              <label className="form-label">First Name</label>
-              <input 
-                type="text" 
-                name="name" 
-                className="form-control" 
-                placeholder="e.g. Mario"
-                value={this.state.name}
-                onChange={this.QHandleInputChange}
-              />
-            </div>
+            <form>
+                {/* Name*/}
+                <div className="mb-3">
+                  <label className="form-label fw-bold small text-muted text-uppercase">First Name</label>
+                  <input 
+                    type="text" 
+                    name="name" 
+                    className="form-control bg-light border-0 py-2" //Soft input style
+                    placeholder="e.g. Mario"
+                    value={this.state.name}
+                    onChange={this.QHandleInputChange}
+                  />
+                </div>
 
-            {/* SURNAME INPUT */}
-            <div className="mb-3">
-              <label className="form-label">Surname</label>
-              <input 
-                type="text" 
-                name="surname" 
-                className="form-control" 
-                placeholder="e.g. Rossi"
-                value={this.state.surname}
-                onChange={this.QHandleInputChange}
-              />
-            </div>
+                {/* Surname*/}
+                <div className="mb-3">
+                  <label className="form-label fw-bold small text-muted text-uppercase">Surname</label>
+                  <input 
+                    type="text" 
+                    name="surname" 
+                    className="form-control bg-light border-0 py-2" 
+                    placeholder="e.g. Rossi"
+                    value={this.state.surname}
+                    onChange={this.QHandleInputChange}
+                  />
+                </div>
 
-            {/* NUMBER INPUT */}
-            <div className="mb-3">
-              <label className="form-label">Jersey Number</label>
-              <input 
-                type="number" 
-                name="number" 
-                className="form-control" 
-                placeholder="e.g. 10"
-                value={this.state.number}
-                onChange={this.QHandleInputChange}
-              />
-            </div>
+                {/* Number*/}
+                <div className="mb-4">
+                  <label className="form-label fw-bold small text-muted text-uppercase">Jersey Number</label>
+                  <input 
+                    type="number" 
+                    name="number" 
+                    className="form-control bg-light border-0 py-2" 
+                    placeholder="e.g. 10"
+                    value={this.state.number}
+                    onChange={this.QHandleInputChange}
+                  />
+                </div>
 
-            <div className="d-flex justify-content-between mt-4">
-               {/* BACK BUTTON */}
-               <button 
-                  className="btn btn-outline-secondary"
-                  onClick={() => this.props.QViewFromChild({ page: "teams" })}
-               >
-                  Back to Teams
-               </button>
+                {/* Buttons */}
+                <div className="d-flex justify-content-between mt-5">
+                   
+                   <button 
+                      type="button"
+                      className="btn btn-outline-secondary rounded-pill px-4 fw-bold"
+                      onClick={() => this.props.QViewFromChild({ page: "teams" })}
+                   >
+                      <i className="bi bi-arrow-left me-2"></i> Back
+                   </button>
 
-               {/* SUBMIT BUTTON */}
-               <button 
-                  className="btn btn-success px-4"
-                  onClick={this.QAddPlayer}
-               >
-                  <i className="bi bi-plus-circle me-2"></i>
-                  Add Player
-               </button>
-            </div>
+                   <button 
+                      type="button"
+                      className="btn btn-primary rounded-pill px-4 fw-bold shadow-sm"
+                      onClick={this.QAddPlayer}
+                   >
+                      <i className="bi bi-plus-lg me-2"></i> Add Player
+                   </button>
+                </div>
+            </form>
 
           </div>
         </div>
