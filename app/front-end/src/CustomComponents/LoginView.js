@@ -93,7 +93,8 @@ class LoginView extends Component {
 
     const { user, errors, errorMessage, loading, showPassword } = this.state;
     return (
-      <div className="card shadow-sm p-0 overflow-hidden" style={{ maxWidth: "400px", margin: "40px auto" }}>
+      <div className="container">
+        <div className="card shadow-sm p-0 overflow-hidden row justify-content-center" style={{ maxWidth: "400px", margin: "40px auto" }}>
         
         {/* Header */}
         <div className="card-header bg-primary text-white text-center py-3">
@@ -176,6 +177,7 @@ class LoginView extends Component {
             </button>
           </div>
 
+        </div>
         </div>
       </div>
     );

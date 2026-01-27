@@ -62,26 +62,29 @@ class FieldsView extends Component {
     let filteredData = this.state.fields;
 
     return (
-      <div>
-        <div className="card" style={{ margin: "10px", padding: "15px" }}>
+      <div className="container mt-4">
+        <div className="card border-0 shadow-sm p-3 mb-4 bg-white rounded-3" style={{ margin: "10px", padding: "15px" }}>
             <div className="row g-3 align-items-center">
                 
                 
                 <div className="col-md-5">
+                  <div className="input-group">
+                    <span className="input-group-text bg-light border-0"><i className="bi bi-search text-muted"></i></span>
                     <input 
                         type="text" 
                         name="searchQuery"
-                        className="form-control" 
+                        className="form-control border-0 bg-light" 
                         placeholder="Search fields by name or address..." 
                         onChange={this.QHandleInputChange}
                     />
+                  </div>
                 </div>
 
                 
                 <div className="col-md-4">
                     <select 
                         name="selectedSport" 
-                        className="form-select" 
+                        className="form-select border-0 bg-light" 
                         onChange={this.QHandleInputChange}
                     >
                         <option value="">All Sports</option>
@@ -94,10 +97,10 @@ class FieldsView extends Component {
                 
                 <div className="col-md-3 text-end">
                     <button 
-                        className="btn btn-success w-100"
+                        className="btn btn-primary w-100 rounded-pill fw-bold shadow-sm"
                         onClick={this.QHandleAddClick} 
                     >
-                      Add New Field
+                      <i className="bi bi-plus-lg me-2"></i> Add New Field
                     </button>
                 </div>
             </div>
@@ -110,7 +113,7 @@ class FieldsView extends Component {
           filteredData.map(d => {
             return (
               <div className="col" key={d._id}>
-                <div className="card h-100 shadow-sm">
+                <div className="card feature-card h-100 shadow-sm">
                   <div className="card-header fw-bold text-uppercase text-secondary">
                     {d.sport}
                   </div>
@@ -123,11 +126,11 @@ class FieldsView extends Component {
                     
                     
                     <div>
-                      <small className="text-muted d-block mb-1">Available Schedule:</small>
+                      <small className="text-muted d-block mb-1">Available Slots:</small>
                       <div className="d-flex flex-wrap gap-1">
                         {/* Check if slots exist and is an array */}
                         {d.bookableSlots && d.bookableSlots.length > 0 ? (
-                          d.bookableSlots.map((slot, index) => (
+                          d.bookableSlots.slice(0, 4).map((slot, index) => (
                               // CRITICAL FIX: We access 'slot.time' because 'slot' is now an object {id, time}
                               <span key={index} className="badge bg-light text-dark border">
                                   {slot.time}
@@ -136,6 +139,9 @@ class FieldsView extends Component {
                         ) : (
                             <span className="text-muted small fst-italic">No schedule defined</span>
                         )}
+                        {d.bookableSlots && d.bookableSlots.length > 4 && (
+                          <span className="badge bg-light text-muted border fw-normal">+{d.bookableSlots.length - 4} more</span>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -143,7 +149,7 @@ class FieldsView extends Component {
                   <div className="card-footer bg-white border-top-0 pt-0 pb-3">
                     <button
                       onClick={() => this.QSetViewInParent({ page: "bookfield", fieldID: d._id })}
-                      className="btn btn-primary w-100 mt-2"
+                      className="btn btn-outline-primary w-100 rounded-pill"
                     >
                       Book Now
                     </button>

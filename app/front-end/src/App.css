@@ -16,6 +16,7 @@
   box-shadow: 0 4px 6px rgba(0,0,0,0.05); /* Very low shadow - separating the background of page and white card */
   transition: transform 0.3s ease, box-shadow 0.3s ease; 
   height: 100%;
+  will-change: transform;
 }
 
 .feature-card:hover {
