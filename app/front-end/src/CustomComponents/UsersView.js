@@ -5,22 +5,18 @@ class UsersView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      users: [],          // List of all users
-      tournaments: [],    // List of all tournaments (to match with creators)
-      search: "",         // Search filter
+      users: [],          
+      tournaments: [],    
+      search: "",         
       loading: true
     };
   }
 
   QFetchUsers = () => {
     const search = this.state.search;
-
     axios.get("http://localhost:8080/users?q="+search)
     .then(res => {
-      this.setState({
-        users: res.data,
-        loading: false
-      });
+      this.setState({ users: res.data, loading: false });
     })
     .catch(err => {
       console.error("Error fetching users:", err);
@@ -30,12 +26,9 @@ class UsersView extends Component {
 
   componentDidMount() {
     this.setState({ loading: true });
-
     axios.get("http://localhost:8080/tournaments")
     .then(res => {
-      this.setState({
-        tournaments: res.data
-      });
+      this.setState({ tournaments: res.data });
       this.QFetchUsers();
     })
     .catch(err => {
@@ -43,7 +36,6 @@ class UsersView extends Component {
       this.setState({ loading: false });
     });
   }
-
   
   getTournamentsForUser = (userId) => {
     return this.state.tournaments.filter(t => {
@@ -66,71 +58,119 @@ class UsersView extends Component {
     return (
       <div className="container mt-4">
         
-        {/* HEADER & SEARCH BAR */}
-        <div className="row mb-4 align-items-center">
-            <div className="col-md-6">
-                <h2>Users Directory</h2>
-            </div>
-            <div className="col-md-6">
-                <input 
-                    type="text"
-                    name="search"
-                    className="form-control" 
-                    placeholder="Search users..." 
-                    value={this.state.search}
-                    onChange={(e) => this.QHandleInputChange(e)}
-                />
+        {/* Search Bar */}
+        <div className="card border-0 shadow-sm p-4 mb-5 bg-white rounded-3">
+            <div className="row align-items-center">
+                <div className="col-md-6">
+                    <h2 className="fw-bold text-primary mb-0">
+                        <i className="bi bi-people-fill me-2"></i> Users
+                    </h2>
+                </div>
+                <div className="col-md-6">
+                    <div className="input-group">
+                        <span className="input-group-text bg-light border-0"><i className="bi bi-search text-muted"></i></span>
+                        <input 
+                            type="text"
+                            name="search"
+                            className="form-control bg-light border-0 py-2" 
+                            placeholder="Search..." 
+                            value={this.state.search}
+                            onChange={(e) => this.QHandleInputChange(e)}
+                        />
+                    </div>
+                </div>
             </div>
         </div>
 
-        {/* LOADING */}
-        {this.state.loading && <div className="text-center">Loading...</div>}
+        {/* Loading */}
+        {this.state.loading && (
+            <div className="text-center py-5">
+                <div className="spinner-border text-primary" role="status"></div>
+            </div>
+        )}
 
-        {/* USERS GRID */}
-        <div className="row">
+        {/* Users Grid */}
+        <div className="row g-4">
           {filteredUsers.map(user => {
             const userTournaments = this.getTournamentsForUser(user._id);
+            
+            // Get first letter of the username
+            const initial = user.user_username ? user.user_username.charAt(0).toUpperCase() : "?";
 
             return (
-              <div key={user._id} className="col-md-6 col-lg-4 mb-4">
-                <div className="card h-100 shadow-sm">
-                  
-                  {/* Card Header: Username & Badge */}
-                  <div 
-                    className="card-header bg-dark text-white d-flex justify-content-between align-items-center"
-                    style={{cursor: "pointer"}}
-                    onClick={() => this.props.QViewFromChild({page: "singleUser", userID: user._id})}
-                  >
-                    <h5 className="mb-0">{user.user_username}</h5>
-                    <span className="badge bg-light text-dark">{userTournaments.length} Tournaments</span>
-                  </div>
-                  
-                  <div className="card-body">
-                    <h6 className="text-muted mb-3">
+              <div key={user._id} className="col-md-6 col-lg-4">
+                <div className="card feature-card h-100 border-0 shadow-sm text-center position-relative">
+                  <div className="card-body p-4 d-flex flex-column">
+                    
+                    {/* Avatar circle */}
+                    <div 
+                        className="mx-auto mb-3 d-flex align-items-center justify-content-center shadow-sm"
+                        style={{
+                            width: "80px", 
+                            height: "80px", 
+                            borderRadius: "50%", 
+                            background: "linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)", // Cool purple-blue gradient
+                            color: "white",
+                            fontSize: "2rem",
+                            fontWeight: "bold",
+                            fontFamily: "'Oswald', sans-serif"
+                        }}
+                    >
+                        {initial}
+                    </div>
+
+                    {/* User info */}
+                    <h4 
+                        className="card-title fw-bold text-dark mb-1" 
+                        style={{ fontFamily: "'Oswald', sans-serif", letterSpacing: "0.5px" }}
+                    >
+                        {user.user_username}
+                    </h4>
+                    <p className="text-muted small mb-3">
                         {user.user_firstName} {user.user_surname}
-                    </h6>
-                    
-                    <h6 className="card-subtitle mb-2 text-primary border-bottom pb-1">
-                        Created Tournaments:
-                    </h6>
-                    
-                    {/* List of Tournaments */}
-                    {userTournaments.length > 0 ? (
-                        <div style={{ maxHeight: "150px", overflowY: "auto" }}>
-                            <ul className="list-group list-group-flush">
-                                {userTournaments.map(t => (
-                                    <li key={t._id} className="list-group-item px-0 py-1 d-flex justify-content-between" 
-                                    onClick={() => this.props.QViewFromChild({page:"teams", tournamentID: t._id})}
+                    </p>
+
+                    {/* Stats badge */}
+                    <div className="mb-4">
+                        <span className="badge rounded-pill bg-primary bg-opacity-10 text-primary px-3 py-2">
+                             <i className="bi bi-trophy-fill me-1"></i> 
+                             {userTournaments.length} {userTournaments.length === 1 ? 'Tournament' : 'Tournaments'}
+                        </span>
+                    </div>
+
+                    {/* Tournament */}
+                    <div className="mt-auto">
+                        {/*<h6 className="small text-uppercase text-muted fw-bold mb-2" style={{fontSize: "0.75rem"}}>Recent Activity</h6>*/}
+                        
+                        {userTournaments.length > 0 ? (
+                            <div className="d-flex flex-wrap justify-content-center gap-2">
+                                {userTournaments.slice(0, 3).map(t => (
+                                    <span 
+                                        key={t._id} 
+                                        className="badge bg-light text-dark border fw-normal p-2 cursor-pointer"
+                                        style={{cursor: "pointer"}}
+                                        onClick={() => this.props.QViewFromChild({page:"teams", tournamentID: t._id})}
+                                        title={`View ${t.name}`}
                                     >
-                                        <small className="fw-bold">{t.name}</small>
-                                        <small className="badge bg-secondary text-wrap" style={{width: "60px"}}>{t.sport}</small>
-                                    </li>
+                                        {t.name}
+                                    </span>
                                 ))}
-                            </ul>
-                        </div>
-                    ) : (
-                        <p className="text-muted small">No tournaments created.</p>
-                    )}
+                                
+                                {userTournaments.length > 3 && (
+                                    <span className="badge bg-light text-muted border p-2">+{userTournaments.length - 3} more</span>
+                                )}
+                            </div>
+                        ) : (
+                            <p className="small text-muted fst-italic">No tournaments yet.</p>
+                        )}
+                    </div>
+                    <button 
+                        className="btn btn-outline-primary w-100 rounded-pill mt-4 fw-bold"
+                        onClick={() => this.props.QViewFromChild({page: "singleUser", userID: user._id})}
+                    >
+                        View Profile
+                    </button>
+
                   </div>
                 </div>
               </div>

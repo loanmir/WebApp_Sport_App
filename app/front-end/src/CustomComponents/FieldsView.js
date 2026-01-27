@@ -149,7 +149,7 @@ class FieldsView extends Component {
                   <div className="card-footer bg-white border-top-0 pt-0 pb-3">
                     <button
                       onClick={() => this.QSetViewInParent({ page: "bookfield", fieldID: d._id })}
-                      className="btn btn-outline-primary w-100 rounded-pill"
+                      className="btn btn-outline-primary w-100 rounded-pill mt-4 fw-bold"
                     >
                       Book Now
                     </button>

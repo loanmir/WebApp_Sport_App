@@ -119,8 +119,6 @@ class App extends Component {
             this.setState({
                 userStatus: {
                     logged: true,
-                    // The GET /login route usually returns the whole user object or just the name. 
-                    // Adjust '.username' based on what your backend sends in 'req.session.user'
                     user: res.data.user
                 }
             })

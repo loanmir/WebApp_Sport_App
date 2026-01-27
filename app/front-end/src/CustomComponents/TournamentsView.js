@@ -160,19 +160,18 @@ return (
             </div>
         </div>
 
-        {/* 3. GRID DISPLAY (Using filteredData) */}
+        {/* GRID DISPLAY */}
         <div className="row row-cols-1 row-cols-md-3 g-4" style={{ margin: "10px" }}>
           {filteredData.length > 0 ? 
           filteredData.map(d => {
         
-        // CHECK IF CURRENT USER IS THE CREATOR
-        // Handle if creator is populated object or just ID string
+        // Checking if current user is the creator
           const creatorId = d.creator && (d.creator._id || d.creator);
           const isCreator = logged && currentUserId === creatorId;
 
           return(
             <div className="col" key={d._id}>
-              <div className="card h-100">
+              <div className="card feature-card h-100">
             
               {/* Header */}
               <div className="card-header d-flex justify-content-between align-items-center">

@@ -39,9 +39,9 @@ dataPool.AllUsers = async (queryText) =>{
 
         if(queryText){
             filter.$or = [
-                {user_username: { $regex: queryText, $options: 'i' } },
-                {user_firstName: { $regex: queryText, $options: 'i' } },
-                {user_surname: { $regex: queryText, $options: 'i' } }
+                {user_username: { $regex: "^" + queryText, $options: 'i' } },
+                {user_firstName: { $regex: "^" + queryText, $options: 'i' } },
+                {user_surname: { $regex: "^" + queryText, $options: 'i' } }
             ];
         }
             const res = await User.find(filter, '-user_password -__v'); // Exclude password and __v fields
