@@ -61,17 +61,18 @@ class BookingsView extends Component {
 
         return (
             <div className="container mt-4">
-                <h2 className="fw-bold text-dark">My Bookings</h2>
+                <h2 className="fw-bold text-primary mb-4">
+                    <i className="bi bi-calendar-check-fill me-2"></i> My Bookings
+                </h2>
 
                 {this.state.bookings.length > 0 ? (
                     <div className="row row-cols-1 row-cols-md-2 g-4">
                         {this.state.bookings.map(booking => (
                             <div className="col" key={booking._id}>
-                                <div className="card shadow-sm border-start border-4 border-primary">
+                                <div className="card feature-card shadow-sm ">
                                     <div className="card-body">
                                         
-                                        {/* Getting the Field name, sport and address with Populate in mongoDB - because of the reference*/}
-                                        <h5 className="card-title fw-bold text-primary">
+                                        <h5 className="card-title fw-bold text-dark">
                                             {booking.field ? booking.field.name : "Unknown Field"}
                                         </h5>
                                         
@@ -98,7 +99,7 @@ class BookingsView extends Component {
                                             </small>
 
                                             <button
-                                            className="btn btn-outline-danger btn-sm"
+                                            className="btn btn-sm btn-light text-danger border w-50 rounded-pill fw-bold"
                                             onClick={() => this.QCancelBooking(booking._id)}
                                             >
                                                 Cancel Booking

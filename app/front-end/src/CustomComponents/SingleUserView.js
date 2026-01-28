@@ -16,7 +16,7 @@ class SingleUserView extends Component {
 
     this.setState({ loading: true });
 
-    // Parallel Fetch: Get User Details AND All Tournaments (to filter)
+    // Parallel Fetch: Get Specific User Details AND All Tournaments (to filter)
     Promise.all([
         axios.get("http://localhost:8080/users/"+userId),
         axios.get("http://localhost:8080/tournaments")
@@ -42,77 +42,114 @@ class SingleUserView extends Component {
   }
 
   render() {
-    if (this.state.loading) return <div className="p-5 text-center">Loading Profile...</div>;
+    if (this.state.loading) return <div className="p-5 text-center text-muted"><div className="spinner-border text-primary"></div></div>;
     
     const { user, userTournaments } = this.state;
+    const initial = user.user_username ? user.user_username.charAt(0).toUpperCase() : "?";
 
     return (
       <div className="container mt-5">
         
-        {/* PROFILE CARD */}
-        <div className="card shadow mb-4">
-            <div className="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-                <h4 className="mb-0">User Profile</h4>
+        {/* Main container - Profile card */}
+        <div className="card border-0 shadow-sm p-4 mb-5 bg-white rounded-3 position-relative overflow-hidden">
+            
+            {/* Back button */}
+            <div className="position-absolute top-0 end-0 p-4">
                 <button 
-                    className="btn btn-sm btn-light text-primary fw-bold"
+                    className="btn btn-outline-secondary rounded-pill fw-bold btn-sm"
                     onClick={() => this.props.QViewFromChild({ page: "users" })}
                 >
-                    Back to Users List
+                    <i className="bi bi-arrow-left me-1"></i> Back to List
                 </button>
             </div>
-            <div className="card-body">
-                <div className="row">
-                    <div className="col-md-2 text-center mb-3">
-                        {/* Avatar Placeholder */}
-                        <div className="rounded-circle bg-secondary text-white d-flex align-items-center justify-content-center mx-auto" 
-                             style={{width: "100px", height: "100px", fontSize: "2.5rem"}}>
-                            {user.user_firstName.charAt(0)}{user.user_surname.charAt(0)}
-                        </div>
-                    </div>
-                    <div className="col-md-10">
-                        <h2 className="fw-bold">{user.user_username}</h2>
-                        <h5 className="text-muted">{user.user_firstName} {user.user_surname}</h5>
-                        <hr />
-                        <div className="row">
-                            <div className="col-md-6">
-                                <strong>User ID:</strong> <span className="text-muted small">{user._id}</span>
-                            </div>
-                        </div>
-                    </div>
+
+            <div className="d-flex flex-column flex-md-row align-items-center text-center text-md-start">
+                
+                {/* Avatar circle */}
+                <div 
+                    className="d-flex align-items-center justify-content-center shadow-sm mb-3 mb-md-0 me-md-4"
+                    style={{
+                        width: "120px", 
+                        height: "120px", 
+                        borderRadius: "50%", 
+                        background: "linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)", // Same Dark Blue Gradient as UsersView
+                        color: "white",
+                        fontSize: "3rem",
+                        fontWeight: "bold",
+                    }}
+                >
+                    {initial}
+                </div>
+
+                {/* User Info */}
+                <div>
+                    <h5 className="text-uppercase text-muted fw-bold small mb-1">User Profile</h5>
+                    <h1 className="fw-bold text-dark display-5 mb-1">
+                        {user.user_username}
+                    </h1>
+                    <p className="text-muted fs-5 mb-2">
+                        {user.user_firstName} {user.user_surname}
+                    </p>
+                    
+                    {/* Stats Pill */}
+                    <span className="badge rounded-pill bg-primary bg-opacity-10 text-primary px-3 py-2">
+                        <i className="bi bi-trophy-fill me-2"></i>
+                        {userTournaments.length} Tournaments Created
+                    </span>
                 </div>
             </div>
         </div>
 
-        {/* TOURNAMENTS SECTION */}
-        <h4 className="mb-3 border-bottom pb-2">Tournaments Created ({userTournaments.length})</h4>
+        {/* Tournaments section */}
+        <div className="mb-4 d-flex align-items-center">
+             <h3 className="fw-bold mb-0">
+                Created Tournaments
+             </h3>
+             <span className="ms-2 badge bg-light text-dark rounded-pill border">
+                {userTournaments.length}
+             </span>
+        </div>
         
-        <div className="row row-cols-1 row-cols-md-2 g-4">
+        <div className="row row-cols-1 row-cols-md-3 g-4">
             {userTournaments.length > 0 ? (
                 userTournaments.map(t => (
                     <div className="col" key={t._id}>
-                        <div className="card h-100 shadow-sm border-start border-4 border-primary">
-                            <div className="card-body">
-                                <div className="d-flex justify-content-between align-items-start mb-2">
-                                    <h5 className="card-title fw-bold mb-0">{t.name}</h5>
-                                    <span className="badge bg-info text-dark">{t.sport}</span>
+                        <div className="card feature-card h-100 border-0 shadow-sm">
+                            <div className="card-body p-4 d-flex flex-column">
+                                
+                                <div className="d-flex justify-content-between mb-3">
+                                    <span className="badge bg-light text-dark border rounded-pill">{t.sport}</span>
+                                    <span className={`badge rounded-pill ${t.status === 'Active' ? 'bg-success' : 'bg-secondary'}`}>
+                                        {t.status}
+                                    </span>
                                 </div>
-                                <p className="card-text text-muted small">
-                                    Status: <span className={`fw-bold ${t.status === 'Active' ? 'text-success' : 'text-secondary'}`}>{t.status}</span>
-                                    <br/>
+
+                                <h5 className="card-title fw-bold mb-3" style={{ fontFamily: "'Oswald', sans-serif" }}>
+                                    {t.name}
+                                </h5>
+
+                                <p className="card-text text-muted small mb-4">
+                                    <i className="bi bi-people-fill me-2 text-primary"></i>
                                     Max Teams: {t.maxTeams}
                                 </p>
+
                                 <button 
-                                    className="btn btn-outline-primary btn-sm w-100"
+                                    className="btn btn-outline-primary w-100 mt-auto rounded-pill fw-bold"
                                     onClick={() => this.props.QViewFromChild({ page: "teams", tournamentID: t._id })}
                                 >
-                                    View Tournament
+                                    View Details
                                 </button>
                             </div>
                         </div>
                     </div>
                 ))
             ) : (
-                <div className="col-12 text-muted">This user has not created any tournaments yet.</div>
+                <div className="col-12">
+                    <div className="text-center p-5 bg-light rounded-3 border border-dashed">
+                        <i className="bi bi-trophy fs-1 text-muted opacity-25"></i>
+                        <p className="text-muted mt-2 mb-0">This user hasn't created any tournaments yet.</p>
+                    </div>
+                </div>
             )}
         </div>
 

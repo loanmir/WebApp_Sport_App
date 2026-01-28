@@ -168,7 +168,7 @@ class AddTeamView extends Component {
                     </div>
                 )}
 
-                {/* Footer */}
+                {/* Footer with buttons */}
                 <div className="d-flex justify-content-between border-top pt-4 mt-4">
                     <button 
                         onClick={() => this.props.QViewFromChild({ page: "teams" })}

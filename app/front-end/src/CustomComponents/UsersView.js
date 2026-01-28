@@ -113,7 +113,6 @@ class UsersView extends Component {
                             color: "white",
                             fontSize: "2rem",
                             fontWeight: "bold",
-                            fontFamily: "'Oswald', sans-serif"
                         }}
                     >
                         {initial}
@@ -122,7 +121,6 @@ class UsersView extends Component {
                     {/* User info */}
                     <h4 
                         className="card-title fw-bold text-dark mb-1" 
-                        style={{ fontFamily: "'Oswald', sans-serif", letterSpacing: "0.5px" }}
                     >
                         {user.user_username}
                     </h4>
@@ -140,8 +138,6 @@ class UsersView extends Component {
 
                     {/* Tournament */}
                     <div className="mt-auto">
-                        {/*<h6 className="small text-uppercase text-muted fw-bold mb-2" style={{fontSize: "0.75rem"}}>Recent Activity</h6>*/}
-                        
                         {userTournaments.length > 0 ? (
                             <div className="d-flex flex-wrap justify-content-center gap-2">
                                 {userTournaments.slice(0, 3).map(t => (

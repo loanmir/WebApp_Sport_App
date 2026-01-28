@@ -93,10 +93,10 @@ class BookFieldView extends Component {
                     <small className="text-muted">{field.address} ({field.sport})</small>
                 </div>
                 <button 
-                    className="btn btn-outline-secondary" 
+                    className="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-bold" 
                     onClick={() => this.props.QViewFromChild({ page: "fields" })}
                 >
-                    Back
+                    <i className="bi bi-arrow-left me-1"></i> Back
                 </button>
             </div>
 

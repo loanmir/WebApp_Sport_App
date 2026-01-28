@@ -9,7 +9,6 @@ class EditTournamentView extends Component {
       sport: "",
       maxTeams: 0,
       status: "Open",
-
       allTeams: [],
       loading: true
     };
@@ -20,12 +19,11 @@ class EditTournamentView extends Component {
     const id = this.props.tournamentID;
     
     Promise.all([
-        axios.get("http://localhost:8080/tournaments/"+id), // Get Tournament
-        axios.get("http://localhost:8080/teams")            // Get All Teams
+        axios.get("http://localhost:8080/tournaments/"+id), // Get tournament
+        axios.get("http://localhost:8080/teams")            // Get ALL teams
     ])
     .then(([tournamentRes, teamsRes]) => {
         const t = tournamentRes.data;
-        // 2. Pre-fill the state
         this.setState({
           name: t.name,
           sport: t.sport,
@@ -38,11 +36,10 @@ class EditTournamentView extends Component {
       .catch(err => {
         console.error("Error loading tournament:", err);
         alert("Could not load data.");
-        this.props.QViewFromChild({ page: "tournaments" }); // If error, go back
+        this.props.QViewFromChild({ page: "tournaments" }); // If error, then go back
       });
   }
 
-  
   QSaveEdit = () => {
     const id = this.props.tournamentID;
     axios.put("http://localhost:8080/tournaments/"+id, {
@@ -53,37 +50,34 @@ class EditTournamentView extends Component {
     }, { withCredentials: true })
     .then(res => {
         alert("Tournament updated!");
-        this.props.QViewFromChild({ page: "tournaments" }); // Go back to list
+        this.props.QViewFromChild({ page: "tournaments" }); // After update, go back to tournaments list
     })
     .catch(err => {
         alert(err.response?.data?.error || "Update failed");
     });
   }
 
-
   QHandleInputChange = (e) => {
-    this.setState({ [e.target.name]: e.target.value });
+    this.setState({ 
+        [e.target.name]: e.target.value 
+    });
   }
-
   
   QAddTeamToTournament = (teamId) => {
       const tournamentId = this.props.tournamentID;
-
       const maxTeams = this.state.maxTeams;
+      
       const currentCount = this.state.allTeams.filter(t => {
-          // 1. If tournament is null/undefined, it's not in the tournament
-          if (!t.tournament) return false; 
-
-          // 2. If it is an object (populated), check ._id
+          if (!t.tournament) return false;
+          // If tournament id is an object, then compare _id
           if (typeof t.tournament === 'object') {
-              return t.tournament._id === tournamentId;
+              return t.tournament._id === tournamentId;                 // Problems with the tournament Id types -> IF added manually in Compass then STRING - if added through app then OBJECT
           }
-          
-          // 3. If it is a string (local update), check directly
+          // Else compare directly 
           return t.tournament === tournamentId;
       }).length;
 
-      // Checking if we have reached the limit!
+      // Checking if reached max number of teams
       if (currentCount >= maxTeams) {
         alert("Maximum number of teams reached!");
         return;
@@ -93,7 +87,7 @@ class EditTournamentView extends Component {
           tournament: tournamentId
       }, { withCredentials: true })
       .then(res => {
-          // Update the local state so the UI changes instantly
+        // Update local state
           this.setState(prevState => ({
               allTeams: prevState.allTeams.map(t => 
                   t._id === teamId ? { ...t, tournament: tournamentId } : t
@@ -103,11 +97,9 @@ class EditTournamentView extends Component {
       .catch(err => alert("Could not add team."));
   }
 
-
-
   QRemoveTeamFromTournament = (teamId) => {
       axios.put("http://localhost:8080/teams/"+teamId, {
-          tournament: null // Set tournament to null
+          tournament: null 
       }, { withCredentials: true })
       .then(res => {
           this.setState(prevState => ({
@@ -119,8 +111,6 @@ class EditTournamentView extends Component {
       .catch(err => alert("Could not remove team."));
   }
 
-
-
   QStartTournament = () => {
     if (!window.confirm("Are you sure you want to start the tournament? This will lock the teams.")) {
         return;
@@ -131,7 +121,6 @@ class EditTournamentView extends Component {
     axios.post("http://localhost:8080/tournaments/"+id+"/matches/generate", {}, { withCredentials: true })
     .then(res =>{
         alert("Tournament started and matches generated!");
-        //this.componentDidMount();
         this.setState({ status: "Active" });
     })
     .catch(err =>{
@@ -140,28 +129,20 @@ class EditTournamentView extends Component {
     })
   }
 
-
-
   render() {
-    if (this.state.loading) return <div className="p-5 text-center">Loading Data...</div>;
+    if (this.state.loading) return <div className="p-5 text-center text-muted"><div className="spinner-border text-primary"></div></div>;
 
     const isActive_Completed = this.state.status === "Active" || this.state.status === "Completed";
-    
     const currentTournamentID = this.props.tournamentID;
 
     // Teams already present in the tournament
     const myTeams = this.state.allTeams.filter(t => {
-        // If team has no tournament, it definitely isn't in THIS one.
-        if (!t.tournament) {
-            return false;
-        } 
-    
-        // If it has a tournament, check the ID safely
+        if (!t.tournament) return false;
         if (typeof t.tournament === 'object') {
             return t.tournament._id === currentTournamentID;
         }
         return t.tournament === currentTournamentID;
-});
+    });
     
     // Teams available to add
     const availableTeams = this.state.allTeams.filter(t => !t.tournament);
@@ -169,101 +150,117 @@ class EditTournamentView extends Component {
 
     return (
       <div className="container mt-4">
-        <div className="row">
+        
+        {/* Header */}
+        <div className="mb-4">
+            <h2 className="fw-bold text-primary">
+                <i className="bi bi-pencil-square me-2"></i> Manage Tournament
+            </h2>
+        </div>
+
+        <div className="row g-4">
             
-            {/* LEFT COLUMN: Edit Tournament Details */}
-            <div className="col-md-6">
-                <div className="card shadow p-4 mb-4">
-                    <h4 className="mb-4">Edit Details</h4>
+            {/* Left column */}
+            <div className="col-lg-5">
+                <div className="card border-0 shadow-sm p-4 bg-white rounded-3 h-100">
+                    <h5 className="fw-bold mb-4 border-bottom pb-2">Tournament Settings</h5>
                     
                     <div className="mb-3">
-                        <label className="form-label">Tournament Name</label>
-                        <input type="text" className="form-control" name="name" 
+                        <label className="form-label small text-muted text-uppercase fw-bold">Tournament Name</label>
+                        <input type="text" className="form-control bg-light border-0 py-2" name="name" 
                             value={this.state.name} onChange={this.QHandleInputChange} />
                     </div>
 
-                    <div className="mb-3">
-                        <label className="form-label">Status</label>
-                        <select className="form-select" name="status" 
+                    <div className="mb-4">
+                        <label className="form-label small text-muted text-uppercase fw-bold">Status</label>
+                        <select className="form-select bg-light border-0 py-2" name="status" 
                             value={this.state.status} onChange={this.QHandleInputChange}>
-                            <option value="Open">Open</option>
-                            <option value="Active">Active</option>
+                            <option value="Open">Open (Sign-ups)</option>
+                            <option value="Active">Active (In Progress)</option>
                             <option value="Completed">Completed</option>
                         </select>
                     </div>
 
-                    <div className="d-flex justify-content-between mt-4">
-                        <button className="btn btn-secondary" 
+                    <div className="d-grid gap-2 d-md-flex justify-content-between mt-auto pt-3">
+                        <button className="btn btn-outline-secondary rounded-pill px-4 fw-bold" 
                             onClick={() => this.props.QViewFromChild({ page: "tournaments" })}>
                             Cancel
                         </button>
-                        <button className="btn btn-warning" onClick={this.QSaveEdit}>
+                        <button className="btn btn-warning rounded-pill px-4 fw-bold shadow-sm" onClick={this.QSaveEdit}>
                             Save Changes
                         </button>
                     </div>
 
+                    {/* Start tournament */}
                     {this.state.status === "Open" && (
-                        <div className="mt-4 border-top pt-3">
-                            <p className="text-muted small mb-2">
-                                Ready to start? This will generate the schedule automatically.
+                        <div className="mt-5 p-3 bg-light rounded-3 border border-dashed text-center">
+                            <h6 className="fw-bold text-dark mb-2">Ready to Kickoff?</h6>
+                            <p className="text-muted small mb-3">
+                                Starting the tournament will lock the roster and generate matches automatically.
                             </p>
                             <button
-                                className="btn btn-success w-100"
+                                className="btn btn-success w-100 rounded-pill fw-bold shadow-sm"
                                 onClick={this.QStartTournament}
-                                disabled={myTeams.length < 2}       // If less than 2 teams, button is disabled
+                                disabled={myTeams.length < 2}
                             >
-                                Start Tournament
+                                <i className="bi bi-play-circle-fill me-2"></i> Start Tournament
                             </button>
+                            {myTeams.length < 2 && <small className="text-danger d-block mt-2 fst-italic">Need at least 2 teams to start.</small>}
                         </div>
                     )}
                 </div>
             </div>
 
-            {/* RIGHT COLUMN: Manage Teams */}
-            <div className="col-md-6">
+            {/* Right column */}
+            <div className="col-lg-7">
                 
-                {/* 1. CURRENT TEAMS LIST */}
-                <div className="card shadow mb-4">
-                    <div className="card-header bg-primary text-white">
-                        Participating Teams ({myTeams.length} / {this.state.maxTeams})
+                {/* Participating teams */}
+                <div className="card border-0 shadow-sm p-4 bg-white rounded-3 mb-4">
+                    <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                        <h5 className="fw-bold mb-0">Participating Teams</h5>
+                        <span className={`badge rounded-pill ${isFull ? 'bg-danger' : 'bg-success'}`}>
+                            {myTeams.length} / {this.state.maxTeams}
+                        </span>
                     </div>
-                    <ul className="list-group list-group-flush">
+                    
+                    <div className="list-group">
                         {myTeams.length > 0 ? myTeams.map(t => (
-                            <li key={t._id} className="list-group-item d-flex justify-content-between align-items-center">
-                                {t.name}
-                                <button className="btn btn-sm btn-outline-danger" 
+                            <div key={t._id} className="list-group-item border-0 bg-light mb-2 rounded-3 d-flex justify-content-between align-items-center px-3 py-2">
+                                <span className="fw-bold text-dark">{t.name}</span>
+                                <button className="btn btn-sm btn-outline-danger border-0 rounded-circle" 
                                     onClick={() => this.QRemoveTeamFromTournament(t._id)}
                                     disabled={isActive_Completed}
-                                    style={isActive_Completed ? {cursor: "not-allowed", opacity: 0.6} : {}}
+                                    title="Remove Team"
                                 >
-                                    Remove
+                                    <i className="bi bi-x-lg"></i>
                                 </button>
-                            </li>
-                        )) : <li className="list-group-item text-muted">No teams joined yet.</li>}
-                    </ul>
+                            </div>
+                        )) : <div className="text-center py-4 text-muted fst-italic">No teams have joined yet.</div>}
+                    </div>
                 </div>
 
-                {/* 2. AVAILABLE TEAMS LIST */}
-                <div className="card shadow">
-                    <div className={`card-header text-white ${isFull || isActive_Completed ? "bg-secondary" : "bg-success"}`}>
-                        {isActive_Completed ? "Tournament Locked": (isFull ? "Tournament Full" : "Available Free Agent Teams")}
+                {/* Available teams */}
+                <div className="card border-0 shadow-sm p-4 bg-white rounded-3">
+                    <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2">
+                         <h5 className="fw-bold mb-0">
+                            {isActive_Completed ? "Tournament Locked" : (isFull ? "Tournament Full" : "Available Free Agents")}
+                         </h5>
+                         {!isActive_Completed && !isFull && <span className="badge bg-success rounded-pill">Open Slots</span>}
                     </div>
-                    <div className="card-body p-0" style={{ maxHeight: "300px", overflowY: "auto" }}>
-                        <ul className="list-group list-group-flush">
-                            {availableTeams.length > 0 ? availableTeams.map(t => (
-                                <li key={t._id} className="list-group-item d-flex justify-content-between align-items-center">
-                                    {t.name}
-                                    <button 
-                                        className="btn btn-sm btn-success" 
-                                        onClick={() => this.QAddTeamToTournament(t._id)}
-                                        disabled={isFull || isActive_Completed} 
-                                        style={isFull ? {cursor: "not-allowed", opacity: 0.6} : {}}
-                                    >
-                                        Add
-                                    </button>
-                                </li>
-                            )) : <li className="list-group-item p-3 text-muted">No free teams available.</li>}
-                        </ul>
+
+                    <div style={{ maxHeight: "300px", overflowY: "auto" }} className="pe-2">
+                        {availableTeams.length > 0 ? availableTeams.map(t => (
+                             <div key={t._id} className="list-group-item border-0 mb-2 rounded-3 d-flex justify-content-between align-items-center px-3 py-2 border-bottom">
+                                 <span className="text-secondary">{t.name}</span>
+                                 <button 
+                                     className="btn btn-sm btn-success rounded-pill px-3 fw-bold" 
+                                     onClick={() => this.QAddTeamToTournament(t._id)}
+                                     disabled={isFull || isActive_Completed} 
+                                 >
+                                     <i className="bi bi-plus-lg me-1"></i> Add
+                                 </button>
+                             </div>
+                        )) : <div className="text-center py-4 text-muted fst-italic">No free agent teams available.</div>}
                     </div>
                 </div>
 

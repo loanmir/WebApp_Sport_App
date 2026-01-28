@@ -83,10 +83,10 @@ class SingleMatchView extends Component {
         <div className="container mt-5">
             
             <button 
-                className="btn btn-outline-secondary mb-4"
+                className="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-bold mb-3"
                 onClick={() => this.props.QViewFromChild({ page: "schedule", tournamentID: tournamentID })}
             >
-                ← Back to Schedule
+                <i className="bi bi-arrow-left me-1"></i>Back to Schedule
             </button>
 
             {/* 2. ADD WARNING BANNER IF READ-ONLY */}
@@ -98,7 +98,7 @@ class SingleMatchView extends Component {
             )}
 
             <div className="card shadow text-center">
-                <div className="card-header bg-dark text-white">
+                <div className="card-header fw-bold bg-dark text-white">
                     Match Details - Round {match.round}
                 </div>
                 

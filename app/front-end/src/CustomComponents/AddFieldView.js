@@ -136,9 +136,9 @@ class AddFieldView extends Component {
                     </button>
                     <button 
                         onClick={this.QPostField} 
-                        className="btn btn-primary rounded-pill px-5 fw-bold shadow-sm"
+                        className="btn btn-success rounded-pill px-5 fw-bold shadow-sm"
                     >
-                        <i className="bi bi-plus-lg me-2"></i> Add Field
+                        <i className="bi bi-check-lg me-2"></i> Add Field
                     </button>
                 </div>
 
