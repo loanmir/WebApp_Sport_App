@@ -14,15 +14,15 @@ class BookFieldView extends Component {
   }
 
   componentDidMount() {
-    this.QLoadData(this.state.selectedDate);
+    this.loadData(this.state.selectedDate);
   }
 
   // Fetch both Field info and Bookings for the specific date
-  QLoadData = (date) => {
+  loadData = (date) => {
     const fieldID = this.props.fieldID;
     this.setState({ loading: true });
 
-    Promise.all([                           // Parallel requests
+    Promise.all([                                                   // Parallel requests
         // Getting details of the field
         axios.get("http://localhost:8080/fields/"+fieldID),
 
@@ -42,21 +42,21 @@ class BookFieldView extends Component {
         console.error("Error loading data:", err);
         
         alert("Could not load booking data. Please try again.");
-        this.props.QViewFromChild({ page: "fields" });
+        this.props.viewFromChild({ page: "fields" });
     });
   }
 
   // When user changes the date picker
-  QHandleDateChange = (e) => {
+  handleDateChange = (e) => {
     const newDate = e.target.value;
     this.setState({ 
         selectedDate: newDate, 
         selectedSlot: null // Reset selection because availability changes by date
     });
-    this.QLoadData(newDate); // Loading data for every date change
+    this.loadData(newDate); // Loading data for every date change
   }
 
-  QConfirmBooking = () => {
+  confirmBooking = () => {
     if (!this.state.selectedSlot) return;
 
     // Send the booking to the backend
@@ -67,7 +67,7 @@ class BookFieldView extends Component {
     }, { withCredentials: true }) // for user session
     .then(res => {
         alert("Booking Successful!");
-        this.props.QViewFromChild({ page: "fields" });
+        this.props.viewFromChild({ page: "fields" });
     })
     .catch(err => {
         console.error(err);
@@ -94,7 +94,7 @@ class BookFieldView extends Component {
                 </div>
                 <button 
                     className="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-bold" 
-                    onClick={() => this.props.QViewFromChild({ page: "fields" })}
+                    onClick={() => this.props.viewFromChild({ page: "fields" })}
                 >
                     <i className="bi bi-arrow-left me-1"></i> Back
                 </button>
@@ -107,7 +107,7 @@ class BookFieldView extends Component {
                     type="date" 
                     className="form-control d-inline-block w-auto" 
                     value={selectedDate} 
-                    onChange={this.QHandleDateChange} 
+                    onChange={this.handleDateChange} 
                 />
             </div>
 
@@ -161,7 +161,7 @@ class BookFieldView extends Component {
                 <button 
                     className="btn btn-primary btn-lg" 
                     disabled={!selectedSlot} // Disable if nothing selected
-                    onClick={this.QConfirmBooking}
+                    onClick={this.confirmBooking}
                 >
                     Confirm Booking
                 </button>

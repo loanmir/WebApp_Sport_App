@@ -23,13 +23,13 @@ class AddPlayerView extends Component {
     }
   }
 
-  QHandleInputChange = (e) => {
+  handleInputChange = (e) => {
     this.setState({ 
         [e.target.name]: e.target.value 
     });
   };
 
-  QAddPlayer = () => {
+  addPlayer = () => {
     // Basic Validation
     if (!this.state.name || !this.state.surname || !this.state.number) {
         alert("Please fill in all fields.");
@@ -42,7 +42,7 @@ class AddPlayerView extends Component {
         number: parseInt(this.state.number)
     };
 
-    // POST request
+    // POST request - Not PUT since we are adding to a collection and not updating it
     axios.post("http://localhost:8080/teams/" + this.props.teamID + "/players", newPlayer, { withCredentials: true })
       .then(res => {
         alert("Player added successfully!");
@@ -82,7 +82,7 @@ class AddPlayerView extends Component {
                     className="form-control bg-light border-0 py-2" //Soft input style
                     placeholder="e.g. Mario"
                     value={this.state.name}
-                    onChange={this.QHandleInputChange}
+                    onChange={this.handleInputChange}
                   />
                 </div>
 
@@ -95,7 +95,7 @@ class AddPlayerView extends Component {
                     className="form-control bg-light border-0 py-2" 
                     placeholder="e.g. Rossi"
                     value={this.state.surname}
-                    onChange={this.QHandleInputChange}
+                    onChange={this.handleInputChange}
                   />
                 </div>
 
@@ -108,7 +108,7 @@ class AddPlayerView extends Component {
                     className="form-control bg-light border-0 py-2" 
                     placeholder="e.g. 10"
                     value={this.state.number}
-                    onChange={this.QHandleInputChange}
+                    onChange={this.handleInputChange}
                   />
                 </div>
 
@@ -118,7 +118,7 @@ class AddPlayerView extends Component {
                    <button 
                       type="button"
                       className="btn btn-outline-secondary rounded-pill px-4 fw-bold"
-                      onClick={() => this.props.QViewFromChild({ page: "teams" })}
+                      onClick={() => this.props.viewFromChild({ page: "teams" })}
                    >
                       <i className="bi bi-arrow-left me-2"></i> Back
                    </button>
@@ -126,7 +126,7 @@ class AddPlayerView extends Component {
                    <button 
                       type="button"
                       className="btn btn-primary rounded-pill px-4 fw-bold shadow-sm"
-                      onClick={this.QAddPlayer}
+                      onClick={this.addPlayer}
                    >
                       <i className="bi bi-plus-lg me-2"></i> Add Player
                    </button>

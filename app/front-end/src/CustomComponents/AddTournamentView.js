@@ -16,7 +16,7 @@ class AddTournamentView extends Component {
   }
 
   // Generic handler for inputs
-  QGetTextFromField = (e) => {
+  getTextFromField = (e) => {
     this.setState(prevState => ({
       tournament: { 
         ...prevState.tournament, 
@@ -25,10 +25,18 @@ class AddTournamentView extends Component {
     }));
   };
 
-  QPostTournament = () => {
+  postTournament = () => {
     // Validation
     if (!this.state.tournament.name || !this.state.tournament.startDate || !this.state.tournament.maxTeams) {
         alert("Please fill in all fields.");
+        return;
+    }
+
+    const today = new Date();
+    const startDate = new Date(this.state.tournament.startDate);  
+    
+    if(startDate < today) {
+        alert("Cannot set a start date in the past.");
         return;
     }
 
@@ -40,7 +48,7 @@ class AddTournamentView extends Component {
     }, {withCredentials: true})
     .then(res => {
       alert("Tournament created successfully!");
-      this.props.QViewFromChild({ page: "tournaments" });
+      this.props.viewFromChild({ page: "tournaments" });
     })
     .catch(err => {
       console.log("Error creating tournament:", err);
@@ -69,7 +77,7 @@ class AddTournamentView extends Component {
                 <div className="mb-3">
                     <label className="form-label fw-bold small text-muted text-uppercase">Tournament Name</label>
                     <input 
-                        onChange={this.QGetTextFromField} 
+                        onChange={this.getTextFromField} 
                         name="name" 
                         type="text" 
                         className="form-control bg-light border-0 py-2" 
@@ -81,7 +89,7 @@ class AddTournamentView extends Component {
                 <div className="mb-3">
                     <label className="form-label fw-bold small text-muted text-uppercase">Sport</label>
                     <select 
-                        onChange={this.QGetTextFromField} 
+                        onChange={this.getTextFromField} 
                         name="sport" 
                         className="form-select bg-light border-0 py-2"
                         value={this.state.tournament.sport}
@@ -96,7 +104,7 @@ class AddTournamentView extends Component {
                 <div className="mb-3">
                     <label className="form-label fw-bold small text-muted text-uppercase">Start Date</label>
                     <input 
-                        onChange={this.QGetTextFromField} 
+                        onChange={this.getTextFromField} 
                         name="startDate" 
                         type="date" 
                         className="form-control bg-light border-0 py-2" 
@@ -107,7 +115,7 @@ class AddTournamentView extends Component {
                 <div className="mb-4">
                     <label className="form-label fw-bold small text-muted text-uppercase">Max Teams</label>
                     <input 
-                        onChange={this.QGetTextFromField} 
+                        onChange={this.getTextFromField} 
                         name="maxTeams" 
                         type="number" 
                         className="form-control bg-light border-0 py-2" 
@@ -118,14 +126,14 @@ class AddTournamentView extends Component {
                 {/* Footer with buttons */}
                 <div className="d-flex justify-content-between border-top pt-4 mt-4">
                     <button 
-                        onClick={() => this.props.QViewFromChild({ page: "tournaments" })} 
+                        onClick={() => this.props.viewFromChild({ page: "tournaments" })} 
                         className="btn btn-outline-secondary rounded-pill px-4 fw-bold"
                     >
                         Cancel
                     </button>
                     
                     <button 
-                        onClick={this.QPostTournament} 
+                        onClick={this.postTournament} 
                         className="btn btn-success rounded-pill px-5 fw-bold shadow-sm"
                     >
                         <i className="bi bi-check-lg me-2"></i> Create Tournament

@@ -10,8 +10,8 @@ class SingleTeamView extends Component {
     }
   }
 
-  QSetViewInParent = (obj) => {
-    this.props.QViewFromChild(obj);
+  setViewInParent = (obj) => {
+    this.props.viewFromChild(obj);
   };
 
   componentDidMount() {
@@ -115,9 +115,9 @@ class SingleTeamView extends Component {
                     className="btn btn-outline-secondary rounded-pill px-4 fw-bold"
                     onClick={() => {
                         if (sourceID) {
-                            this.props.QViewFromChild({ page: "teams", tournamentID: sourceID });
+                            this.props.viewFromChild({ page: "teams", tournamentID: sourceID });
                         } else {
-                            this.props.QViewFromChild({ page: "teams" });
+                            this.props.viewFromChild({ page: "teams" });
                         }
                     }}
                 >

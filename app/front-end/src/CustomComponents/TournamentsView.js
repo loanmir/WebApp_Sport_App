@@ -13,11 +13,11 @@ class TournamentsView extends Component {
     }
   }
 
-  QSetViewInParent = (obj) => {
-    this.props.QViewFromChild(obj);
+  setViewInParent = (obj) => {
+    this.props.viewFromChild(obj);
   };
 
-  QFetchTournaments = () => {
+  fetchTournaments = () => {
     const {searchQuery, selectedStatus} = this.state;
     axios.get("http://localhost:8080/tournaments?q="+searchQuery+"&status="+selectedStatus)
       .then(res => {
@@ -31,18 +31,18 @@ class TournamentsView extends Component {
   }
 
   componentDidMount() {
-    this.QFetchTournaments();
+    this.fetchTournaments();
   }
 
-  QDeleteTournament = (tournamentId) => {
+  deleteTournament = (tournamentId) => {
     if (!window.confirm("Are you sure you want to delete this tournament? This cannot be undone.")) {
       return;
     }
     axios.delete("http://localhost:8080/tournaments/" + tournamentId, { withCredentials: true })
     .then(res => {
-        this.QFetchTournaments();
+        this.fetchTournaments();
         alert("Tournament deleted successfully.");
-        this.props.QIDFromChild({ page: "tournaments"});
+        this.props.viewFromChild({ page: "tournaments"});
     })
     .catch(err => {
         console.error("Delete error:", err);
@@ -50,11 +50,11 @@ class TournamentsView extends Component {
     });
   }
 
-  QHandleInputChange = (e) => {
+  handleInputChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value
     }, () => {
-      this.QFetchTournaments(); 
+      this.fetchTournaments(); 
     });
   }
 
@@ -97,14 +97,14 @@ class TournamentsView extends Component {
                         <input 
                             type="radio" className="btn-check" name="viewMode" id="viewAll" value="all"
                             checked={this.state.viewMode === "all"}
-                            onChange={this.QHandleInputChange}
+                            onChange={this.handleInputChange}
                         />
                         <label className="btn btn-outline-primary rounded-start-pill px-3 fw-bold" htmlFor="viewAll">All</label>
 
                         <input 
                             type="radio" className="btn-check" name="viewMode" id="viewMine" value="mine"
                             checked={this.state.viewMode === "mine"}
-                            onChange={this.QHandleInputChange}
+                            onChange={this.handleInputChange}
                         />
                         <label className="btn btn-outline-primary rounded-end-pill px-3 fw-bold" htmlFor="viewMine">My Tournaments</label>
                     </div>
@@ -125,7 +125,7 @@ class TournamentsView extends Component {
                             name="searchQuery"
                             className="form-control bg-light border-0 py-2" 
                             placeholder="Search tournaments..." 
-                            onChange={this.QHandleInputChange}
+                            onChange={this.handleInputChange}
                         />
                     </div>
                 </div>
@@ -135,7 +135,7 @@ class TournamentsView extends Component {
                     <select 
                         name="selectedStatus" 
                         className="form-select bg-light border-0 py-2" 
-                        onChange={this.QHandleInputChange}
+                        onChange={this.handleInputChange}
                     >
                         <option value="">All Statuses</option>
                         <option value="Open">Open (Sign-ups)</option>
@@ -149,7 +149,7 @@ class TournamentsView extends Component {
                     {logged ? (
                         <button 
                             className="btn btn-primary w-100 rounded-pill fw-bold shadow-sm"
-                            onClick={() => this.QSetViewInParent({ page: "addtournament" })} 
+                            onClick={() => this.setViewInParent({ page: "addtournament" })}
                         >
                             <i className="bi bi-plus-lg me-2"></i> Create Tournament
                         </button>
@@ -205,7 +205,7 @@ class TournamentsView extends Component {
                         {d.status === "Active" && (
                           <button 
                             className="btn btn-success w-100 mb-2 rounded-pill fw-bold"
-                            onClick={() => this.props.QViewFromChild({ page: "schedule", tournamentID: d._id })}
+                            onClick={() => this.setViewInParent({ page: "schedule", tournamentID: d._id })}
                           >
                             <i className="bi bi-calendar-check me-2"></i> View Schedule
                           </button>
@@ -213,7 +213,7 @@ class TournamentsView extends Component {
                         
                         {/* View teams */}
                         <button
-                            onClick={() => this.QSetViewInParent({ page: "teams", tournamentID: d._id })}
+                            onClick={() => this.setViewInParent({ page: "teams", tournamentID: d._id })}
                             className="btn btn-outline-primary w-100 mb-3 rounded-pill fw-bold"
                         >
                             View Teams
@@ -223,13 +223,13 @@ class TournamentsView extends Component {
                         {isCreator && (
                             <div className="d-flex gap-2 border-top pt-3">
                                   <button
-                                    onClick={() => this.QSetViewInParent({ page: "edittournament", tournamentID: d._id })}
+                                    onClick={() => this.setViewInParent({ page: "edittournament", tournamentID: d._id })}
                                     className="btn btn-sm btn-light text-warning border w-50 rounded-pill fw-bold"
                                   >
                                     <i className="bi bi-pencil-fill me-1"></i> Edit
                                   </button>
                                   <button
-                                    onClick={() => this.QDeleteTournament(d._id)}
+                                    onClick={() => this.deleteTournament(d._id)}
                                     className="btn btn-sm btn-light text-danger border w-50 rounded-pill fw-bold"
                                   >
                                     <i className="bi bi-trash-fill me-1"></i> Delete

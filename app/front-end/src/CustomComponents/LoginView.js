@@ -17,7 +17,7 @@ class LoginView extends Component {
     };
   }
 
-  QGetTextFromField = (e) => {
+  getTextFromField = (e) => {
     this.setState((prevState) => ({
       user: { ...prevState.user, [e.target.name]: e.target.value },
       errors: { ...prevState.errors, [e.target.name]: "" }, 
@@ -26,12 +26,12 @@ class LoginView extends Component {
   };
 
 
-  QTogglePassword = () => {
+  togglePassword = () => {
     this.setState(prev => ({ showPassword: !prev.showPassword }));
   }
 
 
-  QValidateFields = () => {
+  validateFields = () => {
     const { username, password } = this.state.user;
     let errors = {};
     let isValid = true;
@@ -45,14 +45,14 @@ class LoginView extends Component {
 
 
 
-  QSendUserToParent = (obj) => {
-    this.props.QUserFromChild(obj);
+  sendUserToParent = (obj) => {
+    this.props.userFromChild(obj);
   };
 
 
 
-  QPostLogin = () =>{
-    if (!this.QValidateFields()) {
+  postLogin = () =>{
+    if (!this.validateFields()) {
       return; // Stop if validation fails
     }
 
@@ -67,8 +67,8 @@ class LoginView extends Component {
     .then(res => {
         console.log("Login successful!");
         console.log(res.data)
-        this.QSendUserToParent(res.data);
-        this.props.QViewFromChild({ page: "home" })
+        this.sendUserToParent(res.data);
+        this.props.viewFromChild({ page: "home" })
     })
     .catch(err => {
       console.log("Error:", err)
@@ -115,7 +115,7 @@ class LoginView extends Component {
             <div className="mb-3">
               <label className="form-label">Username</label>
               <input
-                onChange={this.QGetTextFromField}
+                onChange={this.getTextFromField}
                 name="username"
                 type="text"
                 value={user.username}
@@ -130,7 +130,7 @@ class LoginView extends Component {
               <label className="form-label">Password</label>
               <div className="input-group has-validation">
                 <input
-                    onChange={this.QGetTextFromField}
+                    onChange={this.getTextFromField}
                     name="password"
                     type={showPassword ? "text" : "password"}
                     value={user.password}
@@ -140,7 +140,7 @@ class LoginView extends Component {
                 <button 
                     className="btn btn-outline-secondary" 
                     type="button" 
-                    onClick={this.QTogglePassword}
+                    onClick={this.togglePassword}
                     style={{ zIndex: 0 }}
                 >
                     <i className={`bi ${showPassword ? "bi-eye-slash-fill" : "bi-eye-fill"}`}></i>
@@ -152,7 +152,7 @@ class LoginView extends Component {
 
           {/* LOGIN BUTTON */}
           <button
-            onClick={this.QPostLogin}
+            onClick={this.postLogin}
             disabled={loading}
             className="btn btn-primary w-100 mt-3 fw-bold"
           >
@@ -170,7 +170,7 @@ class LoginView extends Component {
           <div className="text-center">
             <p className="text-muted small mb-2">Don't have an account?</p>
             <button
-              onClick={() => this.props.QViewFromChild({ page: "signup" })}
+              onClick={() => this.props.viewFromChild({ page: "signup" })}
               className="btn btn-outline-secondary btn-sm"
             >
               Create Account

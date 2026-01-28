@@ -16,11 +16,11 @@ class AddTeamView extends Component {
     };
   }
 
-  QHandleTeamName = (e) => {
+  handleTeamName = (e) => {
     this.setState({ name: e.target.value });
   }
   
-  QHandlePlayerInput = (e) => {
+  handlePlayerInput = (e) => {
     this.setState(prevState => ({
       currentPlayer: {
         ...prevState.currentPlayer,
@@ -30,7 +30,7 @@ class AddTeamView extends Component {
   }
 
   // Add the current player to the list
-  QAddPlayerToList = () => {
+  addPlayerToList = () => {
     const { name, surname, number } = this.state.currentPlayer;
 
     if (!name || !surname) {
@@ -44,13 +44,13 @@ class AddTeamView extends Component {
     }));
   }
 
-  QRemovePlayer = (indexToRemove) => {
+  removePlayer = (indexToRemove) => {
     this.setState(prevState => ({
       players: prevState.players.filter((_, index) => index !== indexToRemove)
     }));
   }
 
-  QPostTeam = () => {
+  postTeam = () => {
     if (!this.state.name) {
         alert("Please enter a Team Name.");
         return;
@@ -66,7 +66,7 @@ class AddTeamView extends Component {
     }, { withCredentials: true })
     .then(res => {
       alert("Team created successfully!");
-      this.props.QViewFromChild({ page: "teams", tournamentID: null }); 
+      this.props.viewFromChild({ page: "teams", tournamentID: null }); 
     })
     .catch(err => {
       console.log("Error:", err);
@@ -99,7 +99,7 @@ class AddTeamView extends Component {
                         className="form-control form-control-lg bg-light border-0" 
                         placeholder="e.g. The Lions" 
                         value={this.state.name}
-                        onChange={this.QHandleTeamName}
+                        onChange={this.handleTeamName}
                     />
                 </div>
 
@@ -114,27 +114,27 @@ class AddTeamView extends Component {
                             <label className="form-label small text-muted">First Name</label>
                             <input 
                                 type="text" name="name" className="form-control border-0 bg-white" placeholder="John"
-                                value={this.state.currentPlayer.name} onChange={this.QHandlePlayerInput} 
+                                value={this.state.currentPlayer.name} onChange={this.handlePlayerInput} 
                             />
                         </div>
                         <div className="col-md-5">
                             <label className="form-label small text-muted">Surname</label>
                             <input 
                                 type="text" name="surname" className="form-control border-0 bg-white" placeholder="Doe"
-                                value={this.state.currentPlayer.surname} onChange={this.QHandlePlayerInput} 
+                                value={this.state.currentPlayer.surname} onChange={this.handlePlayerInput} 
                             />
                         </div>
                         <div className="col-md-2">
                             <label className="form-label small text-muted">No.</label>
                             <input 
                                 type="number" name="number" className="form-control border-0 bg-white" placeholder="#"
-                                value={this.state.currentPlayer.number} onChange={this.QHandlePlayerInput} 
+                                value={this.state.currentPlayer.number} onChange={this.handlePlayerInput} 
                             />
                         </div>
                     </div>
                     <button 
                         className="btn btn-outline-primary w-100 mt-3 rounded-pill fw-bold bg-white" 
-                        onClick={this.QAddPlayerToList}
+                        onClick={this.addPlayerToList}
                     >
                         <i className="bi bi-plus-lg"></i> Add to Roster
                     </button>
@@ -157,7 +157,7 @@ class AddTeamView extends Component {
                                     </div>
                                     <button 
                                         className="btn btn-sm btn-outline-danger border-0 rounded-circle" 
-                                        onClick={() => this.QRemovePlayer(index)}
+                                        onClick={() => this.removePlayer(index)}
                                         title="Remove Player"
                                     >
                                         <i className="bi bi-x-lg"></i>
@@ -171,13 +171,13 @@ class AddTeamView extends Component {
                 {/* Footer with buttons */}
                 <div className="d-flex justify-content-between border-top pt-4 mt-4">
                     <button 
-                        onClick={() => this.props.QViewFromChild({ page: "teams" })}
+                        onClick={() => this.props.viewFromChild({ page: "teams" })}
                         className="btn btn-outline-secondary rounded-pill px-4 fw-bold"
                     >
                         Cancel
                     </button>
                     <button 
-                        onClick={this.QPostTeam} 
+                        onClick={this.postTeam} 
                         className="btn btn-success rounded-pill px-5 fw-bold shadow-sm"
                     >
                         <i className="bi bi-check-lg me-2"></i> Create Team

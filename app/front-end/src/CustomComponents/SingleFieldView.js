@@ -12,27 +12,26 @@ class SingleFieldView extends Component {
     }
   }
 
-  QSetViewInParent = (obj) => {
-    this.props.QViewFromChild(obj);
+  setViewInParent = (obj) => {
+    this.props.viewFromChild(obj);
   };
 
-  // Helper to update state when inputs change
-  QHandleInputChange = (e) => {
+  
+  handleInputChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value
     });
   }
 
-  // The Logic to send the booking to the backend
-  QBookField = () => {
-    // 1. Validation
+  
+  bookField = () => {
+    // Validation
     if (!this.state.selectedDate || !this.state.selectedSlot) {
       alert("Please select both a date and a time slot.");
       return;
     }
 
-    // 2. Prepare the data
-    // API Route: POST /api/fields/:id/bookings (Based on your requirements)
+    
     const bookingData = {
       date: this.state.selectedDate,
       timeSlot: this.state.selectedSlot,
@@ -41,11 +40,10 @@ class SingleFieldView extends Component {
 
     console.log("Sending booking:", bookingData);
 
-    // 3. Send Request (You need to ensure you are logged in for this to work!)
-    axios.post(`http://localhost:8080/fields/${this.state.field._id}/bookings`, bookingData, { withCredentials: true })
+    axios.post("http://localhost:8080/fields/" + this.state.field._id + "/bookings", bookingData, { withCredentials: true })
       .then(res => {
         alert("Booking Successful!");
-        this.QSetViewInParent({ page: "fields" }); // Go back to list after success
+        this.setViewInParent({ page: "fields" }); // Go back to list after success
       })
       .catch(err => {
         console.log("Booking failed:", err);
@@ -80,27 +78,27 @@ class SingleFieldView extends Component {
             <p className="card-text"><strong>Address: </strong>{field.address}</p>
             <hr/>
 
-            {/* --- NEW BOOKING SECTION --- */}
+            {/* Main container */}
             <div className="row g-3 align-items-center">
                 
-                {/* 1. DATE PICKER */}
+                {/* Date */}
                 <div className="col-md-6">
                     <label className="form-label">Select Date:</label>
                     <input 
                         type="date" 
                         name="selectedDate"
                         className="form-control"
-                        onChange={this.QHandleInputChange}
+                        onChange={this.handleInputChange}
                     />
                 </div>
 
-                {/* 2. SLOT DROPDOWN (Requested Feature) */}
+                {/* Slot dropdown */}
                 <div className="col-md-6">
                     <label className="form-label">Select Time Slot:</label>
                     <select 
                         name="selectedSlot" 
                         className="form-select" 
-                        onChange={this.QHandleInputChange}
+                        onChange={this.handleInputChange}
                         defaultValue=""
                     >
                         <option value="" disabled>Choose a time...</option>
@@ -113,10 +111,10 @@ class SingleFieldView extends Component {
                 </div>
             </div>
 
-            {/* 3. BOOK BUTTON (Replaces Return Button) */}
+            {/* Button */}
             <div className="mt-4 d-grid gap-2">
                 <button
-                    onClick={this.QBookField}
+                    onClick={this.bookField}
                     className="btn btn-success btn-lg"
                 >
                     Book Field
@@ -124,7 +122,7 @@ class SingleFieldView extends Component {
                 
                 {/* Small link to go back if they change their mind */}
                 <button 
-                    onClick={() => this.QSetViewInParent({ page: "fields" })}
+                    onClick={() => this.setViewInParent({ page: "fields" })}
                     className="btn btn-link text-secondary"
                     style={{ textDecoration: "none" }}
                 >

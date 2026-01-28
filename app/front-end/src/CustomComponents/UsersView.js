@@ -12,7 +12,7 @@ class UsersView extends Component {
     };
   }
 
-  QFetchUsers = () => {
+  fetchUsers = () => {
     const search = this.state.search;
     axios.get("http://localhost:8080/users?q="+search)
     .then(res => {
@@ -29,7 +29,7 @@ class UsersView extends Component {
     axios.get("http://localhost:8080/tournaments")
     .then(res => {
       this.setState({ tournaments: res.data });
-      this.QFetchUsers();
+      this.fetchUsers();
     })
     .catch(err => {
       console.error("Error fetching data:", err);
@@ -44,11 +44,11 @@ class UsersView extends Component {
     });
   };
 
-  QHandleInputChange = (e) => {
+  handleInputChange = (e) => {
     this.setState({
         [e.target.name]: e.target.value
     }, () =>{
-      this.QFetchUsers();
+      this.fetchUsers();
     });
   }
 
@@ -75,14 +75,14 @@ class UsersView extends Component {
                             className="form-control bg-light border-0 py-2" 
                             placeholder="Search..." 
                             value={this.state.search}
-                            onChange={(e) => this.QHandleInputChange(e)}
+                            onChange={(e) => this.handleInputChange(e)}
                         />
                     </div>
                 </div>
             </div>
         </div>
 
-        {/* Loading */}
+        {/* Loading - spinner */}
         {this.state.loading && (
             <div className="text-center py-5">
                 <div className="spinner-border text-primary" role="status"></div>
@@ -145,7 +145,7 @@ class UsersView extends Component {
                                         key={t._id} 
                                         className="badge bg-light text-dark border fw-normal p-2 cursor-pointer"
                                         style={{cursor: "pointer"}}
-                                        onClick={() => this.props.QViewFromChild({page:"teams", tournamentID: t._id})}
+                                        onClick={() => this.props.viewFromChild({page:"teams", tournamentID: t._id})}
                                         title={`View ${t.name}`}
                                     >
                                         {t.name}
@@ -162,7 +162,7 @@ class UsersView extends Component {
                     </div>
                     <button 
                         className="btn btn-outline-primary w-100 rounded-pill mt-4 fw-bold"
-                        onClick={() => this.props.QViewFromChild({page: "singleUser", userID: user._id})}
+                        onClick={() => this.props.viewFromChild({page: "singleUser", userID: user._id})}
                     >
                         View Profile
                     </button>

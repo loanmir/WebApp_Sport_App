@@ -2,8 +2,8 @@ import { Component } from "react";
 
 class HomeView extends Component {
 
-  QSetViewInParent = (obj) => {
-    this.props.QViewFromChild(obj); 
+  setViewInParent = (obj) => {
+    this.props.viewFromChild(obj); 
   };
 
   render() {
@@ -27,7 +27,7 @@ class HomeView extends Component {
                 <button 
                 className="btn btn-light btn-lg px-4 fw-bold shadow-sm"
                 style={{ color: "#0d6efd" }} // Text matches the blue theme
-                onClick={() => this.QSetViewInParent({ page: "login" })}
+                onClick={() => this.setViewInParent({ page: "login" })}
                 >
                 Login / Register
                 </button>
@@ -58,7 +58,7 @@ class HomeView extends Component {
                 </p>
                 <button 
                   className="btn btn-outline-primary w-100 rounded-pill"
-                  onClick={() => this.QSetViewInParent({ page: "tournaments" })}
+                  onClick={() => this.setViewInParent({ page: "tournaments" })}
                 >
                   Go to Tournaments
                 </button>
@@ -79,7 +79,7 @@ class HomeView extends Component {
                 </p>
                 <button 
                   className="btn btn-outline-primary w-100 rounded-pill"
-                  onClick={() => this.QSetViewInParent({ page: "teams" })}
+                  onClick={() => this.setViewInParent({ page: "teams" })}
                 >
                   Manage Teams
                 </button>
@@ -100,7 +100,7 @@ class HomeView extends Component {
                 </p>
                 <button 
                   className="btn btn-outline-warning w-100 rounded-pill"
-                  onClick={() => this.QSetViewInParent({ page: "fields" })}
+                  onClick={() => this.setViewInParent({ page: "fields" })}
                 >
                   Book a Field
                 </button>

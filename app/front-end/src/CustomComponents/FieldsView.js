@@ -12,12 +12,12 @@ class FieldsView extends Component {
     }
   }
 
-  QSetViewInParent = (obj) => {
-    this.props.QViewFromChild(obj);
+  setViewInParent = (obj) => {
+    this.props.viewFromChild(obj);
   };
 
 
-  QFetchFields = () => {
+  fetchFields = () => {
     const {searchQuery, selectedSport} = this.state;
 
     axios.get("http://localhost:8080/fields?q="+searchQuery+"&sport="+selectedSport)
@@ -34,25 +34,25 @@ class FieldsView extends Component {
 
 
   componentDidMount() {
-    this.QFetchFields();
+    this.fetchFields();
   }
 
 
 
-  QHandleInputChange = (e) => {
+  handleInputChange = (e) => {
     this.setState({
       [e.target.name]: e.target.value // Remember the name for each input and select -> They have specific names in order to easily update the state
     }, () => {
-      this.QFetchFields(); // Fetch again after state update
+      this.fetchFields(); // Fetch again after state update
     });
   }
 
-  QHandleAddClick = () => {
+  handleAddClick = () => {
     const { logged } = this.props.userStatus || {};
     if (!logged) {
-      this.QSetViewInParent({ page: "login" });
+      this.setViewInParent({ page: "login" });
     } else{
-      this.QSetViewInParent({ page: "addfield" });
+      this.setViewInParent({ page: "addfield" });
     }
   }
 
@@ -75,7 +75,7 @@ class FieldsView extends Component {
                         name="searchQuery"
                         className="form-control border-0 bg-light" 
                         placeholder="Search fields by name or address..." 
-                        onChange={this.QHandleInputChange}
+                        onChange={this.handleInputChange}
                     />
                   </div>
                 </div>
@@ -85,7 +85,7 @@ class FieldsView extends Component {
                     <select 
                         name="selectedSport" 
                         className="form-select border-0 bg-light" 
-                        onChange={this.QHandleInputChange}
+                        onChange={this.handleInputChange}
                     >
                         <option value="">All Sports</option>
                         <option value="Football">Football</option>
@@ -98,7 +98,7 @@ class FieldsView extends Component {
                 <div className="col-md-3 text-end">
                     <button 
                         className="btn btn-primary w-100 rounded-pill fw-bold shadow-sm"
-                        onClick={this.QHandleAddClick} 
+                        onClick={this.handleAddClick} 
                     >
                       <i className="bi bi-plus-lg me-2"></i> Add New Field
                     </button>
@@ -148,7 +148,7 @@ class FieldsView extends Component {
 
                   <div className="card-footer bg-white border-top-0 pt-0 pb-3">
                     <button
-                      onClick={() => this.QSetViewInParent({ page: "bookfield", fieldID: d._id })}
+                      onClick={() => this.setViewInParent({ page: "bookfield", fieldID: d._id })}
                       className="btn btn-outline-primary w-100 rounded-pill mt-4 fw-bold"
                     >
                       Book Now

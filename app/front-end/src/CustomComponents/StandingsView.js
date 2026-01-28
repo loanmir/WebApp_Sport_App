@@ -32,7 +32,7 @@ class StandingsView extends Component {
                         <h5 className="text-muted">No teams found in this tournament.</h5>
                         <button 
                             className="btn btn-outline-primary rounded-pill mt-3 px-4 fw-bold"
-                            onClick={() => this.props.QViewFromChild({ page: "tournaments" })}
+                            onClick={() => this.props.viewFromChild({ page: "tournaments" })}
                         >
                             Back to Tournaments
                         </button>
@@ -72,7 +72,7 @@ class StandingsView extends Component {
 
                     <button
                         className="btn btn-outline-secondary rounded-pill px-3 fw-bold btn-sm"
-                        onClick={() => this.props.QViewFromChild({
+                        onClick={() => this.props.viewFromChild({
                             page: "schedule",
                             tournamentID: this.props.tournamentID
                         })}

@@ -9,6 +9,7 @@ class EditTournamentView extends Component {
       sport: "",
       maxTeams: 0,
       status: "Open",
+      originalStatus: "Open",
       allTeams: [],
       loading: true
     };
@@ -29,6 +30,7 @@ class EditTournamentView extends Component {
           sport: t.sport,
           maxTeams: t.maxTeams,
           status: t.status,
+          originalStatus: t.status,
           allTeams: teamsRes.data,
           loading: false
         });
@@ -36,11 +38,11 @@ class EditTournamentView extends Component {
       .catch(err => {
         console.error("Error loading tournament:", err);
         alert("Could not load data.");
-        this.props.QViewFromChild({ page: "tournaments" }); // If error, then go back
+        this.props.viewFromChild({ page: "tournaments" }); // If error, then go back
       });
   }
 
-  QSaveEdit = () => {
+  saveEdit = () => {
     const id = this.props.tournamentID;
     axios.put("http://localhost:8080/tournaments/"+id, {
       name: this.state.name,
@@ -50,20 +52,20 @@ class EditTournamentView extends Component {
     }, { withCredentials: true })
     .then(res => {
         alert("Tournament updated!");
-        this.props.QViewFromChild({ page: "tournaments" }); // After update, go back to tournaments list
+        this.props.viewFromChild({ page: "tournaments" }); // After update, go back to tournaments list
     })
     .catch(err => {
         alert(err.response?.data?.error || "Update failed");
     });
   }
 
-  QHandleInputChange = (e) => {
+  handleInputChange = (e) => {
     this.setState({ 
         [e.target.name]: e.target.value 
     });
   }
   
-  QAddTeamToTournament = (teamId) => {
+  addTeamToTournament = (teamId) => {
       const tournamentId = this.props.tournamentID;
       const maxTeams = this.state.maxTeams;
       
@@ -97,7 +99,7 @@ class EditTournamentView extends Component {
       .catch(err => alert("Could not add team."));
   }
 
-  QRemoveTeamFromTournament = (teamId) => {
+  removeTeamFromTournament = (teamId) => {
       axios.put("http://localhost:8080/teams/"+teamId, {
           tournament: null 
       }, { withCredentials: true })
@@ -111,7 +113,7 @@ class EditTournamentView extends Component {
       .catch(err => alert("Could not remove team."));
   }
 
-  QStartTournament = () => {
+  startTournament = () => {
     if (!window.confirm("Are you sure you want to start the tournament? This will lock the teams.")) {
         return;
     }
@@ -120,8 +122,16 @@ class EditTournamentView extends Component {
 
     axios.post("http://localhost:8080/tournaments/"+id+"/matches/generate", {}, { withCredentials: true })
     .then(res =>{
+        return axios.put("http://localhost:8080/tournaments/"+id, {
+            name: this.state.name,
+            sport: this.state.sport,
+            maxTeams: this.state.maxTeams,
+            status: "Active" // Forcing status update to "Active"
+        }, { withCredentials: true });
+    })
+    .then(res => {
         alert("Tournament started and matches generated!");
-        this.setState({ status: "Active" });
+        this.props.viewFromChild({ page: "tournaments" });
     })
     .catch(err =>{
         console.error(err);
@@ -168,25 +178,42 @@ class EditTournamentView extends Component {
                     <div className="mb-3">
                         <label className="form-label small text-muted text-uppercase fw-bold">Tournament Name</label>
                         <input type="text" className="form-control bg-light border-0 py-2" name="name" 
-                            value={this.state.name} onChange={this.QHandleInputChange} />
+                            value={this.state.name} onChange={this.handleInputChange} />
                     </div>
 
                     <div className="mb-4">
                         <label className="form-label small text-muted text-uppercase fw-bold">Status</label>
                         <select className="form-select bg-light border-0 py-2" name="status" 
-                            value={this.state.status} onChange={this.QHandleInputChange}>
-                            <option value="Open">Open (Sign-ups)</option>
-                            <option value="Active">Active (In Progress)</option>
-                            <option value="Completed">Completed</option>
+                            value={this.state.status} onChange={this.handleInputChange}>
+
+                            {this.state.originalStatus === "Open" && (
+                                <>
+                                    <option value="Open">Open (Sign-ups)</option>
+                                    {/*<option value="Completed">Completed</option>*/}
+                                    {/* In this case, "Active" is hidden */}
+                                </>
+                            )}
+
+                            {this.state.originalStatus === "Active" && (
+                                <>
+                                    <option value="Active">Active (In Progress)</option>
+                                    <option value="Completed">Completed</option>
+                                </>
+                            )}
+
+                            {this.state.originalStatus === "Completed" && (
+                                <option value="Completed">Completed</option>
+                            )}
+
                         </select>
                     </div>
 
                     <div className="d-grid gap-2 d-md-flex justify-content-between mt-auto pt-3">
                         <button className="btn btn-outline-secondary rounded-pill px-4 fw-bold" 
-                            onClick={() => this.props.QViewFromChild({ page: "tournaments" })}>
+                            onClick={() => this.props.viewFromChild({ page: "tournaments" })}>
                             Cancel
                         </button>
-                        <button className="btn btn-warning rounded-pill px-4 fw-bold shadow-sm" onClick={this.QSaveEdit}>
+                        <button className="btn btn-warning rounded-pill px-4 fw-bold shadow-sm" onClick={this.saveEdit}>
                             Save Changes
                         </button>
                     </div>
@@ -194,13 +221,13 @@ class EditTournamentView extends Component {
                     {/* Start tournament */}
                     {this.state.status === "Open" && (
                         <div className="mt-5 p-3 bg-light rounded-3 border border-dashed text-center">
-                            <h6 className="fw-bold text-dark mb-2">Ready to Kickoff?</h6>
+                            <h6 className="fw-bold text-dark mb-2">Ready to Start?</h6>
                             <p className="text-muted small mb-3">
                                 Starting the tournament will lock the roster and generate matches automatically.
                             </p>
                             <button
                                 className="btn btn-success w-100 rounded-pill fw-bold shadow-sm"
-                                onClick={this.QStartTournament}
+                                onClick={this.startTournament}
                                 disabled={myTeams.length < 2}
                             >
                                 <i className="bi bi-play-circle-fill me-2"></i> Start Tournament
@@ -228,7 +255,7 @@ class EditTournamentView extends Component {
                             <div key={t._id} className="list-group-item border-0 bg-light mb-2 rounded-3 d-flex justify-content-between align-items-center px-3 py-2">
                                 <span className="fw-bold text-dark">{t.name}</span>
                                 <button className="btn btn-sm btn-outline-danger border-0 rounded-circle" 
-                                    onClick={() => this.QRemoveTeamFromTournament(t._id)}
+                                    onClick={() => this.removeTeamFromTournament(t._id)}
                                     disabled={isActive_Completed}
                                     title="Remove Team"
                                 >
@@ -254,7 +281,7 @@ class EditTournamentView extends Component {
                                  <span className="text-secondary">{t.name}</span>
                                  <button 
                                      className="btn btn-sm btn-success rounded-pill px-3 fw-bold" 
-                                     onClick={() => this.QAddTeamToTournament(t._id)}
+                                     onClick={() => this.addTeamToTournament(t._id)}
                                      disabled={isFull || isActive_Completed} 
                                  >
                                      <i className="bi bi-plus-lg me-1"></i> Add

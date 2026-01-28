@@ -19,7 +19,7 @@ class SignUpView extends Component {
       });
   }
 
-  QGetTextFromField = (e) => {
+  getTextFromField = (e) => {
     this.setState((prevState) => ({
       user: { ...prevState.user, [e.target.name]: e.target.value },
       errors: { ...prevState.errors, [e.target.name]: "" } // Clear error for this field
@@ -27,13 +27,13 @@ class SignUpView extends Component {
   };
 
 
-  QTogglePassword = () => {
+  togglePassword = () => {
     this.setState(prev => ({
       showPassword: !prev.showPassword
     }));
   }
 
-  QValidateFields = () => {
+  validateFields = () => {
     const { username, password, name, surname } = this.state.user;
     let errors = {};
     let isValid = true;
@@ -47,13 +47,9 @@ class SignUpView extends Component {
     return isValid;
   }
 
- 
-  //QSendUserToParent = (state) => {
-    //this.props.QUserFromChild(state.user);
-  //};
 
-  QPostSignUp = () => {
-    if (!this.QValidateFields()) {
+  postSignUp = () => {
+    if (!this.validateFields()) {
       return; // Stop if validation fails
     }
 
@@ -69,7 +65,7 @@ class SignUpView extends Component {
     .then(res => {
       console.log("Sent to server...") 
       alert("Registration successful! You can now log in.")
-      this.props.QViewFromChild({ page: "login" })
+      this.props.viewFromChild({ page: "login" })
     }).catch(err => {
       const serverError = err.response?.data?.error || "Registration failed. Please try again.";
       this.setState({ errorMessage: serverError, loading: false });
@@ -100,7 +96,7 @@ class SignUpView extends Component {
             <div className="mb-3">
               <label className="form-label">Username</label>
               <input
-                onChange={this.QGetTextFromField}
+                onChange={this.getTextFromField}
                 name="username"
                 type="text"
                 value={user.username}
@@ -115,7 +111,7 @@ class SignUpView extends Component {
               <label className="form-label">Password</label>
               <div className="input-group">
                 <input
-                    onChange={this.QGetTextFromField}
+                    onChange={this.getTextFromField}
                     name="password"
                     type={showPassword ? "text" : "password"}
                     value={user.password}
@@ -125,7 +121,7 @@ class SignUpView extends Component {
                 <button 
                     className="btn btn-outline-secondary" 
                     type="button" 
-                    onClick={this.QTogglePassword}
+                    onClick={this.togglePassword}
                     style={{zIndex: 0}}
                 >
                     <i className={`bi ${showPassword ? "bi-eye-slash" : "bi-eye"}`}></i>
@@ -138,7 +134,7 @@ class SignUpView extends Component {
             <div className="mb-3">
               <label className="form-label">First Name</label>
               <input
-                onChange={this.QGetTextFromField}
+                onChange={this.getTextFromField}
                 name="name"
                 type="text"
                 value={user.name}
@@ -152,7 +148,7 @@ class SignUpView extends Component {
             <div className="mb-3">
               <label className="form-label">Surname</label>
               <input
-                onChange={this.QGetTextFromField}
+                onChange={this.getTextFromField}
                 name="surname"
                 type="text"
                 value={user.surname}
@@ -165,7 +161,7 @@ class SignUpView extends Component {
 
           {/* SUBMIT BUTTON */}
           <button
-            onClick={this.QPostSignUp}
+            onClick={this.postSignUp}
             disabled={loading} // Disable button while loading
             className="btn btn-primary w-100 mt-3"
           >
@@ -184,7 +180,7 @@ class SignUpView extends Component {
             <small className="text-muted">Already have an account? </small>
             <a 
                 href="#" 
-                onClick={(e) => { e.preventDefault(); this.props.QViewFromChild({ page: "login" }); }}
+                onClick={(e) => { e.preventDefault(); this.props.viewFromChild({ page: "login" }); }}
                 className="text-decoration-none"
             >
                 Login here

@@ -43,7 +43,7 @@ class App extends Component {
   }
 
   // Custom function for setting the View
-  QSetView = (obj) => {
+  setView = (obj) => {
     this.setState({
       currentPage: obj.page,
       teamID: obj.teamID || 0,
@@ -54,55 +54,55 @@ class App extends Component {
     });
   };
 
-  QGetView = (state) => {
+  getView = (state) => {
     let page = state.currentPage;
     switch (page) {
       case "fields":
-        return <FieldsView QViewFromChild={this.QSetView} userStatus={this.state.userStatus}/>;
+        return <FieldsView viewFromChild={this.setView} userStatus={this.state.userStatus}/>;
       case "addfield":
-        return <AddFieldView QViewFromChild={this.QSetView} />;
+        return <AddFieldView viewFromChild={this.setView} />;
       case "field":
-        return <SingleFieldView QViewFromChild={this.QSetView} data={this.state.fieldID} />;    // SINGLE FIELD VIEW IS NOT USED!!!!!!
+        return <SingleFieldView viewFromChild={this.setView} data={this.state.fieldID} />;    // SINGLE FIELD VIEW IS NOT USED!!!!!!
       case "teams":
-        return <TeamsView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} userStatus={this.state.userStatus}/>;
+        return <TeamsView viewFromChild={this.setView} tournamentID={this.state.tournamentID} userStatus={this.state.userStatus}/>;
       case "addteam":
-        return state.userStatus.logged ? <AddTeamView QViewFromChild={this.QSetView} /> : <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView} />;
+        return state.userStatus.logged ? <AddTeamView viewFromChild={this.setView} /> : <LoginView userFromChild={this.setUser} viewFromChild={this.setView} />;
       case "tournaments":
-        return <TournamentsView QViewFromChild={this.QSetView} data={this.state.userStatus}/>;
+        return <TournamentsView viewFromChild={this.setView} data={this.state.userStatus}/>;
       case "addtournament":
-        return state.userStatus.logged ? <AddTournamentView QViewFromChild={this.QSetView} /> : <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView} />;
+        return state.userStatus.logged ? <AddTournamentView viewFromChild={this.setView} /> : <LoginView userFromChild={this.setUser} viewFromChild={this.setView} />;
       case "edittournament":
-        return <EditTournamentView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} />;
+        return <EditTournamentView viewFromChild={this.setView} tournamentID={this.state.tournamentID} />;
       case "signup":
-        return <SignUpView QViewFromChild={this.QSetView} />;
+        return <SignUpView viewFromChild={this.setView} />;
       case "login":
-        return <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView}  />;
+        return <LoginView userFromChild={this.setUser} viewFromChild={this.setView}  />;
       case "team":
-        return <SingleTeamView QViewFromChild={this.QSetView} data={this.state.teamID} fromTournamentID={this.state.tournamentID} />;
+        return <SingleTeamView viewFromChild={this.setView} data={this.state.teamID} fromTournamentID={this.state.tournamentID} />;
       case "users":
-        return <UsersView QViewFromChild={this.QSetView} />;
+        return <UsersView viewFromChild={this.setView} />;
       case "bookfield":
-        return state.userStatus.logged ? <BookFieldView fieldID={this.state.fieldID} QViewFromChild={this.QSetView} /> : <LoginView QUserFromChild={this.QSetUser} QViewFromChild={this.QSetView} />;
+        return state.userStatus.logged ? <BookFieldView fieldID={this.state.fieldID} viewFromChild={this.setView} /> : <LoginView userFromChild={this.setUser} viewFromChild={this.setView} />;
       case "bookings":
-        return <BookingsView QViewFromChild={this.QSetView} />;
+        return <BookingsView viewFromChild={this.setView} />;
       case "search":
-        return <SearchView QViewFromChild={this.QSetView} searchQuery={this.state.searchQuery} />;
+        return <SearchView viewFromChild={this.setView} searchQuery={this.state.searchQuery} />;
       case "schedule":
-        return <TournamentScheduleView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} />;
+        return <TournamentScheduleView viewFromChild={this.setView} tournamentID={this.state.tournamentID} />;
       case "match":
-        return <SingleMatchView QViewFromChild={this.QSetView} matchID={this.state.matchID} />;
+        return <SingleMatchView viewFromChild={this.setView} matchID={this.state.matchID} />;
       case "standings":
-        return <StandingsView QViewFromChild={this.QSetView} tournamentID={this.state.tournamentID} />;
+        return <StandingsView viewFromChild={this.setView} tournamentID={this.state.tournamentID} />;
       case "singleUser":
-        return <SingleUserView QViewFromChild={this.QSetView} userID={this.state.userID} />;
+        return <SingleUserView viewFromChild={this.setView} userID={this.state.userID} />;
       case "addplayer":
-        return <AddPlayerView QViewFromChild={this.QSetView} teamID={this.state.teamID} />;
+        return <AddPlayerView viewFromChild={this.setView} teamID={this.state.teamID} />;
       default:
-        return <HomeView QViewFromChild={this.QSetView} userStatus={this.state.userStatus} />;
+        return <HomeView viewFromChild={this.setView} userStatus={this.state.userStatus} />;
     }
   };
 
-  QSetUser = (obj) => {
+  setUser = (obj) => {
     this.setState({
       userStatus:{logged:true, user: obj.user}
     })
@@ -131,7 +131,7 @@ class App extends Component {
       });
   }
 
-  QLogout = () => {
+  logout = () => {
     axios.post("http://localhost:8080/users/logout", {}, {withCredentials:true})
       .then(res => {
         console.log("Logged out successfully");
@@ -152,7 +152,7 @@ class App extends Component {
           <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
             <div className="container-fluid">
               <a
-                onClick={() => this.QSetView({ page: "home" })}
+                onClick={() => this.setView({ page: "home" })}
                 className="navbar-brand"
                 href="#"
               >
@@ -199,7 +199,7 @@ class App extends Component {
                   <li className="nav-item">
                     <a
                       onClick={() => {
-                        this.QSetView({ page: "fields" });
+                        this.setView({ page: "fields" });
                       }}
                       className="nav-link "
                       href="#"
@@ -211,7 +211,7 @@ class App extends Component {
                   <li className="nav-item">
                     <a
                       onClick={() => {
-                        this.QSetView({ page: "users" });
+                        this.setView({ page: "users" });
                       }}
                       className="nav-link "
                       href="#"
@@ -220,22 +220,10 @@ class App extends Component {
                     </a>
                   </li>
 
-                  {/*<li className="nav-item">
-                    <a
-                      onClick={() => {
-                        this.QSetView({ page: "teams" });
-                      }}
-                      className="nav-link "
-                      href="#"
-                    >
-                      Teams
-                    </a>
-                  </li>*/}
-
                   <li className="nav-item">
                     <a
                       onClick={() => {
-                        this.QSetView({ page: "teams" });
+                        this.setView({ page: "teams" });
                       }}
                       className="nav-link"
                       href="#"
@@ -247,7 +235,7 @@ class App extends Component {
                   <li className="nav-item">
                     <a
                       onClick={() => {
-                        this.QSetView({ page: "tournaments" });
+                        this.setView({ page: "tournaments" });
                       }}
                       className="nav-link"
                       href="#"
@@ -256,24 +244,12 @@ class App extends Component {
                     </a>
                   </li>
 
-                  {/*<li className="nav-item">
-                    <a
-                      onClick={() => {
-                        this.QSetView({ page: "signup" });
-                      }}
-                      className="nav-link "
-                      href="#"
-                    >
-                      Sign up
-                    </a>
-                  </li>*/}
-
                   {this.state.userStatus.logged ? (
                     <>  {/*React fragment -> It is actually an invisible wrapper for elements*/}
                       <li className="nav-item">
                         <a
                           onClick={() => {
-                          this.QSetView({ page: "bookings" });
+                          this.setView({ page: "bookings" });
                           }}
                           className="nav-link"
                           href="#"
@@ -285,7 +261,7 @@ class App extends Component {
                     
                       <li className="nav-item">
                         <a
-                        onClick={() => this.QLogout()} // Call the logout function
+                        onClick={() => this.logout()} // Call the logout function
                         className="nav-link"
                         href="#"
                         >
@@ -296,7 +272,7 @@ class App extends Component {
                   ) : (
                     <li className="nav-item">
                       <a
-                      onClick={() => this.QSetView({ page: "login" })}
+                      onClick={() => this.setView({ page: "login" })}
                       className="nav-link"
                       href="#"
                       >
@@ -306,7 +282,7 @@ class App extends Component {
                   )}
                 </ul>
 
-                {/* SEARCH BAR FOR QUERY SEARCH */}
+                {/* Search bar */}
                 <form 
                     className="d-flex ms-3" 
                     onSubmit={(e) => {
@@ -337,7 +313,7 @@ class App extends Component {
           </nav>
         </div>
         <div id="viewer" className="row container">
-          {this.QGetView(this.state)}
+          {this.getView(this.state)}
         </div>
       </div>
     );

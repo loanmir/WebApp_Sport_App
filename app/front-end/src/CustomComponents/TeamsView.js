@@ -12,8 +12,8 @@ class TeamsView extends Component {
     }
   }
 
-  QSetViewInParent = (obj) => {
-    this.props.QViewFromChild(obj); 
+  setViewInParent = (obj) => {
+    this.props.viewFromChild(obj); 
   };
 
   componentDidMount() {
@@ -35,7 +35,7 @@ class TeamsView extends Component {
   }
 
 
-  QHandleInputChange = (e) => {
+  handleInputChange = (e) => {
     this.setState({ 
         [e.target.name]: e.target.value
     });
@@ -67,7 +67,7 @@ class TeamsView extends Component {
     return (
       <div className="container mt-4">
         
-        {/* Control Bar */}
+        {/* Control bar */}
         <div className="card border-0 shadow-sm p-4 mb-4 bg-white rounded-3">
             <div className="row align-items-center g-3">
                 
@@ -79,7 +79,7 @@ class TeamsView extends Component {
                     </h2>
                 </div>
 
-                {/* Toggles (All vs Mine) */}
+                {/* Toggle for All vs Mine */}
                 <div className="col-md-4 text-center">
                     {logged && !filterId && (
                         <div className="btn-group shadow-sm" role="group">
@@ -90,7 +90,7 @@ class TeamsView extends Component {
                                 id="viewAll" 
                                 value="all"
                                 checked={this.state.viewMode === "all"}
-                                onChange={this.QHandleInputChange}
+                                onChange={this.handleInputChange}
                             />
                             <label className="btn btn-outline-primary fw-bold px-4" htmlFor="viewAll">All</label>
 
@@ -101,19 +101,19 @@ class TeamsView extends Component {
                                 id="viewMine" 
                                 value="mine"
                                 checked={this.state.viewMode === "mine"}
-                                onChange={this.QHandleInputChange}
+                                onChange={this.handleInputChange}
                             />
                             <label className="btn btn-outline-primary fw-bold px-4" htmlFor="viewMine">My Teams</label>
                         </div>
                     )}
                 </div>
                 
-                {/* Right: Create Button */}
+                {/* Create button */}
                 <div className="col-md-4 text-end">
                     {logged ? (
                         <button 
                             className="btn btn-primary rounded-pill fw-bold shadow-sm px-4"
-                            onClick={() => this.QSetViewInParent({ page: "addteam" })}
+                            onClick={() => this.setViewInParent({ page: "addteam" })}
                         >
                             <i className="bi bi-plus-lg me-2"></i> Create Team
                         </button>
@@ -124,7 +124,7 @@ class TeamsView extends Component {
             </div>
         </div>
 
-        {/* Special Header for Tournament View */}
+        {/* Header for tournament view */}
         {filterId !== 0 && filterId !== undefined && (
             <div className="alert alert-light border shadow-sm d-flex justify-content-between align-items-center mb-4 rounded-3">
                 <span>
@@ -134,13 +134,13 @@ class TeamsView extends Component {
                 </span>
                 <button
                     className="btn btn-sm btn-outline-secondary rounded-pill"
-                    onClick={() => this.QSetViewInParent({ page: "tournaments" })}>
+                    onClick={() => this.setViewInParent({ page: "tournaments" })}>
                       <i className="bi bi-arrow-left me-1"></i> Back
                 </button>
             </div>
         )}
 
-        {/* Teams Grid */}
+        {/* Grid */}
         <div className="row row-cols-1 row-cols-md-3 g-4">
             {filteredData.length > 0 ? 
             filteredData.map(d => {
@@ -151,12 +151,10 @@ class TeamsView extends Component {
 
                 return(
                 <div className="col" key={d._id}>
-                    {/* CARD: feature-card class for hover effect */}
+                    {/* Card container */}
                     <div className="card feature-card h-100 border-0 shadow-sm position-relative">
-                        
                         <div className="card-body p-4">
                             
-                            {/* Sport Badge & Ownership Badge */}
                             <div className="d-flex justify-content-between mb-3">
                                 <span className="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2">
                                     {d.sport || "Team Sport"}
@@ -169,7 +167,7 @@ class TeamsView extends Component {
                                 {d.name}
                             </h5>
                             
-                            {/* Info Block */}
+                            {/* Info block */}
                             <div className="mb-4">
                                 <p className="card-text text-muted mb-2 small">
                                     <i className="bi bi-people-fill me-2 text-primary"></i>
@@ -188,7 +186,7 @@ class TeamsView extends Component {
                             {/* Buttons */}
                             <div className="mt-auto">
                                 <button
-                                    onClick={() => this.QSetViewInParent({ page: "team", teamID: d._id, fromTournamentID: filterId })}
+                                    onClick={() => this.setViewInParent({ page: "team", teamID: d._id, fromTournamentID: filterId })}
                                     className="btn btn-outline-primary w-100 rounded-pill fw-bold"
                                 >
                                     View Details
@@ -196,7 +194,7 @@ class TeamsView extends Component {
 
                                 {isMyTeam && (
                                     <button
-                                        onClick={() => this.QSetViewInParent({ page: "addplayer", teamID: d._id })}
+                                        onClick={() => this.setViewInParent({ page: "addplayer", teamID: d._id })}
                                         className="btn btn-light text-primary border w-100 rounded-pill mt-2 fw-bold"
                                     >
                                         <i className="bi bi-person-plus-fill me-1"></i> Add Players

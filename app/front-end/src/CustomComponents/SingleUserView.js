@@ -37,7 +37,7 @@ class SingleUserView extends Component {
     .catch(err => {
         console.error("Error loading user details:", err);
         alert("Could not load user data.");
-        this.props.QViewFromChild({ page: "users" }); // Go back on error
+        this.props.viewFromChild({ page: "users" }); // Go back on error
     });
   }
 
@@ -57,7 +57,7 @@ class SingleUserView extends Component {
             <div className="position-absolute top-0 end-0 p-4">
                 <button 
                     className="btn btn-outline-secondary rounded-pill fw-bold btn-sm"
-                    onClick={() => this.props.QViewFromChild({ page: "users" })}
+                    onClick={() => this.props.viewFromChild({ page: "users" })}
                 >
                     <i className="bi bi-arrow-left me-1"></i> Back to List
                 </button>
@@ -135,7 +135,7 @@ class SingleUserView extends Component {
 
                                 <button 
                                     className="btn btn-outline-primary w-100 mt-auto rounded-pill fw-bold"
-                                    onClick={() => this.props.QViewFromChild({ page: "teams", tournamentID: t._id })}
+                                    onClick={() => this.props.viewFromChild({ page: "teams", tournamentID: t._id })}
                                 >
                                     View Details
                                 </button>

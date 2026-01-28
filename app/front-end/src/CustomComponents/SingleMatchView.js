@@ -41,7 +41,7 @@ class SingleMatchView extends Component {
             });
     }
 
-    QSaveMatch = () => {
+    saveMatch = () => {
         console.log("Saving match..."); // Debug log to verify button click
         const id = this.props.matchID;
         axios.put("http://localhost:8080/matches/"+id+"/result", {
@@ -84,12 +84,12 @@ class SingleMatchView extends Component {
             
             <button 
                 className="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-bold mb-3"
-                onClick={() => this.props.QViewFromChild({ page: "schedule", tournamentID: tournamentID })}
+                onClick={() => this.props.viewFromChild({ page: "schedule", tournamentID: tournamentID })}
             >
                 <i className="bi bi-arrow-left me-1"></i>Back to Schedule
             </button>
 
-            {/* 2. ADD WARNING BANNER IF READ-ONLY */}
+            {/* Warning banner */}
             {!canEdit && (
                 <div className="alert alert-warning text-center shadow-sm">
                     <i className="bi bi-lock-fill me-2"></i>
@@ -111,7 +111,6 @@ class SingleMatchView extends Component {
 
                         <div className="col-md-4">
                             <div className="d-flex justify-content-center align-items-center gap-3">
-                                {/* 3. DISABLE SCORE INPUTS */}
                                 <input 
                                     type="number" 
                                     className="form-control form-control-lg text-center fw-bold" 
@@ -144,36 +143,34 @@ class SingleMatchView extends Component {
                             
                             <div className="mb-3">
                                 <label className="form-label fw-bold">Match Date & Time</label>
-                                {/* 4. DISABLE DATE INPUT */}
                                 <input 
                                     type="datetime-local" 
                                     className="form-control"
                                     value={matchDate}
                                     onChange={(e) => this.setState({ matchDate: e.target.value })}
-                                    disabled={!canEdit} // <--- HERE
+                                    disabled={!canEdit} 
                                 />
                             </div>
 
                             <div className="form-check form-switch mb-4">
-                                {/* 5. DISABLE CHECKBOX */}
                                 <input 
                                     className="form-check-input" 
                                     type="checkbox" 
                                     id="playedSwitch"
                                     checked={isPlayed}
                                     onChange={(e) => this.setState({ isPlayed: e.target.checked })}
-                                    disabled={!canEdit} // <--- HERE
+                                    disabled={!canEdit} 
                                 />
                                 <label className="form-check-label" htmlFor="playedSwitch">
                                     Mark as <strong>Played</strong>
                                 </label>
                             </div>
 
-                            {/* 6. HIDE SAVE BUTTON IF NOT ALLOWED */}
+                            {/* Button */}
                             {canEdit && (
                                 <button 
                                     className="btn btn-success w-100 py-2 fw-bold"
-                                    onClick={this.QSaveMatch}
+                                    onClick={this.saveMatch}
                                 >
                                     <i className="bi bi-save me-2"></i> Save Results
                                 </button>

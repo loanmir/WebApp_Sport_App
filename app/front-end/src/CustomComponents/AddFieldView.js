@@ -6,34 +6,89 @@ class AddFieldView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      field: {}
+      field: {
+        name: "",
+        sport: "",
+        address: "",
+      },
+      addedSlots: [],
+      tempStart: "",
+      tempEnd: ""
     };
   }
 
-  QGetTextFromField = (e) => {
+  getTextFromField = (e) => {
     this.setState(prevState => ({
       field: { ...prevState.field, [e.target.name]: e.target.value },
     }));
   };
 
-  // Sending POST request to the server
-  QPostField = () => {
-    let slotsToSend = [];
-    const inputSlots = this.state.field.bookableSlots;
+
+  getTempTime = (e) => {
+    this.setState({ [e.target.name]: e.target.value });
+  }
+
+  addSlotToList = () => {
+    const { tempStart, tempEnd } = this.state;
+    // Validation
+    if (!tempStart || !tempEnd) {
+        alert("Please select both a Start Time and an End Time.");
+        return;
+    }
+    // Ensuring end is after start
+    if (tempStart >= tempEnd) {
+        alert("End time must be after Start time.");
+        return;
+    }
     
-    // If User has typed their own timeSlots
-    if (inputSlots && inputSlots.trim().length > 0) {
-      slotsToSend = inputSlots.split(",").map(slot => ({
-        time: slot.trim(),
-      }));
+    const formattedSlot = `${tempStart}-${tempEnd}`;
+    // Checking for duplicates
+    if (this.state.addedSlots.includes(formattedSlot)) {
+        alert("This slot is already added.");
+        return;
+    }
+
+    // Adding to list and clear inputs
+    this.setState(prevState => ({
+        addedSlots: [...prevState.addedSlots, formattedSlot].sort(), 
+        tempStart: "",
+        tempEnd: ""
+    }));
+  }
+
+
+  removeSlot = (slotToRemove) => {
+    this.setState(prevState => ({
+        addedSlots: prevState.addedSlots.filter(s => s !== slotToRemove)
+    }));
+  }
+
+
+  
+  postField = () => {
+    // Validation
+    if (!this.state.field.name || !this.state.field.sport || !this.state.field.address) {
+        alert("Please fill in Name, Sport, and Address.");
+        return;
+    }
+
+    let slotsToSend = [];
+
+    // Checking if user added custom slots
+    if (this.state.addedSlots.length > 0) {
+      slotsToSend = this.state.addedSlots.map(s => ({ time: s }));
     } else {
-      // Default values
-      const defaultTimes = [
-        "09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00",
-        "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00", "18:00-19:00",
-        "19:00-20:00", "20:00-21:00"
-      ];
-      slotsToSend = defaultTimes.map(t => ({ time: t}))
+      // If list is empty, confirm if they want defaults
+      if(window.confirm("No custom slots added. Use default slots (09:00 - 21:00)?")) {
+          const defaultTimes = [
+            "09:00-10:00", "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00",
+            "14:00-15:00", "15:00-16:00", "16:00-17:00", "17:00-18:00", "18:00-19:00",
+            "19:00-20:00", "20:00-21:00"
+          ];
+          slotsToSend = defaultTimes.map(t => ({ time: t}))
+      } else {
+          return; // Stopping submission if user cancels
+      }
     }
 
     axios.post("http://localhost:8080/fields",{
@@ -43,7 +98,7 @@ class AddFieldView extends Component {
       bookableSlots: slotsToSend
     }).then(res => {
       alert("Field added successfully!")
-      this.props.QViewFromChild({ page: "fields" });
+      this.props.viewFromChild({ page: "fields" });
     })
     .catch(err => {
       console.log("Error:", err);
@@ -72,7 +127,7 @@ class AddFieldView extends Component {
                 <div className="mb-3">
                     <label className="form-label fw-bold small text-muted text-uppercase">Field Name</label>
                     <input 
-                        onChange={(e) => this.QGetTextFromField(e)} 
+                        onChange={(e) => this.getTextFromField(e)} 
                         name="name" 
                         type="text" 
                         className="form-control bg-light border-0 py-2" 
@@ -84,7 +139,7 @@ class AddFieldView extends Component {
                 <div className="mb-3">
                     <label className="form-label fw-bold small text-muted text-uppercase">Sport</label>
                     <select 
-                        onChange={(e) => this.QGetTextFromField(e)} 
+                        onChange={(e) => this.getTextFromField(e)} 
                         name="sport" 
                         className="form-select bg-light border-0 py-2"
                         defaultValue="" 
@@ -100,7 +155,7 @@ class AddFieldView extends Component {
                 <div className="mb-3">
                     <label className="form-label fw-bold small text-muted text-uppercase">Address</label>
                     <input 
-                        onChange={(e) => this.QGetTextFromField(e)} 
+                        onChange={(e) => this.getTextFromField(e)} 
                         name="address" 
                         type="text" 
                         className="form-control bg-light border-0 py-2" 
@@ -108,34 +163,76 @@ class AddFieldView extends Component {
                     />
                 </div>
 
-                {/* Bookable slots */}
-                <div className="mb-4">
-                    <label className="form-label fw-bold small text-muted text-uppercase">
-                        Bookable Slots <span className="fw-normal text-secondary text-lowercase">(Optional)</span>
+                {/* Time slots section */}
+                <div className="bg-light p-3 rounded-3 mb-4">
+                    <label className="form-label fw-bold small text-dark text-uppercase mb-3">
+                        <i className="bi bi-clock me-1"></i> Configure Available Slots
                     </label>
-                    <input 
-                        onChange={(e) => this.QGetTextFromField(e)} 
-                        name="bookableSlots" 
-                        type="text" 
-                        className="form-control bg-light border-0 py-2" 
-                        placeholder="Leave empty for default (09:00 - 21:00)" 
-                    />
-                    <small className="text-muted mt-2 d-block fst-italic">
-                        <i className="bi bi-info-circle me-1"></i>
-                        Separate times with commas (e.g. 09:00-10:00, 10:00-11:00)
-                    </small>
+                    
+                    {/* Inputs  */}
+                    <div className="row g-2 align-items-end mb-3">
+                        <div className="col-5">
+                            <label className="small text-muted">Start</label>
+                            <input 
+                                type="time" 
+                                name="tempStart"
+                                className="form-control border-0 bg-white"
+                                value={this.state.tempStart}
+                                onChange={this.getTempTime}
+                            />
+                        </div>
+                        <div className="col-5">
+                            <label className="small text-muted">End</label>
+                            <input 
+                                type="time" 
+                                name="tempEnd"
+                                className="form-control border-0 bg-white"
+                                value={this.state.tempEnd}
+                                onChange={this.getTempTime}
+                            />
+                        </div>
+                        <div className="col-2">
+                            <button 
+                                className="btn btn-primary w-100 fw-bold" 
+                                onClick={this.addSlotToList}
+                                title="Add Slot"
+                            >
+                                <i className="bi bi-plus-lg"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    {/* Added slots*/}
+                    {this.state.addedSlots.length > 0 ? (
+                        <div className="d-flex flex-wrap gap-2">
+                            {this.state.addedSlots.map((slot, index) => (
+                                <span key={index} className="badge bg-white text-dark border shadow-sm p-2 d-flex align-items-center">
+                                    {slot}
+                                    <i 
+                                        className="bi bi-x-circle-fill ms-2 text-danger" 
+                                        style={{cursor: "pointer"}}
+                                        onClick={() => this.removeSlot(slot)}
+                                    ></i>
+                                </span>
+                            ))}
+                        </div>
+                    ) : (
+                        <small className="text-muted fst-italic">
+                            No custom slots added. (Defaults will be used if left empty).
+                        </small>
+                    )}
                 </div>
 
-                {/* FOOTER ACTIONS */}
+                {/* Footer */}
                 <div className="d-flex justify-content-between border-top pt-4 mt-4">
                     <button 
-                        onClick={() => this.props.QViewFromChild({ page: "fields" })}
+                        onClick={() => this.props.viewFromChild({ page: "fields" })}
                         className="btn btn-outline-secondary rounded-pill px-4 fw-bold"
                     >
                         Cancel
                     </button>
                     <button 
-                        onClick={this.QPostField} 
+                        onClick={this.postField} 
                         className="btn btn-success rounded-pill px-5 fw-bold shadow-sm"
                     >
                         <i className="bi bi-check-lg me-2"></i> Add Field

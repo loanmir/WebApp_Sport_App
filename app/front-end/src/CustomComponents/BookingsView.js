@@ -30,7 +30,7 @@ class BookingsView extends Component {
 
 
 
-    QCancelBooking = (bookingID) => {
+    cancelBooking = (bookingID) => {
         if(!window.confirm("Are you sure you want to cancel this booking?")) {
             return;
         }
@@ -100,7 +100,7 @@ class BookingsView extends Component {
 
                                             <button
                                             className="btn btn-sm btn-light text-danger border w-50 rounded-pill fw-bold"
-                                            onClick={() => this.QCancelBooking(booking._id)}
+                                            onClick={() => this.cancelBooking(booking._id)}
                                             >
                                                 Cancel Booking
                                             </button>
@@ -116,7 +116,7 @@ class BookingsView extends Component {
                         <br/>
                         <button 
                             className="btn btn-link" 
-                            onClick={() => this.props.QViewFromChild({ page: "fields" })}
+                            onClick={() => this.props.viewFromChild({ page: "fields" })}
                         >
                             Browse Fields
                         </button>

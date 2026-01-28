@@ -49,7 +49,7 @@ class TournamentScheduleView extends Component {
                     <i className="bi bi-exclamation-circle fs-4 d-block mb-2"></i>
                     No matches generated yet. Start the tournament in settings to generate a schedule.
                     <div className="mt-3">
-                        <button className="btn btn-outline-secondary rounded-pill fw-bold" onClick={() => this.props.QViewFromChild({ page: "tournaments" })}>Back</button>
+                        <button className="btn btn-outline-secondary rounded-pill fw-bold" onClick={() => this.props.viewFromChild({ page: "tournaments" })}>Back</button>
                     </div>
                 </div>
             </div>
@@ -71,13 +71,13 @@ class TournamentScheduleView extends Component {
                       <div className="d-flex gap-2">
                          <button 
                             className="btn btn-outline-secondary btn-sm rounded-pill px-3 fw-bold" 
-                            onClick={() => this.props.QViewFromChild({ page: "tournaments" })}
+                            onClick={() => this.props.viewFromChild({ page: "tournaments" })}
                         >
                             <i className="bi bi-arrow-left me-1"></i> Back
                         </button>
                         <button
                             className="btn btn-success btn-sm rounded-pill px-3 fw-bold shadow-sm" 
-                            onClick={() => this.props.QViewFromChild({
+                            onClick={() => this.props.viewFromChild({
                                 page: "standings",
                                 tournamentID: this.props.tournamentID
                             })}
@@ -107,7 +107,7 @@ class TournamentScheduleView extends Component {
                                 <li key={match._id}  
                                     className="list-group-item d-flex align-items-center list-group-item-action py-3 border-bottom" 
                                     style={{cursor: "pointer"}}
-                                    onClick={() => this.props.QViewFromChild({
+                                    onClick={() => this.props.viewFromChild({
                                         page: "match",
                                         matchID: match._id
                                     })}>
