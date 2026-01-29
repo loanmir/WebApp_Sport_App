@@ -89,16 +89,21 @@ tournaments.delete('/:id', async (req, res, next) => {
             return res.status(403).json({ error: "You are not the creator of this tournament" });
         }
 
+        // Set the teams free from the deleted tournament
         await teamModel.updateMany(
             { tournament: tournamentId },
             { $set: {tournament: null}}
         ); 
+
+        // Delete all matches related to this tournament
+        await matchModel.deleteMany({ tournament: tournamentId });
 
         // 3. Delete it
         await tournamentsData.deleteTournament(tournamentId);
         res.json({ message: "Tournament deleted successfully" });
     }catch (err) {
         console.error(err);
+        res.status(500).json({ error: "Error deleting tournament" });
     }
 });
 

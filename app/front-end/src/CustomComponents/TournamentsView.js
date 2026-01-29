@@ -202,7 +202,7 @@ class TournamentsView extends Component {
                     <div className="mt-auto">
                         
                         {/* Schedule */}
-                        {d.status === "Active" && (
+                        {(d.status === "Active" || d.status === "Completed") && (
                           <button 
                             className="btn btn-success w-100 mb-2 rounded-pill fw-bold"
                             onClick={() => this.setViewInParent({ page: "schedule", tournamentID: d._id })}

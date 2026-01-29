@@ -80,7 +80,7 @@ class App extends Component {
       case "team":
         return <SingleTeamView viewFromChild={this.setView} data={this.state.teamID} fromTournamentID={this.state.tournamentID} />;
       case "users":
-        return <UsersView viewFromChild={this.setView} />;
+        return <UsersView viewFromChild={this.setView} userStatus={this.state.userStatus} />;
       case "bookfield":
         return state.userStatus.logged ? <BookFieldView fieldID={this.state.fieldID} viewFromChild={this.setView} /> : <LoginView userFromChild={this.setUser} viewFromChild={this.setView} />;
       case "bookings":
@@ -284,10 +284,10 @@ class App extends Component {
 
                 {/* Search bar */}
                 <form 
-                    className="d-flex ms-3" 
+                    className="d-flex ms-3"
+                    role="search" 
                     onSubmit={(e) => {
                         e.preventDefault();  // stopping the reload of the page when hitting enter
-                        
                         const searchValue = this.state.tempSearch;
                         if(searchValue) {
                             this.setState({ 
@@ -297,15 +297,18 @@ class App extends Component {
                         }
                     }}
                 >
-                    <input 
-                        className="form-control me-2" 
-                        type="search" 
-                        placeholder="Search..." 
-                        aria-label="Search"
-                        // Storing in temp variable to avoid searching on every keystroke
-                        onChange={(e) => this.setState({ tempSearch: e.target.value })}
-                    />
-                    <button className="btn btn-outline-light" type="submit">Search</button>
+                    <div className="input-group">
+                        <input 
+                            className="form-control border-0 rounded-start-pill ps-3" 
+                            type="search" 
+                            placeholder="Search..." 
+                            aria-label="Search"
+                            // Storing in temp variable to avoid searching on every keystroke
+                            onChange={(e) => this.setState({ tempSearch: e.target.value })}
+                            style={{ maxWidth: "250px" }}
+                        />
+                        <button className="btn btn-light border-0 rounded-end-pill text-primary pe-3" type="submit">Search</button>
+                    </div>
                 </form>
 
               </div>

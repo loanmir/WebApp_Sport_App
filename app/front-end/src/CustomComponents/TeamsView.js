@@ -35,6 +35,26 @@ class TeamsView extends Component {
   }
 
 
+
+
+  deleteTeam = (teamId) => {
+    if(!window.confirm("Are you sure you want to delete this team? This cannot be undone.")) {
+        return;
+    }
+
+    axios.delete("http://localhost:8080/teams/" + teamId, { withCredentials: true })
+    .then(res => {
+        alert("Team deleted successfully");
+        this.fetchTeams(); // Refresh the list
+    })
+    .catch(err => {
+        // Catching error from backend
+        alert(err.response?.data?.error || "Could not delete team");
+    });
+  }
+
+
+
   handleInputChange = (e) => {
     this.setState({ 
         [e.target.name]: e.target.value
@@ -193,12 +213,23 @@ class TeamsView extends Component {
                                 </button>
 
                                 {isMyTeam && (
-                                    <button
-                                        onClick={() => this.setViewInParent({ page: "addplayer", teamID: d._id })}
-                                        className="btn btn-light text-primary border w-100 rounded-pill mt-2 fw-bold"
-                                    >
-                                        <i className="bi bi-person-plus-fill me-1"></i> Add Players
-                                    </button>
+                                    <div className="d-flex gap-2 mt-2">
+                                        <button
+                                            onClick={() => this.setViewInParent({ page: "addplayer", teamID: d._id })}
+                                            className="btn btn-light text-primary border w-100 rounded-pill mt-2 fw-bold"
+                                        >
+                                            <i className="bi bi-person-plus-fill me-1"></i> Add Players
+                                        </button>
+
+                                        <button
+                                            onClick={() => this.deleteTeam(d._id)}
+                                            className="btn btn-light text-danger border w-25 rounded-pill fw-bold"
+                                            title="Delete Team"
+                                        >
+                                            <i className="bi bi-trash-fill"></i>
+                                        </button>
+
+                                    </div>
                                 )}
                             </div>
 

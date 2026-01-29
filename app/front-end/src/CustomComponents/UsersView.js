@@ -55,6 +55,8 @@ class UsersView extends Component {
   render() {
     let filteredUsers = this.state.users;
 
+    const {logged, user: currentUser} = this.props.userStatus || {};
+
     return (
       <div className="container mt-4">
         
@@ -93,9 +95,9 @@ class UsersView extends Component {
         <div className="row g-4">
           {filteredUsers.map(user => {
             const userTournaments = this.getTournamentsForUser(user._id);
-            
             // Get first letter of the username
             const initial = user.user_username ? user.user_username.charAt(0).toUpperCase() : "?";
+            const isMe = logged && currentUser && (currentUser._id === user._id);
 
             return (
               <div key={user._id} className="col-md-6 col-lg-4">
@@ -119,11 +121,19 @@ class UsersView extends Component {
                     </div>
 
                     {/* User info */}
-                    <h4 
-                        className="card-title fw-bold text-dark mb-1" 
-                    >
+                    <div className="mb-1">
+                      <h4 
+                        className="card-title fw-bold text-dark d-inline-block me-2" 
+                      >
                         {user.user_username}
-                    </h4>
+                      </h4>
+                      {isMe && (
+                        <span className="badge bg-success align-top" style={{fontSize: "0.7rem"}}>
+                          ME
+                        </span>
+                      )}
+                    </div>
+
                     <p className="text-muted small mb-3">
                         {user.user_firstName} {user.user_surname}
                     </p>

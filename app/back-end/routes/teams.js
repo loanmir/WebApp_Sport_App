@@ -1,6 +1,7 @@
 const express= require("express")
 const teams = express.Router();
 const teamsData = require('../db/teamsData');
+const tournamentsData = require('../db/tournamentsData');
 
 
 // Getting all the teams
@@ -94,5 +95,45 @@ teams.post('/:id/players', async (req, res, next) => {
         res.status(500).send("Error adding player to team");
     }
 })
+
+
+teams.delete('/:id', async (req, res, next) => {
+    try {
+        if (!req.session.user){
+            return res.status(401).json({ error: "Unauthorized" });
+        }
+
+        const teamId = req.params.id;
+        const userId = req.session.user._id;
+
+        // Check if the user is the creator of the team
+        const team = await teamsData.oneTeam(teamId);
+        if (!team) {
+            return res.status(404).json({ error: "Team not found" });
+        }
+        if (team.creator.toString() !== userId) {
+            return res.status(403).json({ error: "You are not the creator of this team" });
+        }
+
+        // Checking if team is in an active tournament
+        if (team.tournament) {
+            const tournament = await tournamentsData.oneTournament(team.tournament);
+
+            if (tournament && (tournament.status === "Active" || tournament.status === "Completed")) {
+                return res.status(409).json({ 
+                    error: "Cannot delete this team. It is part of an active or completed tournament." 
+                });
+            }
+        }
+
+        await teamsData.deleteTeam(teamId);
+        res.json({ message: "Team deleted successfully" });
+            
+    }catch (err){
+        console.error(err);
+        res.status(500).send("Error deleting team");
+    }
+})
+
 
 module.exports=teams

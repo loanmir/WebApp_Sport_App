@@ -63,4 +63,13 @@ dataPool.addPlayerToTeam = async (teamId, playerData) => {
     }
 }
 
+dataPool.deleteTeam = async (id) => {
+    try{
+        const res = await Teams.findByIdAndDelete(id);
+        return res;
+    }catch(err){
+        throw err;
+    }
+}
+
 module.exports = dataPool;
