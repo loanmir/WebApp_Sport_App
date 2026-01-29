@@ -15,7 +15,7 @@ class SingleTeamView extends Component {
   };
 
   componentDidMount() {
-    axios.get("http://localhost:8080/teams/"+this.props.data)
+    axios.get("/teams/"+this.props.data)  // http://localhost:8080
     .then(res=>{
       this.setState({
         team: res.data

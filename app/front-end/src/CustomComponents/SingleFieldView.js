@@ -40,7 +40,7 @@ class SingleFieldView extends Component {
 
     console.log("Sending booking:", bookingData);
 
-    axios.post("http://localhost:8080/fields/" + this.state.field._id + "/bookings", bookingData, { withCredentials: true })
+    axios.post("/fields/" + this.state.field._id + "/bookings", bookingData, { withCredentials: true }) // http://localhost:8080
       .then(res => {
         alert("Booking Successful!");
         this.setViewInParent({ page: "fields" }); // Go back to list after success
@@ -52,7 +52,7 @@ class SingleFieldView extends Component {
   };
 
   componentDidMount() {
-    axios.get("http://localhost:8080/fields/" + this.props.data)
+    axios.get("/fields/" + this.props.data)
       .then(res => {
         this.setState({
           field: res.data

@@ -20,8 +20,8 @@ class EditTournamentView extends Component {
     const id = this.props.tournamentID;
     
     Promise.all([
-        axios.get("http://localhost:8080/tournaments/"+id), // Get tournament
-        axios.get("http://localhost:8080/teams")            // Get ALL teams
+        axios.get("/tournaments/"+id), // Get tournament
+        axios.get("/teams")            // Get ALL teams     // http://localhost:8080
     ])
     .then(([tournamentRes, teamsRes]) => {
         const t = tournamentRes.data;
@@ -44,7 +44,7 @@ class EditTournamentView extends Component {
 
   saveEdit = () => {
     const id = this.props.tournamentID;
-    axios.put("http://localhost:8080/tournaments/"+id, {
+    axios.put("/tournaments/"+id, {
       name: this.state.name,
       sport: this.state.sport,
       maxTeams: this.state.maxTeams,
@@ -85,7 +85,7 @@ class EditTournamentView extends Component {
         return;
       }
       
-      axios.put("http://localhost:8080/teams/"+teamId, {
+      axios.put("/teams/"+teamId, {
           tournament: tournamentId
       }, { withCredentials: true })
       .then(res => {
@@ -100,7 +100,7 @@ class EditTournamentView extends Component {
   }
 
   removeTeamFromTournament = (teamId) => {
-      axios.put("http://localhost:8080/teams/"+teamId, {
+      axios.put("/teams/"+teamId, {
           tournament: null 
       }, { withCredentials: true })
       .then(res => {
@@ -120,9 +120,9 @@ class EditTournamentView extends Component {
 
     const id = this.props.tournamentID;
 
-    axios.post("http://localhost:8080/tournaments/"+id+"/matches/generate", {}, { withCredentials: true })
+    axios.post("/tournaments/"+id+"/matches/generate", {}, { withCredentials: true })
     .then(res =>{
-        return axios.put("http://localhost:8080/tournaments/"+id, {
+        return axios.put("/tournaments/"+id, {
             name: this.state.name,
             sport: this.state.sport,
             maxTeams: this.state.maxTeams,

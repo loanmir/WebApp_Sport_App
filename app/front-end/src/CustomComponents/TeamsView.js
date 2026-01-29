@@ -21,7 +21,7 @@ class TeamsView extends Component {
   }
 
   fetchTeams = () => {
-    axios.get("http://localhost:8080/teams")
+    axios.get("/teams")     // http://localhost:8080
       .then(res => {
         this.setState({
           teams: res.data,
@@ -42,7 +42,7 @@ class TeamsView extends Component {
         return;
     }
 
-    axios.delete("http://localhost:8080/teams/" + teamId, { withCredentials: true })
+    axios.delete("/teams/" + teamId, { withCredentials: true })     // http://localhost:8080
     .then(res => {
         alert("Team deleted successfully");
         this.fetchTeams(); // Refresh the list
@@ -65,7 +65,7 @@ class TeamsView extends Component {
   render() {
     const { logged, user } = this.props.userStatus || {};
     const currentUserId = user && user._id ? user._id : null;
-    const filterId = this.props.tournamentID; // Existing prop from parent
+    const filterId = this.props.tournamentID; 
 
     
     let filteredData = this.state.teams;

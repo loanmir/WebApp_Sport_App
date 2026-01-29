@@ -24,10 +24,10 @@ class BookFieldView extends Component {
 
     Promise.all([                                                   // Parallel requests
         // Getting details of the field
-        axios.get("http://localhost:8080/fields/"+fieldID),
+        axios.get("/fields/"+fieldID),
 
         // Get existing bookings for specific field and date - Availability
-        axios.get("http://localhost:8080/bookings?field="+fieldID+"&date="+date)
+        axios.get("/bookings?field="+fieldID+"&date="+date)                 // http://localhost:8080
     ])
     .then(([resField, resBookings]) => {
         const bookedTimes = resBookings.data.map(b => b.timeSlot);
@@ -60,7 +60,7 @@ class BookFieldView extends Component {
     if (!this.state.selectedSlot) return;
 
     // Send the booking to the backend
-    axios.post("http://localhost:8080/bookings", {
+    axios.post("/bookings", {
         field: this.props.fieldID,
         date: this.state.selectedDate,
         slotTime: this.state.selectedSlot.time 

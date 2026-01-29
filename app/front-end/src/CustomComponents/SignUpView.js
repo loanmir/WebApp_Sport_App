@@ -11,7 +11,6 @@ class SignUpView extends Component {
           name: "",
           surname: ""
         },
-        // Variables for tracking empty fields, errors, visibility etc.
         errors: {},
         errorMessage: "",
         loading: false,
@@ -56,7 +55,7 @@ class SignUpView extends Component {
     this.setState({ loading: true, errorMessage: "" });
 
     let user = this.state.user;
-    axios.post("http://localhost:8080/users/signup",{
+    axios.post("/users/signup",{    // http://localhost:8080
       username: user.username,           
       password: user.password,
       name: user.name,
@@ -92,7 +91,7 @@ class SignUpView extends Component {
           )}
 
           <form>
-            {/* USERNAME */}
+            {/* Username */}
             <div className="mb-3">
               <label className="form-label">Username</label>
               <input
@@ -106,7 +105,7 @@ class SignUpView extends Component {
               <div className="invalid-feedback">{errors.username}</div>
             </div>
 
-            {/* PASSWORD*/}
+            {/* Password */}
             <div className="mb-3">
               <label className="form-label">Password</label>
               <div className="input-group">
@@ -130,7 +129,7 @@ class SignUpView extends Component {
               </div>
             </div>
 
-            {/* FIRST NAME */}
+            {/* First name */}
             <div className="mb-3">
               <label className="form-label">First Name</label>
               <input
@@ -144,7 +143,7 @@ class SignUpView extends Component {
               <div className="invalid-feedback">{errors.name}</div>
             </div>
 
-            {/* SURNAME */}
+            {/* Surname */}
             <div className="mb-3">
               <label className="form-label">Surname</label>
               <input
@@ -159,7 +158,7 @@ class SignUpView extends Component {
             </div>
           </form>
 
-          {/* SUBMIT BUTTON */}
+          {/* Button */}
           <button
             onClick={this.postSignUp}
             disabled={loading} // Disable button while loading
@@ -175,7 +174,7 @@ class SignUpView extends Component {
             )}
           </button>
           
-          {/* BACK TO LOGIN LINK */}
+          {/* Back to login */}
           <div className="text-center mt-3">
             <small className="text-muted">Already have an account? </small>
             <a 

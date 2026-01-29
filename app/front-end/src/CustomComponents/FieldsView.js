@@ -20,7 +20,7 @@ class FieldsView extends Component {
   fetchFields = () => {
     const {searchQuery, selectedSport} = this.state;
 
-    axios.get("http://localhost:8080/fields?q="+searchQuery+"&sport="+selectedSport)
+    axios.get("/fields?q="+searchQuery+"&sport="+selectedSport) // http://localhost:8080
       .then(res => {
         this.setState({
           fields: res.data
@@ -127,7 +127,7 @@ class FieldsView extends Component {
                         {/* Check if slots exist and is an array */}
                         {d.bookableSlots && d.bookableSlots.length > 0 ? (
                           d.bookableSlots.slice(0, 4).map((slot, index) => (
-                              // CRITICAL FIX: We access 'slot.time' because 'slot' is now an object {id, time}
+                              
                               <span key={index} className="badge bg-light text-dark border">
                                   {slot.time}
                               </span>
@@ -155,7 +155,6 @@ class FieldsView extends Component {
             )
         })
           :
-          // Fallback if search finds nothing
           <div className="col-12 text-center p-5">
              {this.state.fields.length === 0 ? "Loading..." : "No fields found matching your search."}
           </div>

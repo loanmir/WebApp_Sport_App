@@ -41,12 +41,11 @@ class HomeView extends Component {
         </div>
 
 
-        {/* CARDS ROW */}
+        {/* Main Container */}
         <div className="row g-4 mb-5">
           
-          {/* TOURNAMENTS CARD */}
+          {/* Tournament card */}
           <div className="col-md-4">
-            {/*feature-card'*/}
             <div className="card feature-card h-100 p-4 text-center">
               <div className="card-body">
                 <div className="icon-circle mb-3">
@@ -66,7 +65,7 @@ class HomeView extends Component {
             </div>
           </div>
 
-          {/* TEAMS CARD */}
+          {/* Teams card */}
           <div className="col-md-4">
             <div className="card feature-card h-100 p-4 text-center">
               <div className="card-body">
@@ -87,7 +86,7 @@ class HomeView extends Component {
             </div>
           </div>
 
-          {/* FIELDS CARD */}
+          {/* Fields card */}
           <div className="col-md-4">
             <div className="card feature-card h-100 p-4 text-center">
               <div className="card-body">
@@ -110,7 +109,7 @@ class HomeView extends Component {
 
         </div>
 
-        {/* INFO FOOTER */}
+        {/* Footer */}
         <div className="alert alert-light border-0 shadow-sm mt-5 d-flex align-items-center rounded-3" role="alert">
            <i className="bi bi-info-circle-fill text-primary me-3 fs-4"></i>
            <div>

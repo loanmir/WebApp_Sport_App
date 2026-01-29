@@ -19,7 +19,7 @@ class TournamentsView extends Component {
 
   fetchTournaments = () => {
     const {searchQuery, selectedStatus} = this.state;
-    axios.get("http://localhost:8080/tournaments?q="+searchQuery+"&status="+selectedStatus)
+    axios.get("/tournaments?q="+searchQuery+"&status="+selectedStatus)    // http://localhost:8080
       .then(res => {
         this.setState({ 
           tournaments: res.data 
@@ -38,7 +38,7 @@ class TournamentsView extends Component {
     if (!window.confirm("Are you sure you want to delete this tournament? This cannot be undone.")) {
       return;
     }
-    axios.delete("http://localhost:8080/tournaments/" + tournamentId, { withCredentials: true })
+    axios.delete("/tournaments/" + tournamentId, { withCredentials: true })
     .then(res => {
         this.fetchTournaments();
         alert("Tournament deleted successfully.");

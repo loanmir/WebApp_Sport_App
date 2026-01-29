@@ -60,7 +60,7 @@ class LoginView extends Component {
     this.setState({ loading: true, errorMessage: "" });
 
     let user = this.state.user;
-    axios.post("http://localhost:8080/users/signin", {
+    axios.post("/users/signin", {   // http://localhost:8080
       username: user.username,
       password: user.password
     },{withCredentials:true})
@@ -111,7 +111,7 @@ class LoginView extends Component {
           )}
 
           <form>
-            {/* USERNAME */}
+            {/* Username */}
             <div className="mb-3">
               <label className="form-label">Username</label>
               <input
@@ -125,7 +125,7 @@ class LoginView extends Component {
               <div className="invalid-feedback">{errors.username}</div>
             </div>
 
-            {/* PASSWORD */}
+            {/* Password */}
             <div className="mb-3">
               <label className="form-label">Password</label>
               <div className="input-group has-validation">
@@ -150,7 +150,7 @@ class LoginView extends Component {
             </div>
           </form>
 
-          {/* LOGIN BUTTON */}
+          {/* Login button */}
           <button
             onClick={this.postLogin}
             disabled={loading}
@@ -166,7 +166,7 @@ class LoginView extends Component {
 
           <hr className="my-4" />
 
-          {/* SIGN UP SECTION */}
+          {/* Sign Up section */}
           <div className="text-center">
             <p className="text-muted small mb-2">Don't have an account?</p>
             <button

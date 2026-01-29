@@ -91,7 +91,7 @@ class AddFieldView extends Component {
       }
     }
 
-    axios.post("http://localhost:8080/fields",{
+    axios.post("/fields",{ // http://localhost:8080
       name: this.state.field.name,
       sport: this.state.field.sport,
       address: this.state.field.address,

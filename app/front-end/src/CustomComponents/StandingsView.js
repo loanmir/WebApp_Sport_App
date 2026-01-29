@@ -8,7 +8,7 @@ class StandingsView extends Component {
     };
 
     componentDidMount() {
-        axios.get("http://localhost:8080/tournaments/" + this.props.tournamentID + "/standings")
+        axios.get("/tournaments/" + this.props.tournamentID + "/standings")     // http://localhost:8080
             .then(res => {
                 this.setState({ 
                     standings: res.data, // REMEMBER THAT res.data is an ARRAY which is sorted in the back-end

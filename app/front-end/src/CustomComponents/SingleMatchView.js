@@ -18,7 +18,7 @@ class SingleMatchView extends Component {
 
     componentDidMount() {
         const id = this.props.matchID;
-        axios.get("http://localhost:8080/matches/"+id, {withCredentials: true})
+        axios.get("/matches/"+id, {withCredentials: true})  // http://localhost:8080
             .then(res => {
                 const m = res.data;
                 const formattedDate = new Date(m.date).toLocaleString('sv').replace(' ', 'T').slice(0,16);
@@ -42,9 +42,9 @@ class SingleMatchView extends Component {
     }
 
     saveMatch = () => {
-        console.log("Saving match..."); // Debug log to verify button click
+        console.log("Saving match..."); 
         const id = this.props.matchID;
-        axios.put("http://localhost:8080/matches/"+id+"/result", {
+        axios.put("/matches/"+id+"/result", {
             scoreA: this.state.homeScore,
             scoreB: this.state.awayScore,
             isPlayed: this.state.isPlayed,
@@ -66,7 +66,6 @@ class SingleMatchView extends Component {
                     alert("You must be logged in to save changes.");
                 }
                 else {
-                    // Fallback for 500 or other errors
                     alert("An error occurred: " + err.response.status);
                 }
         });

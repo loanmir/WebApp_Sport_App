@@ -4,6 +4,7 @@ const port = 8080
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const path = require("path");
 
 
 // Imports
@@ -22,11 +23,11 @@ connectDB();
 
 
 
-app.use(cors({
-    origin: ["http://localhost:3000"],
-    methods: ["GET","POST", "PUT", "DELETE"],
-    credentials: true
-}));
+//app.use(cors({
+  //  origin: ["http://localhost:3000"],
+   // methods: ["GET","POST", "PUT", "DELETE"],
+    //credentials: true
+//}));
 
 
 app.use(express.json()); //JSON parsing directive so that front-end can send JSON data to the back-end 
@@ -42,12 +43,13 @@ app.use(session({
         maxAge: 1000 * 60 * 5 // 5 minutes
     }
 }))
-
 app.use(cookieParser("somesecret"));
+
+app.use(express.static(path.join(__dirname, 'build')));
 
 
 app.get("/",(req,res)=>{
-    res.send("This text must be changed to a static file")
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 

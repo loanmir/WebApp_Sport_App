@@ -60,7 +60,7 @@ class AddTeamView extends Component {
         if(!window.confirm("You are creating a team with NO players. Continue?")) return;
     }
 
-    axios.post("http://localhost:8080/teams", {
+    axios.post("/teams", {          // http://localhost:8080
       name: this.state.name,
       players: this.state.players,
     }, { withCredentials: true })

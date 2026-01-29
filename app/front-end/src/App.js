@@ -110,7 +110,7 @@ class App extends Component {
 
 
   componentDidMount() {
-    axios.get("http://localhost:8080/whoami", {withCredentials:true})
+    axios.get("/whoami", {withCredentials:true})    // http://localhost:8080
     .then(res => {
         console.log("Session Check", res.data);
         if(res.data.logged) {
@@ -130,7 +130,7 @@ class App extends Component {
   }
 
   logout = () => {
-    axios.post("http://localhost:8080/users/logout", {}, {withCredentials:true})
+    axios.post("/users/logout", {}, {withCredentials:true})
       .then(res => {
         console.log("Logged out successfully");
         this.setState({
@@ -162,7 +162,7 @@ class App extends Component {
                       style={{ width: "35px", height: "35px", fontSize: "1.2rem", fontWeight: "bold", border: "2px solid white" }}
                     >
                   
-                    {this.state.userStatus.user.user_username.substring(0, 2).toUpperCase()} {/* Taking chars 0 and 1, so first 2 letters and convert them to upper case*/}
+                    {this.state.userStatus.user.user_username.substring(0, 2).toUpperCase()} {/* Converting first 2 letters of username into uppercase */}
                     </div>
        
                   {/* Username Text */}
@@ -259,7 +259,7 @@ class App extends Component {
                     
                       <li className="nav-item">
                         <a
-                        onClick={() => this.logout()} // Call the logout function
+                        onClick={() => this.logout()}
                         className="nav-link"
                         href="#"
                         >

@@ -14,7 +14,7 @@ class SearchView extends Component {
         this.performSearch(this.props.searchQuery);
     }
 
-    // Re-run search if the query changes (e.g., user types a new word while on this page)
+    // Re-run search if the query changes 
     componentDidUpdate(prevProps) {
         if (prevProps.searchQuery !== this.props.searchQuery) {
             this.performSearch(this.props.searchQuery);
@@ -23,7 +23,7 @@ class SearchView extends Component {
 
     performSearch = (query) => {
         this.setState({ loading: true });
-        axios.get("http://localhost:8080/search?q="+query)
+        axios.get("/search?q="+query)       // http://localhost:8080
             .then(res => {
                 this.setState({ results: res.data, loading: false });
             })

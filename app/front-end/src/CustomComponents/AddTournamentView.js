@@ -40,7 +40,7 @@ class AddTournamentView extends Component {
         return;
     }
 
-    axios.post("http://localhost:8080/tournaments", {
+    axios.post("/tournaments", {          // http://localhost:8080
       name: this.state.tournament.name,
       sport: this.state.tournament.sport,
       startDate: this.state.tournament.startDate,

@@ -14,7 +14,7 @@ class UsersView extends Component {
 
   fetchUsers = () => {
     const search = this.state.search;
-    axios.get("http://localhost:8080/users?q="+search)
+    axios.get("/users?q="+search)   // http://localhost:8080
     .then(res => {
       this.setState({ users: res.data, loading: false });
     })
@@ -26,7 +26,7 @@ class UsersView extends Component {
 
   componentDidMount() {
     this.setState({ loading: true });
-    axios.get("http://localhost:8080/tournaments")
+    axios.get("/tournaments")
     .then(res => {
       this.setState({ tournaments: res.data });
       this.fetchUsers();
@@ -84,7 +84,7 @@ class UsersView extends Component {
             </div>
         </div>
 
-        {/* Loading - spinner */}
+        {/* Loading */}
         {this.state.loading && (
             <div className="text-center py-5">
                 <div className="spinner-border text-primary" role="status"></div>

@@ -18,8 +18,8 @@ class SingleUserView extends Component {
 
     // Parallel Fetch: Get Specific User Details AND All Tournaments (to filter)
     Promise.all([
-        axios.get("http://localhost:8080/users/"+userId),
-        axios.get("http://localhost:8080/tournaments")
+        axios.get("/users/"+userId),        // http://localhost:8080
+        axios.get("/tournaments")
     ])
     .then(([userRes, tournamentsRes]) => {
         // Filter tournaments created by this user
@@ -124,7 +124,7 @@ class SingleUserView extends Component {
                                     </span>
                                 </div>
 
-                                <h5 className="card-title fw-bold mb-3" style={{ fontFamily: "'Oswald', sans-serif" }}>
+                                <h5 className="card-title fw-bold mb-3">
                                     {t.name}
                                 </h5>
 

@@ -15,7 +15,7 @@ class AddPlayerView extends Component {
 
   componentDidMount() {
     if (this.props.teamID) {
-      axios.get("http://localhost:8080/teams/" + this.props.teamID)
+      axios.get("/teams/" + this.props.teamID)  // http://localhost:8080
         .then(res => {
           this.setState({ teamName: res.data.name });
         })
@@ -46,7 +46,7 @@ class AddPlayerView extends Component {
     };
 
     // POST request - Not PUT since we are adding to a collection and not updating it
-    axios.post("http://localhost:8080/teams/" + this.props.teamID + "/players", newPlayer, { withCredentials: true })
+    axios.post("/teams/" + this.props.teamID + "/players", newPlayer, { withCredentials: true })  // http://localhost:8080
       .then(res => {
         alert("Player added successfully!");
         // Clear form

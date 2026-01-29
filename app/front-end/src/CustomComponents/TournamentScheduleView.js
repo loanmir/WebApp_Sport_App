@@ -16,7 +16,7 @@ class TournamentScheduleView extends Component {
 
     fetchMatches = () => {
         const id = this.props.tournamentID;
-        axios.get("http://localhost:8080/tournaments/" + id + "/matches")
+        axios.get("/tournaments/" + id + "/matches")    // http://localhost:8080
             .then(res => {
                 this.setState({ 
                     matches: res.data, 
