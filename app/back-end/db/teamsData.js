@@ -2,7 +2,7 @@ const Teams = require('../models/Team');
 
 let dataPool = {};
 
-// GET ALL TEAMS
+// Get all teams
 dataPool.allTeams = async () => {
     try {
         const res = await Teams.find().populate('tournament'); 
@@ -12,7 +12,7 @@ dataPool.allTeams = async () => {
     }
 }
 
-// GET ONE BY ID
+// Get one team by ID
 dataPool.oneTeam = async (id) => {
     try {
         const res = await Teams.findById(id).populate('tournament');
@@ -22,7 +22,7 @@ dataPool.oneTeam = async (id) => {
     }
 }
 
-// CREATE NEW TEAM
+// Create a new team
 dataPool.createTeam = async (name, players, creator) => {
     try {
         const res = await Teams.create({
@@ -36,7 +36,7 @@ dataPool.createTeam = async (name, players, creator) => {
     }
 }
 
-// UPDATE TEAM - LINK TO TOURNAMENT
+// Update a team by ID -> For the linking to a tournament
 dataPool.updateTeam = async (id, newData, options = { new: true }) => {
     try {
         // Mongoose findByIdAndUpdate takes (id, update, options)
@@ -48,7 +48,7 @@ dataPool.updateTeam = async (id, newData, options = { new: true }) => {
     }
 }
 
-
+// Add a player to a team
 dataPool.addPlayerToTeam = async (teamId, playerData) => {
     try {
         const res = await Teams.findByIdAndUpdate(
@@ -63,6 +63,7 @@ dataPool.addPlayerToTeam = async (teamId, playerData) => {
     }
 }
 
+// Delete a team by ID
 dataPool.deleteTeam = async (id) => {
     try{
         const res = await Teams.findByIdAndDelete(id);

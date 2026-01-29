@@ -2,7 +2,7 @@ const Fields = require('../models/Field');
 
 let dataPool = {};
 
-// 1. GET ALL TEAMS
+// Get all fields
 dataPool.allFields = async (queryText, sportFilter) => {
     try {
         let filter = {};
@@ -22,7 +22,7 @@ dataPool.allFields = async (queryText, sportFilter) => {
     }
 }
 
-// 2. GET ONE BY ID
+// Get one field by ID
 dataPool.oneField = async (id) => {
     try {
         const res = await Fields.findById(id);
@@ -32,7 +32,7 @@ dataPool.oneField = async (id) => {
     }
 }
 
-// 3. CREATE NEW TEAM
+// Create a new field
 dataPool.createField = async (name, sport, address, bookableSlots) => {
     try {
         const res = await Fields.create({

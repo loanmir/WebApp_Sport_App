@@ -6,8 +6,7 @@ const TournamentSchema = new mongoose.Schema({
     type: String, 
     required: true,
     enum: ['Football', 'Volleyball', 'Basketball'] 
-},
-
+  },
   startDate: { type: Date, required: true },               
   maxTeams: { type: Number, required: true },              
   creator: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, 
@@ -15,7 +14,7 @@ const TournamentSchema = new mongoose.Schema({
     type: String, 
     enum: ['Open', 'Active', 'Completed'], 
     default: 'Open' 
-}
+  }
 });
 
 module.exports = mongoose.model('Tournament', TournamentSchema);

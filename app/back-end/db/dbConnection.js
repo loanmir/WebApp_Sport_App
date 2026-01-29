@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
   try {
     // 'mongo' is the service name defined in docker-compose.yml
-    // 'sports_db' is the database you created in Compass
+    // 'sports_db' is the database created in Compass
     const dbURI = 'mongodb://mongo:27017/sports_db';
     
     await mongoose.connect(dbURI);

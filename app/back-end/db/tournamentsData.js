@@ -2,7 +2,7 @@ const Tournaments = require('../models/Tournament');
 
 let dataPool = {};
 
-// 1. GET ALL TEAMS
+// Get all tournaments 
 dataPool.allTournaments = async (queryText, statusFilter) => {
     try {
         let filter = {};
@@ -24,7 +24,7 @@ dataPool.allTournaments = async (queryText, statusFilter) => {
     }
 }
 
-// 2. GET ONE BY ID
+// Get one tournament by ID
 dataPool.oneTournament = async (id) => {
     try {
         const res = await Tournaments.findById(id);
@@ -34,7 +34,7 @@ dataPool.oneTournament = async (id) => {
     }
 }
 
-// 3. CREATE NEW TOURNAMENT
+// Create a new tournament
 dataPool.createTournament = async (name, sport, startDate, maxTeams, creator) => {
     try {
         const res = await Tournaments.create({
@@ -51,7 +51,7 @@ dataPool.createTournament = async (name, sport, startDate, maxTeams, creator) =>
     }
 }
 
-
+// Delete a tournament by ID
 dataPool.deleteTournament = async (id) => {
     try{
         const res = await Tournaments.findByIdAndDelete(id);
@@ -61,7 +61,7 @@ dataPool.deleteTournament = async (id) => {
     }
 }
 
-
+// Edit a tournament by ID
 dataPool.editTournament = async (id, newData) => {
     try {
         const updatedTournament = await Tournaments.findByIdAndUpdate(

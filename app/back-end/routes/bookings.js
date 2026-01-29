@@ -11,7 +11,6 @@ bookings.get('/', async (req, res, next) => {
         if (!field || !date) {
             return res.status(400).json({ error: "Missing required query parameters: field and date" });
         }
-
         const foundBooking = await bookingsData.getBookingsByFieldAndDate(field, date);
         res.json(foundBooking);
     } catch(err){
@@ -19,6 +18,7 @@ bookings.get('/', async (req, res, next) => {
         res.status(500).json({ error: "Error fetching bookings" });
     }
 })
+
 
 
 bookings.get('/user', async (req, res, next) => {

@@ -28,7 +28,7 @@ teams.get('/:id', async (req, res, next) => {
 });
 
 
-// UPDATE TEAM (e.g. Assign to Tournament)
+// Updating a team -> Assigning it to a tournament
 teams.put('/:id', async (req, res) => {
     try {
         const teamId = req.params.id;
@@ -51,19 +51,18 @@ teams.put('/:id', async (req, res) => {
 });
 
 
+// Creating a new team
 teams.post('/', async (req, res, next) => {
     try {
         const { name, players } = req.body;
         
-        // Simple validation
+        // Validation
         if (!name) {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        // Call the helper function from teamsData.js
         const newEntry = await teamsData.createTeam(name, players, req.session.user._id);
         
-        // Return 201 (Created)
         res.status(201).json(newEntry);
         console.log("New team created:", newEntry);
     } catch (err) {
@@ -73,7 +72,7 @@ teams.post('/', async (req, res, next) => {
 });
 
 
-
+// Adding a player to an existing team
 teams.post('/:id/players', async (req, res, next) => {
     try{
 
@@ -96,7 +95,7 @@ teams.post('/:id/players', async (req, res, next) => {
     }
 })
 
-
+// Deleting a team
 teams.delete('/:id', async (req, res, next) => {
     try {
         if (!req.session.user){

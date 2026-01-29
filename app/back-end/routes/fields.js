@@ -3,7 +3,7 @@ const fields = express.Router();
 const fieldsData = require('../db/fieldsData');
 
 
-// Getting all the news
+// Getting all the fields
 fields.get('/', async (req, res, next) => {
     try {
 
@@ -38,10 +38,8 @@ fields.post('/', async (req, res, next) => {
             return res.status(400).json({ error: "Missing required fields" });
         }
 
-        // Call the helper function from fieldsData.js
         const newEntry = await fieldsData.createField(name, sport, address, bookableSlots);
         
-        // Return 201 (Created)
         res.status(201).json(newEntry);
         console.log("New field created:", newEntry);
     } catch (err) {

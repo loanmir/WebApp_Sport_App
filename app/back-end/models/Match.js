@@ -1,6 +1,3 @@
-
-// REMEMBER THE ROUNF-ROBIN SYSTEM for MATCHES
-
 const mongoose = require('mongoose');
 
 const MatchSchema = new mongoose.Schema({

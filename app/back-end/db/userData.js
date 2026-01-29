@@ -3,7 +3,7 @@ const User = require('../models/User');
 let dataPool = {};
 
 
-// FIND USER BY THE USERNAME
+// Find user by username for authentication
 dataPool.AuthUser = async (username) => {
     try {
         // .findOne returns the first document that matches the criteria
@@ -15,7 +15,7 @@ dataPool.AuthUser = async (username) => {
 }
 
 
-// REGISTER A NEW USER
+// Register a new user
 dataPool.AddUser = async (username, password, name, surname) => {
     try {
         const newUser = await User.create({
@@ -32,6 +32,7 @@ dataPool.AddUser = async (username, password, name, surname) => {
     }
 }
 
+// Get all users with optional search query
 dataPool.AllUsers = async (queryText) =>{
     try {
 
@@ -51,7 +52,7 @@ dataPool.AllUsers = async (queryText) =>{
         }
 }
 
-
+// Get user by ID
 dataPool.getUserById = async (id) => {
     try {
         const res = await User.findById(id, '-user_password -__v'); // Exclude password and __v fields

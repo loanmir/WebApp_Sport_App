@@ -17,7 +17,7 @@ search.get('/', async (req, res) => {
         // $regex with 'i' (case-insensitive) matches partial strings
         const regex = { $regex: "^" + query, $options: 'i' };
 
-        // Run all 4 queries simultaneously for speed
+        // Run all 4 queries simultaneously
         const [fields, teams, tournaments, users] = await Promise.all([
             Fields.find({ name: regex }),
             Teams.find({ name: regex }),
@@ -35,7 +35,6 @@ search.get('/', async (req, res) => {
         res.json({ fields, teams, tournaments, users });
 
     } catch (err) {
-        console.error("Search Error:", err);
         res.status(500).json({ error: "Server error during search" });
     }
 });

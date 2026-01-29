@@ -47,23 +47,15 @@ class FieldsView extends Component {
     });
   }
 
-  handleAddClick = () => {
-    const { logged } = this.props.userStatus || {};
-    if (!logged) {
-      this.setViewInParent({ page: "login" });
-    } else{
-      this.setViewInParent({ page: "addfield" });
-    }
-  }
+  
 
   render() {
-    
-
     let filteredData = this.state.fields;
-
+    const {logged, user} = this.props.userStatus || {};
+    
     return (
       <div className="container mt-4">
-        <div className="card border-0 shadow-sm p-3 mb-4 bg-white rounded-3" style={{ margin: "10px", padding: "15px" }}>
+        <div className="card border-0 shadow-sm p-4 mb-4 bg-white rounded-3" style={{ margin: "10px", padding: "15px" }}>
             <div className="row g-3 align-items-center">
                 
                 
@@ -81,7 +73,7 @@ class FieldsView extends Component {
                 </div>
 
                 
-                <div className="col-md-4">
+                <div className="col-md-3">
                     <select 
                         name="selectedSport" 
                         className="form-select border-0 bg-light" 
@@ -95,13 +87,17 @@ class FieldsView extends Component {
                 </div>
 
                 
-                <div className="col-md-3 text-end">
-                    <button 
-                        className="btn btn-primary w-100 rounded-pill fw-bold shadow-sm"
-                        onClick={this.handleAddClick} 
-                    >
-                      <i className="bi bi-plus-lg me-2"></i> Add New Field
-                    </button>
+                <div className="col-md-4 text-end">
+                    {logged ? (
+                        <button 
+                            className="btn btn-primary w-100 rounded-pill fw-bold shadow-sm"
+                            onClick={() => this.setViewInParent({ page: "addfield" })} 
+                        >
+                            <i className="bi bi-plus-lg me-2"></i> Add New Field
+                        </button>
+                    ) : (
+                        <span className="text-muted small">Login to add fields</span>
+                    )}
                 </div>
             </div>
         </div>

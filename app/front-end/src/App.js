@@ -61,8 +61,6 @@ class App extends Component {
         return <FieldsView viewFromChild={this.setView} userStatus={this.state.userStatus}/>;
       case "addfield":
         return <AddFieldView viewFromChild={this.setView} />;
-      case "field":
-        return <SingleFieldView viewFromChild={this.setView} data={this.state.fieldID} />;    // SINGLE FIELD VIEW IS NOT USED!!!!!!
       case "teams":
         return <TeamsView viewFromChild={this.setView} tournamentID={this.state.tournamentID} userStatus={this.state.userStatus}/>;
       case "addteam":

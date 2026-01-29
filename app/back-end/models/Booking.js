@@ -1,4 +1,3 @@
-// It links a User, a Field and a Date
 const mongoose = require('mongoose');
 
 const BookingSchema = new mongoose.Schema({

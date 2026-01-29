@@ -102,7 +102,7 @@ class AddFieldView extends Component {
     })
     .catch(err => {
       console.log("Error:", err);
-      alert("Error adding field");
+      alert(err.response?.data?.error || "Error adding field");
     })
   }
 

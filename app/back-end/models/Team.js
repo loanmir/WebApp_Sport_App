@@ -10,17 +10,13 @@ const PlayerSchema = new mongoose.Schema({
 // Main Team Schema
 const TeamSchema = new mongoose.Schema({
   name: { type: String, required: true },
-  
-  // Link to the Tournament this team belongs to
   tournament: { 
     type: mongoose.Schema.Types.ObjectId, 
     ref: 'Tournament', 
     required: false 
   },
-  
   // Array of player objects
   players: [PlayerSchema],
-  
   creator: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

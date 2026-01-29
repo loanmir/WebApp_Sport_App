@@ -11,7 +11,6 @@ tournaments.get('/', async (req, res, next) => {
         const {q, status} = req.query;
         console.log("Searching tournaments... Query: "+q+", Status: "+status);
 
-        
         const results = await tournamentsData.allTournaments(q, status);
         res.json(results);
         
@@ -36,7 +35,7 @@ tournaments.get('/:id', async (req, res, next) => {
 
 
 
-
+// Creating a new tournament
 tournaments.post('/', async (req, res, next) => {
     try {
 
@@ -48,7 +47,7 @@ tournaments.post('/', async (req, res, next) => {
         const { name, sport, startDate, maxTeams } = req.body;
         const today = new Date().toISOString().split('T')[0]; // get today's date in "YYYY-MM-DD" format
         
-        // Simple validation
+        // Validation
         if (!name || !sport || !startDate || !maxTeams) {
             return res.status(400).json({ error: "Missing required fields" });
         }
@@ -57,10 +56,8 @@ tournaments.post('/', async (req, res, next) => {
             return res.status(400).json({ error: "The start date cannot be in the past!" });
         }
 
-        // Call the helper function from tournamentsData.js
         const newEntry = await tournamentsData.createTournament(name, sport, startDate, maxTeams, creatorId);
         
-        // Return 201 (Created)
         res.status(201).json(newEntry);
         console.log("New tournament created:", newEntry);
     } catch (err) {
@@ -71,7 +68,7 @@ tournaments.post('/', async (req, res, next) => {
 
 
 
-
+// Deleting a tournament
 tournaments.delete('/:id', async (req, res, next) => {
     try{
         const tournamentId = req.params.id;
@@ -79,12 +76,11 @@ tournaments.delete('/:id', async (req, res, next) => {
         // Check if user is logged in
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
-        
         const tournament = await tournamentsData.oneTournament(tournamentId); 
         // Security check: If the tournament exists
         if (!tournament) return res.status(404).json({ error: "Tournament not found" });
 
-        // 2. Check ownership
+        // Check ownership
         if (tournament.creator.toString() !== userId.toString()) {
             return res.status(403).json({ error: "You are not the creator of this tournament" });
         }
@@ -98,7 +94,6 @@ tournaments.delete('/:id', async (req, res, next) => {
         // Delete all matches related to this tournament
         await matchModel.deleteMany({ tournament: tournamentId });
 
-        // 3. Delete it
         await tournamentsData.deleteTournament(tournamentId);
         res.json({ message: "Tournament deleted successfully" });
     }catch (err) {
@@ -110,7 +105,7 @@ tournaments.delete('/:id', async (req, res, next) => {
 
 
 
-
+// Getting one specific tournament by ID
 tournaments.get('/:id', async (req, res) => {
     try {
         const t = await tournamentsData.oneTournament(req.params.id);
@@ -124,16 +119,16 @@ tournaments.get('/:id', async (req, res) => {
 
 
 
-
+// Editing a tournament
 tournaments.put('/:id', async (req, res) => {
     try {
         const tournamentId = req.params.id;
         const userId = req.session.user ? req.session.user._id : null;
 
-        // Security: First checking the login
+        // Checking if user is logged in
         if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
-        // Checking if model exists
+        // Checking if tournament exists
         const tournament = await tournamentsData.oneTournament(tournamentId);
         if (!tournament) return res.status(404).json({ error: "Not found" });
 
@@ -142,7 +137,6 @@ tournaments.put('/:id', async (req, res) => {
             return res.status(403).json({ error: "Forbidden: You are not the creator" });
         }
 
-        
         const updates = {
             name: req.body.name,
             sport: req.body.sport,
@@ -154,14 +148,14 @@ tournaments.put('/:id', async (req, res) => {
         res.json(updated);
 
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        res.status(500).json({ error: "Server error while editing tournament" });
     }
 });
 
 
 
 
-
+// Generating matches for a tournament -> ROUND-ROBIN
 tournaments.post('/:id/matches/generate', async (req, res) => {
     try {
         const tournamentId = req.params.id;
@@ -178,11 +172,11 @@ tournaments.post('/:id/matches/generate', async (req, res) => {
         }
 
 
-        // PREPARING THE ROUND-ROBIN SCHEDULE
+        // ROUND-ROBIN ALGORITHM
         const rotation = teams.map(t => t._id); //array of team IDs
 
         if (rotation.length % 2 !== 0){     // Taking care of the situation when there is an ODD number of teams
-            rotation.push(null); // adding a "null" team -> So called BYE
+            rotation.push(null); // adding a "null" team 
         }
 
         const numTeams = rotation.length;
@@ -238,7 +232,7 @@ tournaments.post('/:id/matches/generate', async (req, res) => {
 
 
 
-
+// Getting all matches for a specific tournament
 tournaments.get('/:id/matches', async (req, res, next) =>{
     try{
         const tournamentId = req.params.id;
@@ -258,6 +252,7 @@ tournaments.get('/:id/matches', async (req, res, next) =>{
 
 
 
+// Getting the standings for a specific tournament
 tournaments.get('/:id/standings', async (req, res, next) =>{
     try{
         const tournamentId = req.params.id;
@@ -367,7 +362,7 @@ tournaments.get('/:id/standings', async (req, res, next) =>{
             return goalDifferenceB - goalDifferenceA; // Sort by goal difference
         });
 
-        res.json(standingsArray); // sorted array
+        res.json(standingsArray); // sorted array as output!
 
     }catch(err){
         console.error(err);

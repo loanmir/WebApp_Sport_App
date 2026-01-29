@@ -3,23 +3,10 @@ const users = express.Router();
 const userData = require('../db/userData');
 
 
-//users.get("/login", (req, res, next) => {
-   // if(req.session.user){
-        //res.send({
-          //  logged:true,
-           // user: req.session.user
-       // })
-    //} else{
-    //    res.send({logged:false}) // If user doen't exist then we send that there is no logged user
-    //}
-//})
-
-
-// USER LOGIN 
+// Login 
 users.post('/signin', async (req, res, next) => {
     const { username, password  } = req.body;
 
-    // CHECKING IF USERNAME AND PASSWORD ARE PROVIDED
     if (!username || !password) {
         return res.status(400).json({ error: "Please enter Username and Password!" });
     }
@@ -30,7 +17,7 @@ users.post('/signin', async (req, res, next) => {
         const user = await userData.AuthUser(username);
 
         if (user) {
-            // CHECKING THE PASSWORD - IF IT IS CORRECT FOR THAT ONE USER
+            // Checking if password is correct -> Future work: "bcrypt" hashing
             const userFromDoc = await user.toObject();
 
             if (password === user.user_password) {
@@ -42,7 +29,6 @@ users.post('/signin', async (req, res, next) => {
                     console.log("SESSION VALID:", req.session.user);
                 }
 
-                // Send success response
                 return res.json({ message: "Login successful", user: userWithoutPassword });
             } else {
                 console.log("INCORRECT PASSWORD");
@@ -61,7 +47,7 @@ users.post('/signin', async (req, res, next) => {
 
 
 
-// USER REGISTRATION
+// Register
 users.post('/signup', async (req, res, next) => {
     // Trimming to remove accidental spaces
     const username = req.body.username?.trim();
@@ -69,20 +55,17 @@ users.post('/signup', async (req, res, next) => {
     const name = req.body.name?.trim();
     const surname = req.body.surname?.trim();
 
-    // CHECKING IF ALL FIELDS ARE PROVIDED
     if (!username || !password || !name || !surname) {
         console.log("A field is missing!");
         return res.status(400).json({ error: "Missing username, password, name, or surname" });
     }
 
     try {
-        // INSERTING THE NEW USER INTO THE DATABASE
+        // Inserting the new user into the database
         const newUser = await userData.AddUser(username, password, name, surname);
         
-        // If code reaches here, it succeeded (otherwise catch block runs)
         console.log("New user added!!");
         
-        // Return 201 Created and the new user data
         return res.status(201).json({ 
             message: "User registered successfully", 
             user: newUser 
@@ -99,7 +82,7 @@ users.post('/signup', async (req, res, next) => {
 });
 
 
-
+// Logout
 users.post('/logout', (req, res, next) => {
     req.session.destroy(err => {
         if (err) {
@@ -114,6 +97,7 @@ users.post('/logout', (req, res, next) => {
 })
 
 
+// Get all users
 users.get("/", async (req, res, next) => {
     try {
         const q = req.query.q;
@@ -129,7 +113,7 @@ users.get("/", async (req, res, next) => {
 });
 
 
-
+// Get user by ID
 users.get("/:id", async (req, res, next) => {
     try {
         const result = await userData.getUserById(req.params.id);

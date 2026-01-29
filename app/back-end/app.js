@@ -29,10 +29,10 @@ app.use(cors({
 }));
 
 
-app.use(express.json()); //JSON parsing directive so that front-end can send JSON data to the back-end -> TAKE A LOOK AGAIN
+app.use(express.json()); //JSON parsing directive so that front-end can send JSON data to the back-end 
 app.use(express.urlencoded({ extended: true }));
 
-// CHECK AGAIN THIS session.parameters!!! -> TAKE A LOOK AT THE MEANING
+// CHECK AGAIN THIS session.parameters
 app.use(session({
     secret: "somesecret",
     name: "sport_app_session",

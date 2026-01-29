@@ -19,7 +19,10 @@ class AddPlayerView extends Component {
         .then(res => {
           this.setState({ teamName: res.data.name });
         })
-        .catch(err => console.error("Error fetching team:", err));
+        .catch(err => {
+          console.error("Error fetching team:", err)
+          alert(err.response?.data?.error || "Could not fetch team data. Check console.");
+        });
     }
   }
 
@@ -51,7 +54,7 @@ class AddPlayerView extends Component {
       })
       .catch(err => {
         console.error("Error adding player:", err);
-        alert("Could not add player. Check console.");
+        alert(err.response?.data?.error || "Could not add player.");
       });
   };
 

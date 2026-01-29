@@ -19,7 +19,7 @@ matches.get('/:id', async (req, res, next) => {
             canEdit = true;
         }
 
-        // REMEMBER THIS SYNTAX -> Mixes the permission flag directly into the match data -> keeping a flat structure
+        // REMEMBER THIS SYNTAX -> Mixes the "canEdit" flag directly into the match data -> keeping a flat structure
         res.json({ 
             ...match.toObject(), 
             canEdit: canEdit 
@@ -38,7 +38,6 @@ matches.put('/:id/result', async (req, res, next) => {
         const userId = req.session.user ? req.session.user._id : null;
 
         if (!userId){
-            console.log("You must be logged in");
             return res.status(401).json({ error: "You must be logged in" });
         }
 
@@ -46,12 +45,10 @@ matches.put('/:id/result', async (req, res, next) => {
 
 
         if (!matchExist){
-            console.log("Match not found");
             return  res.status(404).json({ error: "Match not found" });
         }   
 
         if (!matchExist.tournament.creator.equals(userId)){
-            console.log("Unathorized: You are not the creator of the tournament for this match");
             return res.status(403).json({ error: "Unathorized: You are not the creator of the tournament for this match" });
         }
 
@@ -59,7 +56,6 @@ matches.put('/:id/result', async (req, res, next) => {
         const now = new Date();
         const matchDate = new Date(matchExist.date);
         if (matchDate > now){
-            console.log("Cannot update match result before the match date");
             return res.status(400).json({ error: "Cannot update match result before the match date" });
         }
 
@@ -67,7 +63,6 @@ matches.put('/:id/result', async (req, res, next) => {
         const {scoreA, scoreB, isPlayed} = req.body;
 
         if (scoreA < 0 || scoreB < 0 || scoreA > 150 || scoreB > 150){
-            console.log("Invalid data for the scores")
             return res.status(400).json({ error: "Scores must be between 0 and 150" });
         }
 
