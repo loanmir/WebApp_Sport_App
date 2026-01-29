@@ -26,7 +26,7 @@ class BookFieldView extends Component {
         // Getting details of the field
         axios.get("http://localhost:8080/fields/"+fieldID),
 
-        // Get existing bookings for specific field and date
+        // Get existing bookings for specific field and date - Availability
         axios.get("http://localhost:8080/bookings?field="+fieldID+"&date="+date)
     ])
     .then(([resField, resBookings]) => {
@@ -41,7 +41,7 @@ class BookFieldView extends Component {
     .catch(err => {
         console.error("Error loading data:", err);
         
-        alert("Could not load booking data. Please try again.");
+        alert(err.response?.data?.error || "Could not load booking data. Please try again.");
         this.props.viewFromChild({ page: "fields" });
     });
   }
@@ -86,7 +86,7 @@ class BookFieldView extends Component {
       <div className="container mt-4">
         <div className="card shadow p-4">
             
-            {/* --- HEADER --- */}
+            {/* Header */}
             <div className="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h3 className="mb-0">Book: {field.name}</h3>
@@ -100,7 +100,7 @@ class BookFieldView extends Component {
                 </button>
             </div>
 
-            {/* --- DATE SELECTION --- */}
+            {/* Select date */}
             <div className="mb-4 p-3 bg-light rounded">
                 <label className="fw-bold me-3">Select Date:</label>
                 <input 
@@ -111,7 +111,7 @@ class BookFieldView extends Component {
                 />
             </div>
 
-            {/* --- SLOTS GRID --- */}
+            {/* Available times */}
             <h5 className="mb-3">Available Times</h5>
             
             {field.bookableSlots && field.bookableSlots.length > 0 ? (
@@ -124,7 +124,7 @@ class BookFieldView extends Component {
                         // Checking if slot is currently selected
                         const isSelected = selectedSlot && selectedSlot._id === slot._id;
 
-                        // £ different colors for each state -> taken, selected, available
+                        // different colors for each state -> taken, selected, available
                         let btnClass = "btn-outline-success"; 
                         if (isTaken) btnClass = "btn-secondary disabled"; 
                         else if (isSelected) btnClass = "btn-success text-white"; 
@@ -151,7 +151,7 @@ class BookFieldView extends Component {
                 <div className="alert alert-warning">No slots defined for this field.</div>
             )}
 
-            {/* --- FOOTER / CONFIRM --- */}
+            {/* Footer */}
             <div className="mt-5 pt-3 border-top text-end">
                 {selectedSlot && (
                     <span className="me-3 text-muted">
