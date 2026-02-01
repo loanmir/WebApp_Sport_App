@@ -20,6 +20,7 @@ services:
     volumes:
       # This saves your database data in a folder named 'data' so you don't lose it
       - ./data:/data/db
+      - ./mongo-seed/init.js:/docker-entrypoint-initdb.d/init.js:ro
     ports:
       - "27017:27017"
     command: ["--quiet"]
