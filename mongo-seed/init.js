@@ -521,3 +521,5 @@ db.matches.insertMany([
 ]);
 
 print("***** Matches seeded successfully! *****");
+
+print("***** Database seeded successfully! *****");
