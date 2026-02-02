@@ -7,7 +7,7 @@ const MatchSchema = new mongoose.Schema({
   scoreA: { type: Number, default: 0 },
   scoreB: { type: Number, default: 0 },
   date: { type: Date, default: null }, 
-  played: { type: Boolean, default: false }, // To track if the game is finished
+  played: { type: Boolean, default: false }, // To track if the game has been played
   round: {type: Number, required: true},
   field: {type: mongoose.Schema.Types.ObjectId, ref: 'Field', default: null}
 });

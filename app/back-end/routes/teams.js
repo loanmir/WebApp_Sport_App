@@ -5,7 +5,7 @@ const tournamentsData = require('../db/tournamentsData');
 
 
 // Getting all the teams
-teams.get('/', async (req, res, next) => {
+teams.get('/', async (req, res) => {
     try {
         console.log("Fetching all teams...");
         const results = await teamsData.allTeams();
@@ -18,7 +18,7 @@ teams.get('/', async (req, res, next) => {
 });
 
 // Getting one specific team by ID
-teams.get('/:id', async (req, res, next) => {
+teams.get('/:id', async (req, res) => {
     try {
         const result = await teamsData.oneTeam(req.params.id);
         res.json(result);
@@ -52,7 +52,7 @@ teams.put('/:id', async (req, res) => {
 
 
 // Creating a new team
-teams.post('/', async (req, res, next) => {
+teams.post('/', async (req, res) => {
     try {
         const { name, players } = req.body;
         
@@ -73,7 +73,7 @@ teams.post('/', async (req, res, next) => {
 
 
 // Adding a player to an existing team
-teams.post('/:id/players', async (req, res, next) => {
+teams.post('/:id/players', async (req, res) => {
     try{
 
         const teamId =  req.params.id;
@@ -96,7 +96,7 @@ teams.post('/:id/players', async (req, res, next) => {
 })
 
 // Deleting a team
-teams.delete('/:id', async (req, res, next) => {
+teams.delete('/:id', async (req, res) => {
     try {
         if (!req.session.user){
             return res.status(401).json({ error: "Unauthorized" });

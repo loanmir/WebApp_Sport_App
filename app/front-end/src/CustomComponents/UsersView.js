@@ -111,7 +111,7 @@ class UsersView extends Component {
                             width: "80px", 
                             height: "80px", 
                             borderRadius: "50%", 
-                            background: "linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)", // Cool purple-blue gradient
+                            background: "linear-gradient(135deg, #1e3c72 0%, #2a5298 100%)",
                             color: "white",
                             fontSize: "2rem",
                             fontWeight: "bold",

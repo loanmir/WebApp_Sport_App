@@ -26,7 +26,7 @@ class HomeView extends Component {
             {!logged && (
                 <button 
                 className="btn btn-light btn-lg px-4 fw-bold shadow-sm"
-                style={{ color: "#0d6efd" }} // Text matches the blue theme
+                style={{ color: "#0d6efd" }} 
                 onClick={() => this.setViewInParent({ page: "login" })}
                 >
                 Login / Register

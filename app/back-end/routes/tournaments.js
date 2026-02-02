@@ -4,8 +4,8 @@ const tournamentsData = require('../db/tournamentsData');
 const teamModel = require('../models/Team');
 const matchModel = require('../models/Match');
 
-
-tournaments.get('/', async (req, res, next) => {
+// getting all tournaments 
+tournaments.get('/', async (req, res) => {
     try {
 
         const {q, status} = req.query;
@@ -23,8 +23,8 @@ tournaments.get('/', async (req, res, next) => {
 
 
 
-// Getting one specific news item by ID
-tournaments.get('/:id', async (req, res, next) => {
+// Getting one specific tournament by ID
+tournaments.get('/:id', async (req, res) => {
     try {
         const result = await tournamentsData.oneTournament(req.params.id);
         res.json(result);
@@ -36,7 +36,7 @@ tournaments.get('/:id', async (req, res, next) => {
 
 
 // Creating a new tournament
-tournaments.post('/', async (req, res, next) => {
+tournaments.post('/', async (req, res) => {
     try {
 
         if (!req.session || !req.session.user) {
@@ -69,7 +69,7 @@ tournaments.post('/', async (req, res, next) => {
 
 
 // Deleting a tournament
-tournaments.delete('/:id', async (req, res, next) => {
+tournaments.delete('/:id', async (req, res) => {
     try{
         const tournamentId = req.params.id;
         const userId = req.session.user ? req.session.user._id : null;
@@ -233,7 +233,7 @@ tournaments.post('/:id/matches/generate', async (req, res) => {
 
 
 // Getting all matches for a specific tournament
-tournaments.get('/:id/matches', async (req, res, next) =>{
+tournaments.get('/:id/matches', async (req, res) => {
     try{
         const tournamentId = req.params.id;
         const matches = await matchModel.find({tournament: tournamentId})
@@ -253,7 +253,7 @@ tournaments.get('/:id/matches', async (req, res, next) =>{
 
 
 // Getting the standings for a specific tournament
-tournaments.get('/:id/standings', async (req, res, next) =>{
+tournaments.get('/:id/standings', async (req, res) => {
     try{
         const tournamentId = req.params.id;
 

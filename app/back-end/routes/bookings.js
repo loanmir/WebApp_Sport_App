@@ -4,7 +4,7 @@ const bookingsData = require('../db/bookingsData');
 
 
 
-bookings.get('/', async (req, res, next) => {
+bookings.get('/', async (req, res) => {
     try{
         const {field, date} = req.query;
 
@@ -21,7 +21,7 @@ bookings.get('/', async (req, res, next) => {
 
 
 
-bookings.get('/user', async (req, res, next) => {
+bookings.get('/user', async (req, res) => {
     try{
         if (!req.session || !req.session.user) {
             return res.status(401).json({ error: "Unauthorized: Please log in." });
@@ -40,7 +40,7 @@ bookings.get('/user', async (req, res, next) => {
 
 
 
-bookings.post('/', async (req, res, next) => {
+bookings.post('/', async (req, res) => {
     try{
         const { field, date, slotTime } = req.body;
         const today = new Date().toISOString().split('T')[0]; // get today's date in "YYYY-MM-DD" format
@@ -95,7 +95,7 @@ bookings.post('/', async (req, res, next) => {
 
 
 
-bookings.delete('/:id', async (req, res, next) => {
+bookings.delete('/:id', async (req, res) => {
     try{
         const bookingID =  req.params.id;
 
@@ -108,12 +108,12 @@ bookings.delete('/:id', async (req, res, next) => {
 
         const bookingToDelete = await bookingsData.getBookingByID(bookingID);
 
-        //Check if desired booking actually exists
+        // Checking if desired booking actually exists
         if(!bookingToDelete){
             return res.status(404).json({ error: "Booking not found" });
         }
 
-        //  checking if booking is actually owned by current user 
+        // Checking if booking is actually owned by current user 
         if(bookingToDelete.user.toString() !== userID){
             return res.status(403).json({ error: "You are not allowed to delete this booking." });
         }

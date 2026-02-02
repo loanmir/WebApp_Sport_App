@@ -2,7 +2,7 @@ const Matches = require('../models/Match');
 
 let dataPool = {};
 
-
+// Get match by ID
 dataPool.oneMatch = async (id) => {
     try{
         const res = await Matches.findById(id)
@@ -15,7 +15,7 @@ dataPool.oneMatch = async (id) => {
     }
 }
 
-
+// Update match result/status
 dataPool.updateMatchResult = async (id, resultData, options={}) => {
     try{
         const res  = await Matches.findByIdAndUpdate(id, resultData, options);

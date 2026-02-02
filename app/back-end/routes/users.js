@@ -4,7 +4,7 @@ const userData = require('../db/userData');
 
 
 // Login 
-users.post('/signin', async (req, res, next) => {
+users.post('/signin', async (req, res) => {
     const { username, password  } = req.body;
 
     if (!username || !password) {
@@ -48,7 +48,7 @@ users.post('/signin', async (req, res, next) => {
 
 
 // Register
-users.post('/signup', async (req, res, next) => {
+users.post('/signup', async (req, res) => {
     // Trimming to remove accidental spaces
     const username = req.body.username?.trim();
     const password = req.body.password;
@@ -83,22 +83,22 @@ users.post('/signup', async (req, res, next) => {
 
 
 // Logout
-users.post('/logout', (req, res, next) => {
+users.post('/logout', (req, res) => {
     req.session.destroy(err => {
         if (err) {
             console.error("Error destroying session:", err);
             return res.status(500).send("Could not log out.");
         }
-        res.clearCookie('sport_app_session', { path: '/' });  // this is default cookie name -> Found on "expressjs.com"
+        res.clearCookie('sport_app_session', { path: '/' });  
 
-        // 3. Send success response
+        
         return res.json({ message: "Logout successful" });
     });
 })
 
 
 // Get all users
-users.get("/", async (req, res, next) => {
+users.get("/", async (req, res) => {
     try {
         const q = req.query.q;
         console.log("Query param:", q);
@@ -114,7 +114,7 @@ users.get("/", async (req, res, next) => {
 
 
 // Get user by ID
-users.get("/:id", async (req, res, next) => {
+users.get("/:id", async (req, res) => {
     try {
         const result = await userData.getUserById(req.params.id);
         res.json(result);

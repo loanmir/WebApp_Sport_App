@@ -11,7 +11,7 @@ class BookingsView extends Component {
     }
 
     componentDidMount() {
-        // Fetch the specific route we just created
+        
         axios.get("/bookings/user", { withCredentials: true })  // http://localhost:8080
             .then(res => {
                 this.setState({
@@ -36,7 +36,6 @@ class BookingsView extends Component {
         }
          axios.delete("/bookings/"+bookingID, { withCredentials: true })
          .then(res => {
-            // If everything goes right, then show again the list of bookings except the one we have just deleted -> Update the state -> auto render refresh
             const updatedList = this.state.bookings.filter(b => b._id !== bookingID);
             this.setState({ bookings: updatedList });
             alert("Booking cancelled successfully.");

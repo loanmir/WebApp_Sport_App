@@ -4,8 +4,8 @@ const matchesData = require('../db/matchesData');
 const matchModel = require('../models/Match');
 
 
-
-matches.get('/:id', async (req, res, next) => {
+// Get match by ID
+matches.get('/:id', async (req, res) => {
     try{
         let canEdit = false;
         const userId = req.session.user ? req.session.user._id : null;
@@ -32,7 +32,7 @@ matches.get('/:id', async (req, res, next) => {
 })
 
 
-matches.put('/:id/result', async (req, res, next) => {
+matches.put('/:id/result', async (req, res) => {
     try{
 
         const userId = req.session.user ? req.session.user._id : null;

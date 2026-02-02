@@ -27,7 +27,7 @@ dataPool.AddUser = async (username, password, name, surname) => {
         });
         return newUser;
     } catch (err) {
-        // Username OR Email already exists
+        
         throw err;
     }
 }

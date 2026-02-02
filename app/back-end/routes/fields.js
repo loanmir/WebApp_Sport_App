@@ -4,7 +4,7 @@ const fieldsData = require('../db/fieldsData');
 
 
 // Getting all the fields
-fields.get('/', async (req, res, next) => {
+fields.get('/', async (req, res) => {
     try {
 
         const {q, sport} = req.query;
@@ -20,7 +20,7 @@ fields.get('/', async (req, res, next) => {
 });
 
 // Getting one specific field by ID
-fields.get('/:id', async (req, res, next) => {
+fields.get('/:id', async (req, res) => {
     try {
         const result = await fieldsData.oneField(req.params.id);
         res.json(result);
@@ -29,7 +29,9 @@ fields.get('/:id', async (req, res, next) => {
     }
 });
 
-fields.post('/', async (req, res, next) => {
+
+// Creating a new field
+fields.post('/', async (req, res) => {
     try {
         const { name, sport, address, bookableSlots } = req.body;
         

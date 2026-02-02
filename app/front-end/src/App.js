@@ -10,7 +10,6 @@ import LoginView from "./CustomComponents/LoginView";
 import TeamsView from "./CustomComponents/TeamsView";
 import SignUpView from "./CustomComponents/SignUpView";
 import SingleTeamView from "./CustomComponents/SingleTeamView";
-import SingleFieldView from "./CustomComponents/SingleFieldView";
 import TournamentsView from "./CustomComponents/TournamentsView";
 import AddTournamentView from "./CustomComponents/AddTournamentView";
 import UsersView from "./CustomComponents/UsersView";

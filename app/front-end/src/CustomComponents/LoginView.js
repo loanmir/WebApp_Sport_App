@@ -9,7 +9,6 @@ class LoginView extends Component {
         username: "",
         password: ""
       },
-      // Same attributes as in SignUpView.js
       errors: {},           
       errorMessage: "",     
       loading: false,       
@@ -56,7 +55,6 @@ class LoginView extends Component {
       return; // Stop if validation fails
     }
 
-    // set loading state
     this.setState({ loading: true, errorMessage: "" });
 
     let user = this.state.user;

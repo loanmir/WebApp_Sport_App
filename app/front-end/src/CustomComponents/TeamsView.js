@@ -48,7 +48,7 @@ class TeamsView extends Component {
         this.fetchTeams(); // Refresh the list
     })
     .catch(err => {
-        // Catching error from backend
+        console.log("Error:", err);
         alert(err.response?.data?.error || "Could not delete team");
     });
   }

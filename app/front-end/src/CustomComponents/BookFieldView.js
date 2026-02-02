@@ -5,8 +5,8 @@ class BookFieldView extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      field: null,           // The field details (name, address, master slots)
-      takenSlots: [],        // List of time strings already booked for this date
+      field: null,           
+      takenSlots: [],        // List of time slots already booked for this date
       selectedDate: new Date().toISOString().split('T')[0], // Default: Today "YYYY-MM-DD"
       selectedSlot: null,    // The slot object the user clicked
       loading: true
@@ -64,7 +64,7 @@ class BookFieldView extends Component {
         field: this.props.fieldID,
         date: this.state.selectedDate,
         slotTime: this.state.selectedSlot.time 
-    }, { withCredentials: true }) // for user session
+    }, { withCredentials: true }) 
     .then(res => {
         alert("Booking Successful!");
         this.props.viewFromChild({ page: "fields" });
